@@ -1,32 +1,44 @@
-const services = [
-  "Projetos paisagísticos residenciais",
-  "Jardins corporativos",
-  "Manutenção de áreas verdes",
-];
+import { ContactBanner } from "./_components/ContactBanner";
+import { SiteFooter } from "./_components/SiteFooter";
+import { SiteFrame } from "./_components/SiteFrame";
+import { SiteHeader } from "./_components/SiteHeader";
+import { AboutPanel } from "./_home/AboutPanel";
+import { BenefitsPanel } from "./_home/BenefitsPanel";
+import { HeroSection } from "./_home/HeroSection";
+import { ProjectsSection } from "./_home/ProjectsSection";
+import { homeContent } from "./_home/homeContent";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="page">
-      <section className="hero" aria-labelledby="hero-title">
-        <p className="eyebrow">Sobreiro Paisagismo</p>
-        <h1 id="hero-title">Natureza planejada para transformar ambientes.</h1>
-        <p className="heroText">
-          Uma base moderna com React.js e Next.js para apresentar projetos,
-          serviços e contatos da marca com performance e SEO desde o início.
-        </p>
-        <a className="cta" href="mailto:contato@sobreiro-paisagismo.com">
-          Solicitar orçamento
-        </a>
-      </section>
-
-      <section className="services" aria-labelledby="services-title">
-        <h2 id="services-title">Serviços em destaque</h2>
-        <ul>
-          {services.map((service) => (
-            <li key={service}>{service}</li>
-          ))}
-        </ul>
-      </section>
-    </main>
+    <SiteFrame
+      variant="fullBleed"
+      header={
+        <SiteHeader
+          contactHref={homeContent.contact.href}
+          contactLabel={homeContent.contact.label}
+          presentation="floating"
+        />
+      }
+      footer={
+        <SiteFooter
+          description={homeContent.footer.description}
+          groups={homeContent.footer.groups}
+          socialLinks={homeContent.footer.socialLinks}
+          legal={homeContent.footer.legal}
+        />
+      }
+    >
+      <HeroSection content={homeContent.hero} />
+      <BenefitsPanel heading={homeContent.benefitsHeading} benefits={homeContent.benefits} />
+      <ProjectsSection heading={homeContent.projectsHeading} projects={homeContent.projects} />
+      <AboutPanel content={homeContent.about} />
+      <ContactBanner
+        id="contato"
+        message={homeContent.banner.message}
+        contactHref={homeContent.contact.href}
+        contactLabel={homeContent.contact.label}
+        supportingAction={homeContent.banner.supportingAction}
+      />
+    </SiteFrame>
   );
 }

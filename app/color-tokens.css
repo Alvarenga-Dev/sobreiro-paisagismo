@@ -1,0 +1,137 @@
+:root {
+  /* ========================================
+     SOBREIRO — PRIMITIVE COLORS
+     ======================================== */
+
+  /* Forest */
+  --forest-950: #080b04;
+  --forest-900: #0f180e;
+  --forest-850: #132415;
+  --forest-800: #192718;
+  --forest-700: #22291d;
+  --forest-600: #3a4629;
+
+  /* Olive */
+  --olive-700: #5c632e;
+  --olive-600: #757f39;
+  --olive-500: #85904a;
+  --olive-400: #939961;
+  --olive-300: #a5aa6c;
+  --olive-200: #b6ba80;
+
+  /* Gold */
+  --gold-700: #6f5733;
+  --gold-600: #86693e;
+  --gold-500: #957748;
+  --gold-400: #a28352;
+  --gold-300: #bc9a63;
+  --gold-200: #d6b883;
+  --gold-100: #edd6ab;
+
+  /* Neutral */
+  --neutral-50: #f9f7f4;
+  --neutral-100: #f5f1ec;
+  --neutral-200: #eeeae4;
+  --neutral-300: #d6d5d0;
+  --neutral-400: #c4c1b9;
+  --neutral-500: #a3a298;
+  --neutral-600: #878883;
+  --neutral-700: #70716a;
+  --neutral-800: #47493d;
+  --neutral-900: #22291d;
+
+  /* ========================================
+     SEMANTIC COLORS
+     ======================================== */
+
+  --color-primary: var(--olive-500);
+  --color-primary-hover: var(--olive-600);
+  --color-primary-active: var(--olive-700);
+  --color-primary-subtle: var(--olive-300);
+
+  --color-background: var(--neutral-50);
+  --color-background-alt: var(--neutral-100);
+  --color-background-dark: var(--forest-850);
+
+  --color-surface: var(--neutral-100);
+  --color-surface-dark: var(--forest-800);
+
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-700);
+  --color-text-muted: var(--neutral-600);
+  --color-text-inverse: var(--neutral-50);
+  --color-text-brand: var(--olive-500);
+
+  --color-border: var(--neutral-300);
+  --color-border-subtle: var(--neutral-200);
+  --color-border-dark: var(--forest-600);
+  --color-border-brand: var(--olive-500);
+
+  --color-premium: var(--gold-300);
+
+  /* Glass */
+  --glass-dark: rgba(15, 24, 14, 0.78);
+  --glass-dark-strong: rgba(8, 11, 4, 0.88);
+  --glass-dark-soft: rgba(19, 36, 21, 0.68);
+  --glass-light: rgba(249, 247, 244, 0.8);
+
+  --glass-border-dark: rgba(182, 186, 128, 0.25);
+  --glass-border-light: rgba(255, 255, 255, 0.18);
+
+  /* ========================================
+     FUNCTIONAL ALIASES
+     Keep the aliases above for existing consumers. New components use the
+     contextual roles below so primitive colors can change independently.
+     ======================================== */
+
+  /* Surfaces */
+  --color-canvas-external: var(--forest-950);
+  --color-surface-deep: var(--forest-950);
+  --color-surface-dark-primary: var(--forest-900);
+  --color-surface-dark-secondary: var(--forest-850);
+  --color-surface-dark-raised: var(--forest-800);
+  --color-surface-light-primary: var(--neutral-50);
+  --color-surface-light-secondary: var(--neutral-100);
+  --color-surface-light-raised: var(--neutral-200);
+  --color-surface-media-fallback: var(--forest-700);
+  --color-surface-accent: var(--olive-500);
+
+  /* Text */
+  --color-text-on-dark: var(--neutral-50);
+  --color-text-on-dark-muted: var(--neutral-400);
+  --color-text-on-light: var(--neutral-900);
+  --color-text-on-light-muted: var(--neutral-700);
+  --color-text-accent-on-dark: var(--olive-300);
+  --color-text-accent-on-light: var(--olive-700);
+  --color-text-on-accent: var(--forest-950);
+
+  /* Borders */
+  --color-border-on-dark: rgba(182, 186, 128, 0.28);
+  --color-border-on-dark-strong: rgba(214, 216, 187, 0.5);
+  --color-border-on-light: rgba(34, 41, 29, 0.14);
+  --color-border-on-light-strong: rgba(34, 41, 29, 0.34);
+
+  /* Icons and decoration */
+  --color-icon-on-dark: var(--neutral-50);
+  --color-icon-on-light: var(--forest-700);
+  --color-icon-accent: var(--olive-300);
+  --color-decoration-on-dark: rgba(165, 170, 108, 0.18);
+  --color-decoration-on-light: rgba(92, 99, 46, 0.16);
+
+  /* Actions */
+  --color-action-accent: var(--olive-300);
+  --color-action-accent-hover: var(--olive-200);
+  --color-action-accent-active: var(--olive-400);
+  --color-action-accent-text: var(--forest-950);
+  --color-action-inverse-text: var(--neutral-50);
+  --color-action-neutral-text: var(--forest-900);
+  --color-action-disabled: var(--neutral-600);
+
+  /* Focus */
+  --color-focus-on-dark: var(--gold-100);
+  --color-focus-on-light: var(--olive-700);
+
+  /* Media contrast */
+  --color-media-overlay-strong: rgba(4, 10, 4, 0.9);
+  --color-media-overlay-soft: rgba(4, 10, 4, 0.24);
+}
