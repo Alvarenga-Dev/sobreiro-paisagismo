@@ -1,6 +1,6 @@
 import { BrandLockup } from "./Brand";
 import { ContactButton } from "./ButtonLink";
-import { MenuTrigger } from "./MenuTrigger";
+import { MobileNavigation } from "./MobileNavigation";
 
 export interface SiteHeaderProps {
   contactHref?: string;
@@ -28,7 +28,7 @@ export function SiteHeader({
         {hasContact ? (
           <ContactButton className="siteHeader__contact" href={contactHref} label={contactLabel} />
         ) : null}
-        <MenuTrigger disabled />
+        <MobileNavigation />
       </div>
     </header>
   );

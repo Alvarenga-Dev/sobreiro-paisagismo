@@ -56,12 +56,12 @@ describe("HomePage", () => {
       "fullBleed",
     );
     expect(screen.getByRole("banner")).toHaveAttribute("data-presentation", "floating");
-    expect(screen.getByRole("button", { name: /menu — conteúdo em definição/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
     expect(screen.getByRole("contentinfo")).toHaveTextContent(
       "© 2026 Sobreiro Paisagismo. Todos os direitos reservados.",
     );
     expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("href", "#inicio");
-    expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute("href", "#sobre");
+    expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute("href", "/sobre");
     expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "#projetos");
     expect(screen.getAllByRole("link", { name: "contato@sobreiro.com.br" })[0]).toHaveAttribute(
       "href",

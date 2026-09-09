@@ -370,3 +370,28 @@ para texto muted em claro; o foco quente sobre escuro mede 12,79:1.
 
 TypeScript, 23 testes Jest, ESLint e o build de produção passaram. O Next.js
 classificou `/sobre` como rota estática.
+
+## 9. Navegação mobile
+
+`MobileNavigation` é a única fronteira cliente do menu e compõe `MenuTrigger` e
+`MobileMenu`. O gatilho é controlado, usa `aria-expanded`/`aria-controls` e só é
+visível abaixo de `40rem`; em telas maiores o conjunto fica fora da ordem de foco.
+
+`MobileMenu` usa um `<dialog>` modal nativo nomeado “Menu principal”. A API
+aceita `MobileMenuContent`, cujos cinco itens são readonly e possuem `id`,
+`label`, `href` e `LineIconName`. Cada `MobileMenuItem` é um único link de linha
+inteira, marca o destino atual com `aria-current="page"` e mantém chevron e ícone
+decorativos. A ordem DOM é fechar, marca empilhada, navegação, contatos e rodapé.
+
+WhatsApp e telefone usam a união `ConfiguredContact`: somente o estado
+`configured` produz um `ButtonLink` (`accent` ou `outlineInverse`); o estado
+`unavailable` não produz âncora. O conteúdo atual mantém ambos indisponíveis até
+que URLs aprovadas sejam adicionadas a `app/_content/siteContent.ts`.
+
+Ao abrir, o foco vai para “Fechar menu”; `Escape`, backdrop, botão e links
+internos compartilham o ciclo de fechamento. O dialog nativo fornece modalidade
+e contenção de foco, com contenção de Tab como reforço; o scroll inline anterior
+é restaurado exatamente e o foco retorna ao gatilho quando não há navegação.
+`prefers-reduced-motion` reduz a transição a uma conclusão imediata. O painel usa
+`100dvh`, safe areas e rolagem interna para preservar rótulos e alvos de 44 px em
+320 px e em paisagem.

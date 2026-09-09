@@ -171,7 +171,7 @@ export const homeContent = {
       "Acreditamos que o paisagismo vai muito além da estética. Ele transforma ambientes, melhora a qualidade de vida e cria conexões duradouras com a natureza.",
     action: {
       label: "Conheça nossa história",
-      href: "#sobre",
+      href: "/sobre",
     },
     media: {
       src: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=86",
