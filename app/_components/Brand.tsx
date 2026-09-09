@@ -33,13 +33,14 @@ export function BrandEmblem({
 export interface BrandLockupProps {
   href?: string;
   compact?: boolean;
+  presentation?: "horizontal" | "stacked";
   className?: string;
 }
 
-export function BrandLockup({ href = "/", compact = false, className = "" }: BrandLockupProps) {
+export function BrandLockup({ href = "/", compact = false, presentation = "horizontal", className = "" }: BrandLockupProps) {
   return (
     <a
-      className={`brandLockup ${compact ? "brandLockup--compact" : ""} ${className}`.trim()}
+      className={`brandLockup ${compact ? "brandLockup--compact" : ""} ${presentation === "stacked" ? "brandLockup--stacked" : ""} ${className}`.trim()}
       href={href}
       aria-label="Sobreiro Paisagismo — página inicial"
     >

@@ -1,5 +1,7 @@
 "use client";
 
+import { forwardRef } from "react";
+
 export interface MenuTriggerProps {
   expanded?: boolean;
   controlsId?: string;
@@ -7,18 +9,19 @@ export interface MenuTriggerProps {
   disabled?: boolean;
 }
 
-export function MenuTrigger({
+export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger({
   expanded = false,
   controlsId,
   onExpandedChange,
   disabled = false,
-}: MenuTriggerProps) {
+}, ref) {
   const cannotExpand = disabled || !controlsId || !onExpandedChange;
   const label = cannotExpand ? "Menu — conteúdo em definição" : expanded ? "Fechar menu" : "Abrir menu";
 
   return (
     <button
       className="menuTrigger"
+      ref={ref}
       type="button"
       aria-label={label}
       aria-expanded={controlsId ? expanded : undefined}
@@ -31,4 +34,4 @@ export function MenuTrigger({
       <span aria-hidden="true" />
     </button>
   );
-}
+});

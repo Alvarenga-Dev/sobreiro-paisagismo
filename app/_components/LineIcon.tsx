@@ -5,7 +5,10 @@ export type LineIconName =
   | "arrowRight"
   | "award"
   | "calendar"
+  | "chevronRight"
+  | "close"
   | "droplet"
+  | "home"
   | "instagram"
   | "graduationCap"
   | "leaf"
@@ -13,8 +16,11 @@ export type LineIconName =
   | "mail"
   | "message"
   | "pin"
+  | "phone"
   | "shield"
+  | "sprout"
   | "sun"
+  | "user"
   | "users";
 
 export interface LineIconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
@@ -39,7 +45,10 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
       <path d="M7 3v4m10-4v4M3.5 9.5h17M8 13h.01m4 0h.01m4 0h.01m-8 3.5h.01m4 0h.01" strokeWidth="2" />
     </>
   ),
+  chevronRight: <path d="m9 5 7 7-7 7" />,
+  close: <path d="m6 6 12 12M18 6 6 18" />,
   droplet: <path d="M12 3.5S6.5 9.4 6.5 14a5.5 5.5 0 0 0 11 0C17.5 9.4 12 3.5 12 3.5Z" />,
+  home: <path d="m3.5 10.5 8.5-7 8.5 7M5.5 9v11h13V9M9.5 20v-6h5v6" />,
   instagram: (
     <>
       <rect x="4" y="4" width="16" height="16" rx="5" />
@@ -83,12 +92,14 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
       <circle cx="12" cy="10" r="2.6" />
     </>
   ),
+  phone: <path d="M6.5 4.5 9 4l2 5-2.5 1.5a14 14 0 0 0 5 5L15 13l5 2 .5 2.5c.2 1-0.5 2-1.5 2C11.3 19.5 4.5 12.7 4.5 5c0-1 .9-1.7 2-1.5Z" />,
   shield: (
     <>
       <path d="M12 3 5 6v5c0 4.8 2.7 8.1 7 10 4.3-1.9 7-5.2 7-10V6l-7-3Z" />
       <path d="m9 12 2 2 4-4" />
     </>
   ),
+  sprout: <path d="M12 20V10m0 4c-4.5 0-7-2.5-7-7 4.5 0 7 2.5 7 7Zm0-2c0-4.5 2.5-7 7-7 0 4.5-2.5 7-7 7Z" />,
   sun: (
     <>
       <circle cx="12" cy="12" r="4" />
@@ -100,6 +111,12 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
       <circle cx="9" cy="8" r="3" />
       <circle cx="17" cy="9" r="2.3" />
       <path d="M3.5 20c.3-4.2 2-6.3 5.5-6.3s5.2 2.1 5.5 6.3m.3-5.5c3.5-.5 5.4 1.3 5.7 4.5" />
+    </>
+  ),
+  user: (
+    <>
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5 20c.4-4.3 2.7-6.5 7-6.5s6.6 2.2 7 6.5" />
     </>
   ),
 };
