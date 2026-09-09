@@ -62,7 +62,7 @@ describe("AboutPage", () => {
     render(<AboutPage />);
 
     expect(screen.getByRole("banner")).toHaveAttribute("data-presentation", "floating");
-    expect(screen.getByRole("button", { name: /menu — conteúdo em definição/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: /menu principal/i })).not.toBeInTheDocument();
   });

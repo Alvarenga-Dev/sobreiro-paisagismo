@@ -36,12 +36,12 @@ describe("shell compartilhado", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "conteudo-principal");
   });
 
-  it("renderiza o cabeçalho flutuante sem CTA e mantém o menu indisponível", () => {
+  it("renderiza o cabeçalho flutuante sem CTA e mantém o menu disponível no mobile", () => {
     render(<SiteHeader presentation="floating" showContact={false} />);
 
     expect(screen.getByRole("banner")).toHaveAttribute("data-presentation", "floating");
     expect(screen.queryByRole("link", { name: "Contato" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /menu — conteúdo em definição/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 });
