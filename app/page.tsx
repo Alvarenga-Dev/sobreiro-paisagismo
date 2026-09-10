@@ -1,7 +1,6 @@
 import { ContactBanner } from "./_components/ContactBanner";
 import { SiteFooter } from "./_components/SiteFooter";
 import { SiteFrame } from "./_components/SiteFrame";
-import { SiteHeader } from "./_components/SiteHeader";
 import { AboutPanel } from "./_home/AboutPanel";
 import { BenefitsPanel } from "./_home/BenefitsPanel";
 import { HeroSection } from "./_home/HeroSection";
@@ -12,13 +11,6 @@ export default function HomePage() {
   return (
     <SiteFrame
       variant="fullBleed"
-      header={
-        <SiteHeader
-          contactHref={homeContent.contact.href}
-          contactLabel={homeContent.contact.label}
-          presentation="floating"
-        />
-      }
       footer={
         <SiteFooter
           description={homeContent.footer.description}

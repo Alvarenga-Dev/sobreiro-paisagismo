@@ -4,6 +4,7 @@ import { LineIcon, type LineIconName } from "./LineIcon";
 export interface FooterLink {
   label: string;
   href: string;
+  icon?: LineIconName;
 }
 
 export interface FooterNavGroupData {
@@ -23,16 +24,19 @@ export interface LegalContent {
 
 export interface FooterNavGroupProps extends FooterNavGroupData {
   index: number;
+  currentPath?: string;
 }
 
-export function FooterNavGroup({ label, links, index }: FooterNavGroupProps) {
+export function FooterNavGroup({ label, links, index, currentPath }: FooterNavGroupProps) {
   return (
     <nav className="footerNavGroup" aria-labelledby={`footer-group-${index}`}>
       <h2 id={`footer-group-${index}`}>{label}</h2>
       <ul>
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href}>{link.label}</a>
+            <a href={link.href} aria-current={currentPath && !link.href.includes("#") && link.href.split("?")[0] === currentPath.split("?")[0] ? "page" : undefined}>
+              {link.icon ? <LineIcon name={link.icon} size="sm" /> : null}{link.label}
+            </a>
           </li>
         ))}
       </ul>
@@ -69,13 +73,14 @@ export function LegalBar({ content }: { content: LegalContent }) {
 }
 
 export interface SiteFooterProps {
+  currentPath?: string;
   description: string;
   groups: readonly FooterNavGroupData[];
   socialLinks: readonly SocialLink[];
   legal: LegalContent;
 }
 
-export function SiteFooter({ description, groups, socialLinks, legal }: SiteFooterProps) {
+export function SiteFooter({ description, groups, socialLinks, legal, currentPath }: SiteFooterProps) {
   return (
     <footer className="siteFooter" data-region="footer">
       <div className="siteFooter__grid">
@@ -83,7 +88,7 @@ export function SiteFooter({ description, groups, socialLinks, legal }: SiteFoot
           <SocialLinks links={socialLinks} />
         </FooterBrand>
         {groups.map((group, index) => (
-          <FooterNavGroup {...group} index={index} key={group.label} />
+          <FooterNavGroup {...group} currentPath={currentPath} index={index} key={group.label} />
         ))}
       </div>
       <LegalBar content={legal} />

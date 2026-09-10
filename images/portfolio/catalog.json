@@ -1,0 +1,195 @@
+{
+  "owner": "Jéssica Sobreiro",
+  "brand": "Sobreiro Paisagismo",
+  "version": 1,
+  "imageCount": 58,
+  "categories": [
+    {
+      "id": "paisagismo-residencial",
+      "label": "Paisagismo residencial",
+      "description": "Áreas externas residenciais com piscina, área gourmet, decks, canteiros e iluminação paisagística.",
+      "projects": [
+        {
+          "id": "residencia-piscina-area-gourmet",
+          "title": "Residência com piscina e área gourmet",
+          "summary": "Paisagismo residencial para uma área de lazer integrada à piscina, ao deck e à área gourmet.",
+          "status": "fotografia de projeto",
+          "detailPublication": "published",
+          "cover": "01-paisagismo-residencial/residencia-piscina-area-gourmet/01-piscina-area-gourmet.jpg",
+          "images": [
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/01-piscina-area-gourmet.jpg", "alt": "Piscina integrada à área gourmet em residência contemporânea" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/02-area-de-estar.jpg", "alt": "Área de estar externa com mesa, cadeiras e vegetação" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/03-piscina-com-deck.jpg", "alt": "Piscina residencial junto a deck de madeira e jardim" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/04-detalhe-de-vegetacao.jpg", "alt": "Detalhe da vegetação ornamental junto à área de estar" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/05-piscina-e-jardim.jpg", "alt": "Piscina e jardim linear em área externa residencial" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/06-detalhe-area-gourmet.jpg", "alt": "Detalhe dos bancos da área gourmet externa" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/08-piscina-iluminada.jpg", "alt": "Piscina iluminada ao lado da área gourmet" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/09-jardim-linear.jpg", "alt": "Jardim linear acompanhando o muro da residência" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/10-paisagem-ao-entardecer.jpg", "alt": "Jardim residencial visto ao entardecer" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/11-jardim-com-cobertura.jpg", "alt": "Jardim e área de convivência sob cobertura de vidro" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/12-deck-e-vegetacao.jpg", "alt": "Deck de madeira cercado por vegetação e mobiliário externo" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/13-jardim-com-deck.jpg", "alt": "Jardim residencial com deck e banco externo" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/14-canteiro-e-area-de-estar.jpg", "alt": "Canteiro com folhagens junto à área de estar" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/15-piscina-e-montanhas.jpg", "alt": "Piscina residencial com jardim e vista para as montanhas" },
+            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/16-iluminacao-do-jardim.jpg", "alt": "Iluminação cênica destacando o jardim residencial à noite" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paisagismo-comercial",
+      "label": "Paisagismo comercial",
+      "description": "Projeto externo e ambientação do espaço comercial Coffee Comfort.",
+      "projects": [
+        {
+          "id": "coffee-comfort",
+          "title": "Coffee Comfort",
+          "summary": "Paisagismo e ambientação para uma cafeteria, conectando fachada, acesso, salão e balcão de atendimento.",
+          "status": "fotografia de projeto",
+          "detailPublication": "published",
+          "cover": "02-paisagismo-comercial/coffee-comfort/01-fachada.jpg",
+          "images": [
+            { "file": "02-paisagismo-comercial/coffee-comfort/01-fachada.jpg", "alt": "Fachada do Coffee Comfort cercada por árvores" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/02-fachada-com-calcada.jpg", "alt": "Fachada do Coffee Comfort vista a partir da calçada" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/03-fachada-lateral.jpg", "alt": "Vista lateral da fachada do Coffee Comfort" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/04-interior-do-cafe.jpg", "alt": "Interior do Coffee Comfort com mesas e vegetação suspensa" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/05-salao.jpg", "alt": "Salão do Coffee Comfort com iluminação acolhedora" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/06-balcao.jpg", "alt": "Balcão de atendimento do Coffee Comfort" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/07-detalhe-do-balcao.jpg", "alt": "Detalhe da máquina de café e do balcão do Coffee Comfort" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "paisagismo-de-fachada",
+      "label": "Paisagismo de fachada",
+      "description": "Composições vegetais para valorizar a fachada, o acesso e os planos arquitetônicos de uma residência.",
+      "projects": [
+        {
+          "id": "residencia-contemporanea-fachada",
+          "title": "Residência contemporânea — fachada",
+          "summary": "Paisagismo de fachada com canteiro linear, palmeiras e folhagens tropicais junto à arquitetura contemporânea.",
+          "status": "imagem de projeto/renderização — confirmar origem",
+          "detailPublication": "published",
+          "cover": "03-paisagismo-de-fachada/residencia-contemporanea/01-fachada-principal.png",
+          "images": [
+            { "file": "03-paisagismo-de-fachada/residencia-contemporanea/01-fachada-principal.png", "alt": "Fachada contemporânea com gramado e paisagismo" },
+            { "file": "03-paisagismo-de-fachada/residencia-contemporanea/02-canteiro-linear.png", "alt": "Canteiro linear com folhagens junto à fachada" },
+            { "file": "03-paisagismo-de-fachada/residencia-contemporanea/03-entrada-ajardinada.png", "alt": "Entrada residencial ajardinada com palmeiras" },
+            { "file": "03-paisagismo-de-fachada/residencia-contemporanea/04-detalhe-de-folhagem.png", "alt": "Detalhe de folhagem tropical no paisagismo da fachada" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rooftop",
+      "label": "Rooftop e áreas de lazer elevadas",
+      "description": "Área de lazer em cobertura com piscina, cascata, bar, deck e jardins verticais.",
+      "projects": [
+        {
+          "id": "rooftop-com-piscina",
+          "title": "Rooftop com piscina",
+          "summary": "Rooftop com piscina, área gourmet, floreiras e soluções de vegetação para uma cobertura de convivência.",
+          "status": "fotografia de projeto — confirmar autoria",
+          "detailPublication": "published",
+          "cover": "04-rooftop/rooftop-com-piscina/02-piscina-e-lounge.png",
+          "images": [
+            { "file": "04-rooftop/rooftop-com-piscina/01-bar-e-cobertura.png", "alt": "Bar externo sob cobertura em rooftop" },
+            { "file": "04-rooftop/rooftop-com-piscina/02-piscina-e-lounge.png", "alt": "Piscina e lounge de rooftop com vista para a cidade" },
+            { "file": "04-rooftop/rooftop-com-piscina/03-floreiras-com-vista.jpg", "alt": "Floreiras coloridas em rooftop com vista para a cidade" },
+            { "file": "04-rooftop/rooftop-com-piscina/04-cascata-e-piscina.png", "alt": "Cascata ornamental ao lado da piscina do rooftop" },
+            { "file": "04-rooftop/rooftop-com-piscina/05-jardim-vertical.png", "alt": "Jardim vertical em parede de rooftop" },
+            { "file": "04-rooftop/rooftop-com-piscina/06-area-gourmet.png", "alt": "Área gourmet externa do rooftop" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jardins-verticais",
+      "label": "Jardins verticais",
+      "description": "Paredes verdes e jardins verticais aplicados a fachadas e áreas de lazer residenciais.",
+      "projects": [
+        {
+          "id": "jardim-vertical-residencial",
+          "title": "Jardim vertical residencial",
+          "summary": "Jardim vertical integrado à fachada e à área da piscina, com diferentes enquadramentos e detalhes de composição.",
+          "status": "referência visual — revisar direitos e origem",
+          "detailPublication": "published",
+          "cover": "05-jardins-verticais/jardim-vertical-residencial/01-fachada-com-jardim-vertical.png",
+          "images": [
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/01-fachada-com-jardim-vertical.png", "alt": "Fachada residencial com jardim vertical" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/02-jardim-vertical-com-piscina.jpg", "alt": "Jardim vertical ao lado de piscina residencial" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/03-piscina-e-parede-verde.png", "alt": "Piscina com parede verde e vista para a paisagem" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/04-area-da-piscina.png", "alt": "Área de piscina com jardim vertical residencial" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/05-borda-infinita.jpg", "alt": "Piscina de borda infinita diante de jardim vertical" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/06-cafe-da-manha-na-piscina.jpg", "alt": "Café da manhã servido junto à piscina e ao jardim vertical" },
+            { "file": "05-jardins-verticais/jardim-vertical-residencial/07-detalhe-do-jardim-vertical.jpg", "alt": "Detalhe das folhagens coloridas de um jardim vertical" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "design-de-interiores",
+      "label": "Design de interiores",
+      "description": "Ambientes internos com marcenaria, iluminação, revestimentos, mobiliário e integração de vegetação.",
+      "projects": [
+        {
+          "id": "cozinha-contemporanea",
+          "title": "Cozinha contemporânea",
+          "summary": "Cozinha integrada com marcenaria escura, revestimento texturizado, área de jantar e jardim interno.",
+          "status": "imagem de projeto/renderização — confirmar origem",
+          "detailPublication": "published",
+          "cover": "06-design-de-interiores/cozinha-contemporanea/01-cozinha-integrada.png",
+          "images": [
+            { "file": "06-design-de-interiores/cozinha-contemporanea/01-cozinha-integrada.png", "alt": "Cozinha contemporânea integrada à área de jantar" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/02-cozinha-e-sala-de-jantar.png", "alt": "Cozinha e sala de jantar com marcenaria escura" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/03-detalhe-da-bancada.png", "alt": "Detalhe da bancada e do revestimento da cozinha" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/04-sala-de-jantar.png", "alt": "Sala de jantar com mesa redonda e iluminação pendente" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/05-jardim-interno.png", "alt": "Jardim interno iluminado junto à cozinha" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/06-armarios-e-revestimento.png", "alt": "Armários, coifa e revestimento texturizado da cozinha" },
+            { "file": "06-design-de-interiores/cozinha-contemporanea/07-vista-geral.png", "alt": "Vista geral da cozinha contemporânea integrada" }
+          ]
+        },
+        {
+          "id": "hall-de-entrada",
+          "title": "Hall de entrada e escada",
+          "summary": "Hall de entrada com painel ripado, iluminação indireta, estar e escada envidraçada.",
+          "status": "imagem de projeto/renderização — confirmar origem",
+          "detailPublication": "published",
+          "cover": "06-design-de-interiores/hall-de-entrada/02-hall-e-escada.JPG",
+          "images": [
+            { "file": "06-design-de-interiores/hall-de-entrada/01-painel-e-estar.JPG", "alt": "Hall de entrada com painel decorativo e banco estofado" },
+            { "file": "06-design-de-interiores/hall-de-entrada/02-hall-e-escada.JPG", "alt": "Hall de entrada integrado à escada e ao jardim interno" },
+            { "file": "06-design-de-interiores/hall-de-entrada/03-painel-com-iluminacao.JPG", "alt": "Painel decorativo com iluminação indireta no hall" },
+            { "file": "06-design-de-interiores/hall-de-entrada/04-composicao-do-hall.JPG", "alt": "Composição do hall com sofá, poltronas e painel iluminado" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conceitos-e-renders",
+      "label": "Conceitos e renders",
+      "description": "Estudos visuais e imagens conceituais de arquitetura e paisagismo, separados dos projetos fotografados.",
+      "projects": [
+        {
+          "id": "casa-suspensa-na-mata",
+          "title": "Casa suspensa na mata",
+          "summary": "Estudo conceitual de uma residência compacta integrada à mata, com terraço, vegetação tropical e diferentes atmosferas de luz.",
+          "status": "conceito/renderização — não apresentar como obra executada sem confirmação",
+          "detailPublication": "published",
+          "cover": "07-conceitos-e-renders/casa-suspensa-na-mata/02-vista-ampla.png",
+          "images": [
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/01-caminho-de-acesso.png", "alt": "Caminho de acesso molhado em direção a uma casa integrada à mata" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/02-vista-ampla.png", "alt": "Vista ampla de uma casa suspensa entre a vegetação tropical" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/03-fachada-com-terraco.png", "alt": "Fachada envidraçada com terraço em uma casa na mata" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/04-terraco-com-chuva.png", "alt": "Terraço coberto de uma casa na mata durante a chuva" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/05-terraco.png", "alt": "Terraço externo com mobiliário e vegetação tropical" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/06-vista-noturna.png", "alt": "Casa iluminada à noite em meio à mata" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/07-casa-ao-entardecer.png", "alt": "Casa suspensa vista ao entardecer" },
+            { "file": "07-conceitos-e-renders/casa-suspensa-na-mata/08-vista-na-mata.png", "alt": "Vista distante de uma casa suspensa em paisagem tropical" }
+          ]
+        }
+      ]
+    }
+  ]
+}

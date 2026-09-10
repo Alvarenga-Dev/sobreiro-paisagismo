@@ -1,7 +1,7 @@
 import type { LineIconName } from "../_components/LineIcon";
-import type { ProjectCardData } from "../_components/ProjectCard";
 import type { TextFragment } from "../_components/Typography";
 import { siteContent } from "../_content/siteContent";
+import { homeFeaturedProjects } from "../_content/portfolioCatalog";
 
 export interface BenefitContent {
   id: string;
@@ -114,53 +114,7 @@ export const homeContent = {
     { text: "Ambientes que " },
     { text: "inspiram", accent: true },
   ] satisfies readonly TextFragment[],
-  projects: [
-    {
-      id: "jardim-residencial",
-      href: "#contato",
-      title: "Jardim Residencial",
-      category: "Residencial",
-      summary: "Integração entre natureza e arquitetura para criar um ambiente acolhedor.",
-      media: {
-        src: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=86",
-        alt: "Jardim residencial exuberante ao redor de uma passagem",
-        width: 1200,
-        height: 800,
-        sizes: "(max-width: 699px) 82vw, (max-width: 1099px) 43vw, 30vw",
-        position: "center",
-      },
-    },
-    {
-      id: "espaco-gourmet",
-      href: "#contato",
-      title: "Espaço Gourmet Natural",
-      category: "Área gourmet",
-      summary: "Convívio, sombra e beleza para receber bem em todas as estações.",
-      media: {
-        src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=86",
-        alt: "Área de convivência contemporânea aberta para o jardim",
-        width: 1200,
-        height: 800,
-        sizes: "(max-width: 699px) 82vw, (max-width: 1099px) 43vw, 30vw",
-        position: "center",
-      },
-    },
-    {
-      id: "oasis-particular",
-      href: "#contato",
-      title: "Oásis Particular",
-      category: "Piscinas",
-      summary: "Paisagismo que valoriza a água e cria uma atmosfera de tranquilidade.",
-      media: {
-        src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=86",
-        alt: "Casa contemporânea com piscina integrada ao paisagismo",
-        width: 1200,
-        height: 800,
-        sizes: "(max-width: 699px) 82vw, (max-width: 1099px) 43vw, 30vw",
-        position: "center",
-      },
-    },
-  ] satisfies readonly ProjectCardData[],
+  projects: homeFeaturedProjects,
   about: {
     eyebrow: "Sobre a Sobreiro",
     title: [

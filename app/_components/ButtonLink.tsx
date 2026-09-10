@@ -90,7 +90,6 @@ export function SectionAction({ href, label, className }: PresetButtonProps) {
       className={className}
       variant="outlineInverse"
       trailingIcon={<LineIcon name="arrowRight" size="sm" />}
-      ariaLabel={`${label} — navegar para a seção`}
     >
       {label}
     </ButtonLink>

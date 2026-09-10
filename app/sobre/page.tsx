@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "../_components/SiteFooter";
 import { SiteFrame } from "../_components/SiteFrame";
-import { SiteHeader } from "../_components/SiteHeader";
 import { siteContent } from "../_content/siteContent";
 import { AboutHero } from "./_components/AboutHero";
 import { ContactMethodsSection } from "./_components/ContactMethodsSection";
@@ -19,7 +18,6 @@ export default function AboutPage() {
   return (
     <SiteFrame
       variant="fullBleed"
-      header={<SiteHeader presentation="floating" showContact={false} />}
       footer={<SiteFooter {...siteContent.internalFooter} />}
     >
       <AboutHero content={aboutContent.hero} />

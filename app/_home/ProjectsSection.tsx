@@ -18,7 +18,7 @@ export function ProjectsSection({ heading, projects }: ProjectsSectionProps) {
           fragments={heading}
           context="onDark"
         />
-        <SectionAction href="#contato" label="Ver todos" />
+        <SectionAction href="/projetos" label="Ver todos" />
       </div>
       <ProjectCarousel projects={projects} />
     </section>

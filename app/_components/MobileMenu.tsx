@@ -1,17 +1,23 @@
 import { BrandLockup, BotanicalDecoration } from "./Brand";
 import { ButtonLink } from "./ButtonLink";
 import { LineIcon, type LineIconName } from "./LineIcon";
-import type { ConfiguredContact, MobileMenuContent, MobileNavigationItem } from "../_content/siteContent";
+import type { ConfiguredContact, MobileMenuContent, NavigationItem } from "../_content/siteContent";
 
 export interface MobileMenuItemProps {
-  item: MobileNavigationItem;
+  item: NavigationItem;
   active?: boolean;
+  onNavigate: () => void;
 }
 
-export function MobileMenuItem({ item, active = false }: MobileMenuItemProps) {
+export function MobileMenuItem({ item, active = false, onNavigate }: MobileMenuItemProps) {
   return (
     <li className="mobileMenu__item">
-      <a className="mobileMenu__link" href={item.href} aria-current={active ? "page" : undefined}>
+      <a
+        className="mobileMenu__link"
+        href={item.href}
+        aria-current={active ? "page" : undefined}
+        onClick={onNavigate}
+      >
         <LineIcon name={item.icon} size="md" aria-hidden="true" />
         <span>{item.label}</span>
         <LineIcon name="chevronRight" size="sm" aria-hidden="true" />
@@ -36,8 +42,10 @@ function ContactAction({ contact, children, icon, variant }: {
 
 export interface MobileMenuProps {
   content: MobileMenuContent;
-  activeId: MobileNavigationItem["id"];
+  navigation: readonly NavigationItem[];
+  activeId: NavigationItem["id"] | undefined;
   onClose: () => void;
+  onNavigate: () => void;
   onCancel: (event: React.SyntheticEvent<HTMLDialogElement>) => void;
   onBackdropClick: (event: React.MouseEvent<HTMLDialogElement>) => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
@@ -46,7 +54,7 @@ export interface MobileMenuProps {
   onKeyDown: (event: React.KeyboardEvent<HTMLDialogElement>) => void;
 }
 
-export function MobileMenu({ content, activeId, onClose, onCancel, onBackdropClick, dialogRef, closeButtonRef, phase, onKeyDown }: MobileMenuProps) {
+export function MobileMenu({ content, navigation, activeId, onClose, onNavigate, onCancel, onBackdropClick, dialogRef, closeButtonRef, phase, onKeyDown }: MobileMenuProps) {
   return (
     <dialog
       ref={dialogRef}
@@ -66,7 +74,14 @@ export function MobileMenu({ content, activeId, onClose, onCancel, onBackdropCli
         </div>
         <nav aria-label="Navegação principal">
           <ul className="mobileMenu__list">
-            {content.navigation.map((item) => <MobileMenuItem key={item.id} item={item} active={item.id === activeId} />)}
+            {navigation.map((item) => (
+              <MobileMenuItem
+                key={item.id}
+                item={item}
+                active={item.id === activeId}
+                onNavigate={onNavigate}
+              />
+            ))}
           </ul>
         </nav>
         <div className="mobileMenu__contacts">
