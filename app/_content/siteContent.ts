@@ -33,7 +33,7 @@ const footerDescription =
 const footerSocialLinks = [
   { label: "Instagram da Sobreiro", href: "https://www.instagram.com/sobreiropaisagismo/", icon: "instagram" },
   { label: "YouTube da Sobreiro", href: "https://www.youtube.com/@SobreiroPaisagismo", icon: "youtube" },
-  { label: "Enviar mensagem para a Sobreiro", href: contactHref, icon: "message" },
+  { label: "WhatsApp da Sobreiro", href: "https://wa.me/message/CRFBFPI3Y5TJC1", icon: "whatsapp" },
 ] satisfies readonly SocialLink[];
 const footerLegal = {
   copyright: "© 2026 Sobreiro Paisagismo. Todos os direitos reservados.",

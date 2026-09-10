@@ -24,6 +24,9 @@ O arquivo [`catalog.json`](./catalog.json) é a fonte editorial única do portf�
 
 O arquivo [`home-catalog.json`](./home-catalog.json) contém somente três referências ordenadas por `projectId`: residência com piscina e área gourmet, Coffee Comfort e jardim vertical residencial. Títulos, resumos, capas e galerias continuam vindo do catálogo completo.
 
+Os oito projetos do catálogo são públicos e de autoria de Jéssica Sobreiro. Os
+ativos atuais foram aprovados para exibição no portfólio da Sobreiro Paisagismo.
+
 ## Imagens principais dos cards
 
 Em cada projeto, o campo `cover` aponta para a imagem principal do card. As demais imagens do array `images` podem compor a página de detalhes e a galeria do projeto.
@@ -51,12 +54,12 @@ Em cada projeto, o campo `cover` aponta para a imagem principal do card. As dema
 - Os nomes dos arquivos descrevem o enquadramento ou o ambiente principal, sem alterar o conteúdo visual.
 - `residencia-piscina-area-gourmet` é um único projeto residencial fotografado em diferentes horários e ângulos.
 - `coffee-comfort` é o projeto comercial identificado nas imagens pela marca do café.
-- `casa-suspensa-na-mata` foi mantida separada como conceito/renderização; validar se deve ser apresentada como projeto executado.
+- `casa-suspensa-na-mata` foi mantida separada como conceito/renderização e não é apresentada como obra executada.
 
-## Revisão antes da publicação
+## Manutenção editorial
 
 - A referência ausente `01-paisagismo-residencial/residencia-piscina-area-gourmet/07-composicao-noturna.jpg` foi removida do catálogo porque não existe entre os ativos fornecidos; ela permanece como pendência para reposição editorial, sem duplicar outro arquivo.
-- As imagens com `watermarked` no nome original foram renomeadas, mas devem passar por uma revisão de direitos/creditação antes de entrarem no site.
-- A imagem `02-jardim-vertical-com-piscina.jpg` tem origem indicada pelo nome original `Gemini_Generated_Image`; tratá-la como imagem gerada/conceitual até confirmação.
-- Algumas imagens de interiores parecem conter pequenas marcas/assinaturas no rodapé. Conferir a versão final e substituir por arquivos limpos quando possível.
+- A autoria dos projetos e a publicação dos ativos atuais foram confirmadas por Jéssica Sobreiro.
+- A imagem `02-jardim-vertical-com-piscina.jpg` permanece classificada como renderização do projeto.
+- Marcas da Sobreiro presentes nas imagens fazem parte dos ativos aprovados; substituições futuras devem preservar a autoria e a autorização de uso.
 - Os textos alternativos sugeridos estão no `catalog.json`; revisar com a Jéssica antes de publicar para refletir o projeto e as espécies vegetais corretas.

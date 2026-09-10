@@ -125,7 +125,7 @@ independentes porque não têm consumidor ou API própria. Não há nó órfão 
 | `CardSurface` | Superfície e geometria sem decidir marcação. `children`, `tone`. | `light`, `dark`, `media`. | borda e fundo por contexto. | Não adiciona papel ARIA; consumidor escolhe semântica. |
 | `PaginationDots` | Comunica e, opcionalmente, altera página. `count`, `activeIndex`, `label`, `onSelect`. | estático ou interativo. | idle, active, hover, focus. | Interativo usa botões de 44 px, `aria-current=page` e rótulos com posição; estático fornece texto oculto. |
 | `BrandEmblem` | Emblema com caixa estável. `label`, `decorative`, `artwork`, `flowerTone`. | `fallback` vetorial ou flor oficial `olive`/`light`; informativo ou decorativo. | fallback via `currentColor`; flor oficial em SVG oliva ou neutro claro. | Informativo usa `role=img`; decoração usa `aria-hidden`; a arte preserva proporção sem alterar a caixa. |
-| `BrandLockup` | Link da marca. `href`, `compact`, `emblem`. | padrão, compacto; fallback ou flor oficial. | foco sobre escuro; Navbar e footer usam a flor oliva. | O texto visível nomeia a marca e o link tem nome completo; outros consumidores preservam o fallback até migração explícita. |
+| `BrandLockup` | Link da marca. `href`, `compact`, `emblem`. | padrão, compacto; fallback ou flor oficial. | foco sobre escuro; Navbar, menu mobile e footer usam a flor oliva. | O texto visível nomeia a marca e o link tem nome completo; outros consumidores preservam o fallback até migração explícita. |
 | `BotanicalDecoration` | Ornamento linear. `position`. | esquerda, direita. | baixa opacidade e sem interação. | Sempre `aria-hidden`, `focusable=false`, `pointer-events:none`. |
 
 ### Exemplo de primitiva
@@ -176,7 +176,7 @@ Use `ButtonLink` para navegação. Ações que só alteram estado de interface u
 | `BenefitCard` | `benefit` tipado. | Ícone, título e descrição. | Cada item é `li`; ícone decorativo. | Superfície com altura mínima interna; texto pode crescer. |
 | `BenefitsPanel` | heading e lista de benefícios. | Coleção de 5 itens no conteúdo atual. | Seção nomeada, lista nomeada. | Scroll horizontal no estreito; 5 colunas a partir de 896 px. |
 | `ProjectsSection` | heading e projetos. | Cabeçalho + ação + carrossel. | Seção nomeada; título e ação permanecem fora do track. | Cabeçalho quebra abaixo de 432 px. |
-| `ProjectCarousel` | lista de projetos. | anterior/próximo, dots, início/fim, estado ativo, sem autoplay. | Região rotulada como carrossel, Tab nos controles/links, setas esquerda/direita no track, `aria-live` para página ativa. | Base sempre rolável com scroll snap; 1 card estreito, ~2 no tablet e 3 no desktop. |
+| `ProjectCarousel` | lista de projetos. | No mobile/tablet, anterior/próximo, dots, swipe sincronizado, início/fim e estado ativo, sem autoplay; no desktop, os controles ficam ocultos. | Região rotulada como carrossel, Tab nos controles/links, setas esquerda/direita no track, `aria-live` para página ativa. | Scroll snap com 1 card estreito e ~2 no tablet; a partir de 896 px, 3 cards estáticos sem navegação visível. |
 | `MediaFrame` | mídia de Sobre. | Área estável e recorte configurável. | Imagem informativa com alt. | Proporção 4:3 e `sizes` por faixa. |
 | `QuoteCard` | citação, autoria e papel. | Sobreposição visual sobre a mídia. | `figure`, `blockquote` e `figcaption` mantêm relação semântica. | Fica abaixo da mídia no estreito; sobreposição cresce com espaço. |
 | `MediaQuoteComposite` | mídia + citação. | Coordena sobreposição sem reordenar DOM. | Leitura mantém mídia antes de citação/autoria. | Não inverte conteúdo; remove pressão de sobreposição no estreito. |
@@ -271,22 +271,17 @@ enquanto superfícies e mídias podem alcançar as bordas do viewport.
 
 | Item provisório | Estado atual | Ponto de substituição sem alterar API |
 | --- | --- | --- |
-| Logo, emblema e ornamentos | Navbar e footer usam a flor oficial oliva; `ContactBanner` usa a versão neutra clara como marca-d'água | Migrar os consumidores restantes de forma explícita, mantendo caixa, proporção e rótulos. |
+| Logo, emblema e ornamentos | Navbar, menu mobile e footer usam a flor oficial oliva; `ContactBanner` usa a versão neutra clara como marca-d'água | Migrar os consumidores restantes de forma explícita, mantendo caixa, proporção e rótulos. |
 | Fontes | Georgia + pilha sans do sistema | Alterar `--font-display` e `--font-body` ou integrar fonte aprovada no layout. |
-| Hero e projetos | Fotografias provisórias do Unsplash | Trocar `src`, `alt`, `position` e dimensões em `homeContent.ts`. |
+| Hero e projetos | Fotografias locais da Sobreiro Paisagismo | Trocar `src`, `alt`, `position` e dimensões nos módulos de conteúdo, mantendo os ativos em `public/images/portfolio`. |
 | Destino de contato | `mailto:contato@sobreiro.com.br` | Alterar `siteContent.contact`; consumidores globais recebem o destino por props. |
 | WhatsApp da Navbar | Indisponível | Configurar `siteContent.mobileMenu.contacts.whatsapp` com URL HTTPS oficial; a área aparece sem alterar a composição dos demais destinos. |
 | Projetos | 3 itens demonstrativos e destinos `#contato` | Trocar a lista local e os destinos, mantendo `ProjectCardData`. |
 | Instagram | Destino genérico | Substituir em `homeContent.footer.socialLinks`. |
 | Texto e autoria | Conteúdo editorial provisório | Substituir objetos locais sem mudar componentes. |
 
-Fotografias provisórias:
-
-- Hero: `photo-1416879595882-3373a0480b5b`.
-- Projeto residencial: `photo-1585320806297-9794b3e4eeae`.
-- Área de convivência: `photo-1600566753086-00f18fb6b3ea`.
-- Piscina: `photo-1600607687920-4e2a09cf159d`.
-- Sobre: `photo-1558904541-efa843a96f01`.
+As fotografias e renderizações atuais são ativos locais de projetos autorais de
+Jéssica Sobreiro, aprovados para exibição pública no site.
 
 ## 11. Validação
 

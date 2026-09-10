@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { renderWithUser } from "../test-utils";
 import { homeContent } from "./homeContent";
 import { ProjectCarousel } from "./ProjectCarousel";
@@ -47,5 +47,27 @@ describe("ProjectCarousel", () => {
       "aria-current",
       "page",
     );
+  });
+
+  it("sincroniza a paginação quando a pessoa desliza a galeria", () => {
+    renderWithUser(<ProjectCarousel projects={homeContent.projects} />);
+    const track = screen.getByRole("list");
+    const slides = Array.from(track.children) as HTMLElement[];
+
+    Object.defineProperty(track, "scrollLeft", { configurable: true, value: 304 });
+    slides.forEach((slide, index) => {
+      Object.defineProperty(slide, "offsetLeft", {
+        configurable: true,
+        value: index * 304,
+      });
+    });
+
+    fireEvent.scroll(track);
+
+    expect(screen.getByRole("button", { name: "Ir para o projeto 2 de 3" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByText(/projeto 2 de 3: coffee comfort/i)).toBeInTheDocument();
   });
 });

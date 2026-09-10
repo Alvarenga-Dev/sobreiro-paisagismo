@@ -21,9 +21,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" data-scroll-behavior="smooth">
-      <head>
-        <link rel="preconnect" href="https://images.unsplash.com" />
-      </head>
       <body>
         <RouteTransition header={<SiteHeader />}>{children}</RouteTransition>
       </body>

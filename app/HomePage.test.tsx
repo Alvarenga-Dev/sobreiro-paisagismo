@@ -40,7 +40,10 @@ describe("HomePage", () => {
       expect(card.querySelector("img")).not.toHaveAttribute("src", expect.stringContaining("unsplash"));
     }
     expect(screen.getByRole("list", { name: "Benefícios do paisagismo" }).children).toHaveLength(5);
-    expect(screen.getByAltText(/profissional de paisagismo cuidando/i)).toBeVisible();
+    expect(screen.getByAltText(/Jéssica Sobreiro, paisagista e fundadora/i)).toHaveAttribute(
+      "src",
+      expect.stringContaining("%2Fimages%2Fportfolio%2Fprofile-jess.webp"),
+    );
     expect(screen.getByAltText(/piscina integrada à área gourmet/i)).toBeVisible();
     const quote = screen.getByText(/cada jardim começa pela escuta/i).closest("blockquote");
     expect(quote).toBeInTheDocument();
@@ -86,6 +89,10 @@ describe("HomePage", () => {
     expect(screen.getByRole("link", { name: "Ver todos" })).toHaveAttribute("href", "/projetos");
     expect(screen.getByRole("link", { name: "Ver projetos" })).toHaveAttribute("href", "#projetos");
     expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "/projetos");
+    expect(screen.getByRole("link", { name: "WhatsApp da Sobreiro" })).toHaveAttribute(
+      "href",
+      "https://wa.me/message/CRFBFPI3Y5TJC1",
+    );
     expect(screen.getAllByRole("link", { name: "contato@sobreiro.com.br" })[0]).toHaveAttribute(
       "href",
       "mailto:contato@sobreiro.com.br",

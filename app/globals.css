@@ -1659,6 +1659,14 @@ ol {
   opacity: 0.35;
 }
 
+.projectCarousel__arrow--previous .lineIcon {
+  translate: -0.14rem 0;
+}
+
+.projectCarousel__arrow--next .lineIcon {
+  translate: 0.14rem 0;
+}
+
 @media (hover: hover) {
   .projectCarousel__arrow:not(:disabled):hover {
     background: rgba(249, 247, 244, 0.1);
@@ -2018,6 +2026,12 @@ ol {
     grid-auto-columns: calc((100% - (2 * var(--space-md))) / 3);
     margin-inline: 0;
     padding-inline: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+
+  .projectCarousel__navigation {
+    display: none;
   }
 
   .aboutHero::after {

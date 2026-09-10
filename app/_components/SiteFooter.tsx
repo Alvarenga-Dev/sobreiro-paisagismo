@@ -13,7 +13,7 @@ export interface FooterNavGroupData {
 }
 
 export interface SocialLink extends FooterLink {
-  icon: Extract<LineIconName, "instagram" | "youtube" | "message">;
+  icon: Extract<LineIconName, "instagram" | "youtube" | "whatsapp">;
 }
 
 export interface LegalContent {

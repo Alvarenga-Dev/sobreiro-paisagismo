@@ -44,6 +44,10 @@ describe("MobileNavigation", () => {
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByRole("button", { name: "Fechar menu" })).toHaveFocus();
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeVisible();
+    expect(dialog.querySelector(".mobileMenu__brand .brandEmblem--flower img")).toHaveAttribute(
+      "src",
+      "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
+    );
     expect(screen.getAllByRole("link").filter((link) => ["Início", "Sobre", "Projetos", "Por que um projeto?", "Contato"].includes(link.textContent ?? ""))).toHaveLength(5);
     expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("aria-current", "page");
     expect(screen.queryByRole("link", { name: "Fale no WhatsApp" })).not.toBeInTheDocument();
