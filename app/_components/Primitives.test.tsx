@@ -59,4 +59,16 @@ describe("primitivas do design system", () => {
 
     expect(screen.getByText("Projeto 2 de 3")).toBeInTheDocument();
   });
+
+  it("mantém ícones decorativos inertes e oferece nome ao grid informativo", () => {
+    const { container, rerender } = render(<LineIcon name="grid" />);
+    const decorative = container.querySelector("svg");
+    expect(decorative).toHaveAttribute("aria-hidden", "true");
+    expect(decorative).toHaveAttribute("stroke", "currentColor");
+    expect(decorative).toHaveAttribute("viewBox", "0 0 24 24");
+    expect(decorative).toHaveAttribute("focusable", "false");
+
+    rerender(<LineIcon name="grid" decorative={false} label="Grade de projetos" />);
+    expect(screen.getByRole("img", { name: "Grade de projetos" })).toBeVisible();
+  });
 });

@@ -38,7 +38,7 @@ describe("ProjectCarousel", () => {
       "aria-current",
       "page",
     );
-    expect(screen.getByText(/projeto 2 de 3: espaço gourmet natural/i)).toBeInTheDocument();
+    expect(screen.getByText(/projeto 2 de 3: coffee comfort/i)).toBeInTheDocument();
 
     carousel.focus();
     await user.keyboard("{ArrowRight}");

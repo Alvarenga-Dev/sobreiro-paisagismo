@@ -7,7 +7,6 @@ describe("HomePage", () => {
   it("renderiza a narrativa principal na ordem semântica prevista", () => {
     render(<HomePage />);
 
-    const header = screen.getByRole("banner");
     const main = screen.getByRole("main");
     const footer = screen.getByRole("contentinfo");
     const sectionNames = [
@@ -18,7 +17,6 @@ describe("HomePage", () => {
       /vamos transformar seu espaço juntos/i,
     ];
 
-    expect(header.compareDocumentPosition(main) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(main.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(main.children).toHaveLength(5);
     sectionNames.forEach((name, index) => {
@@ -30,10 +28,20 @@ describe("HomePage", () => {
   it("renderiza cinco benefícios, três projetos e mídias com alternativas", () => {
     render(<HomePage />);
 
-    expect(screen.getAllByRole("article")).toHaveLength(3);
+    const projectCards = screen.getAllByRole("article");
+    expect(projectCards).toHaveLength(3);
+    expect(projectCards.map((card) => card.getAttribute("data-project-id"))).toEqual([
+      "residencia-piscina-area-gourmet",
+      "coffee-comfort",
+      "jardim-vertical-residencial",
+    ]);
+    for (const card of projectCards) {
+      expect(card.querySelector("img")).toHaveAttribute("src", expect.stringContaining("%2Fimages%2Fportfolio%2F"));
+      expect(card.querySelector("img")).not.toHaveAttribute("src", expect.stringContaining("unsplash"));
+    }
     expect(screen.getByRole("list", { name: "Benefícios do paisagismo" }).children).toHaveLength(5);
     expect(screen.getByAltText(/profissional de paisagismo cuidando/i)).toBeVisible();
-    expect(screen.getByAltText(/casa contemporânea com piscina/i)).toBeVisible();
+    expect(screen.getByAltText(/piscina integrada à área gourmet/i)).toBeVisible();
     const quote = screen.getByText(/cada jardim começa pela escuta/i).closest("blockquote");
     expect(quote).toBeInTheDocument();
     expect(screen.getByText("Sobreiro Paisagismo", { selector: "strong" })).toBeVisible();
@@ -48,21 +56,23 @@ describe("HomePage", () => {
     expect(screen.getByText(/projetos de paisagismo que conectam natureza/i)).toBeVisible();
   });
 
-  it("preserva cabeçalho, rodapé e destinos globais durante a extração de conteúdo", () => {
+  it("deixa o cabeçalho global fora da rota e preserva rodapé e destinos", () => {
     render(<HomePage />);
 
     expect(screen.getByRole("main").closest("[data-region='frame']")).toHaveAttribute(
       "data-variant",
       "fullBleed",
     );
-    expect(screen.getByRole("banner")).toHaveAttribute("data-presentation", "floating");
-    expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
+    expect(screen.queryByRole("banner")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Abrir menu" })).not.toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toHaveTextContent(
       "© 2026 Sobreiro Paisagismo. Todos os direitos reservados.",
     );
     expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("href", "#inicio");
     expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute("href", "/sobre");
-    expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "#projetos");
+    expect(screen.getByRole("link", { name: "Ver todos" })).toHaveAttribute("href", "/projetos");
+    expect(screen.getByRole("link", { name: "Ver projetos" })).toHaveAttribute("href", "#projetos");
+    expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "/projetos");
     expect(screen.getAllByRole("link", { name: "contato@sobreiro.com.br" })[0]).toHaveAttribute(
       "href",
       "mailto:contato@sobreiro.com.br",
