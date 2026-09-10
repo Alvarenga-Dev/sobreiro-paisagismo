@@ -50,7 +50,12 @@ export function SocialLinks({ links }: { links: readonly SocialLink[] }) {
       <ul>
         {links.map((link) => (
           <li key={link.href}>
-            <a href={link.href} aria-label={link.label}>
+            <a
+              href={link.href}
+              aria-label={link.label}
+              target="_blank"
+              rel="noreferrer"
+            >
               <LineIcon name={link.icon} />
             </a>
           </li>

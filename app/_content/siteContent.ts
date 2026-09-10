@@ -56,7 +56,7 @@ const homeFooterGroups = [
     label: "Fale conosco",
     links: [
       { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
-      { label: "Rio de Janeiro, RJ", icon: "pin", href: "#contato" },
+      { label: "Saudades, SC", icon: "pin", href: "#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];
@@ -76,7 +76,7 @@ const internalFooterGroups = [
     label: "Fale conosco",
     links: [
       { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
-      { label: "Rio de Janeiro, RJ", icon: "pin", href: "/#contato" },
+      { label: "Saudades, SC", icon: "pin", href: "/#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];

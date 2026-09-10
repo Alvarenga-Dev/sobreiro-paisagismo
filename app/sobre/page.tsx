@@ -9,7 +9,7 @@ import { TeamProfileSection } from "./_components/TeamProfileSection";
 import { aboutContent } from "./aboutContent";
 
 export const metadata: Metadata = {
-  title: "Sobre a Sobreiro Paisagismo | Paisagismo autoral",
+  title: "Sobre | Sobreiro Paisagismo",
   description:
     "Conheça a essência, os valores e a abordagem da Sobreiro Paisagismo para criar espaços conectados à natureza.",
 };
