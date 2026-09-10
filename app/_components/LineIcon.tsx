@@ -1,27 +1,39 @@
 import type { SVGProps } from "react";
 
-export type LineIconName =
-  | "arrowLeft"
-  | "arrowRight"
-  | "award"
-  | "calendar"
-  | "chevronRight"
-  | "close"
-  | "droplet"
-  | "home"
-  | "instagram"
-  | "graduationCap"
-  | "leaf"
-  | "lotus"
-  | "mail"
-  | "message"
-  | "pin"
-  | "phone"
-  | "shield"
-  | "sprout"
-  | "sun"
-  | "user"
-  | "users";
+export const lineIconNames = [
+  "utensils",
+  "waves",
+  "plant",
+  "building",
+  "arrowLeft",
+  "arrowRight",
+  "award",
+  "calendar",
+  "chevronRight",
+  "close",
+  "droplet",
+  "grid",
+  "home",
+  "instagram",
+  "graduationCap",
+  "leaf",
+  "lotus",
+  "mail",
+  "message",
+  "pin",
+  "phone",
+  "shield",
+  "sprout",
+  "sun",
+  "user",
+  "users",
+] as const;
+
+export type LineIconName = (typeof lineIconNames)[number];
+
+export function isLineIconName(value: string): value is LineIconName {
+  return lineIconNames.some((name) => name === value);
+}
 
 export interface LineIconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
   name: LineIconName;
@@ -31,6 +43,10 @@ export interface LineIconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
 }
 
 const iconPaths: Record<LineIconName, React.ReactNode> = {
+  utensils: <path d="M5 3v7m3-7v7M3 3v5a3 3 0 0 0 6 0V3M6 11v10M18 3c-3 3-4 7 0 9V3Zm0 9v9" />,
+  waves: <path d="M3 6q3-4 6 0t6 0 6 0M3 12q3-4 6 0t6 0 6 0M3 18q3-4 6 0t6 0 6 0" />,
+  plant: <path d="M7 15h10l-2 6H9l-2-6Zm5 0V8m0 3C6 11 4 8 5 4c5 0 7 3 7 7Zm0-2c0-4 3-6 7-6 0 4-2 6-7 6Z" />,
+  building: <path d="M5 21V3h14v18M3 21h18M9 7h1m4 0h1M9 11h1m4 0h1M10 21v-6h4v6" />,
   arrowLeft: <path d="m15 18-6-6 6-6M9 12h11" />,
   arrowRight: <path d="m9 18 6-6-6-6m6 6H4" />,
   award: (
@@ -48,6 +64,14 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
   chevronRight: <path d="m9 5 7 7-7 7" />,
   close: <path d="m6 6 12 12M18 6 6 18" />,
   droplet: <path d="M12 3.5S6.5 9.4 6.5 14a5.5 5.5 0 0 0 11 0C17.5 9.4 12 3.5 12 3.5Z" />,
+  grid: (
+    <>
+      <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="1" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="1" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="1" />
+    </>
+  ),
   home: <path d="m3.5 10.5 8.5-7 8.5 7M5.5 9v11h13V9M9.5 20v-6h5v6" />,
   instagram: (
     <>

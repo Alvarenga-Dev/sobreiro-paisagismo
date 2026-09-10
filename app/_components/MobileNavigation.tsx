@@ -1,31 +1,49 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { siteContent } from "../_content/siteContent";
 import { MenuTrigger } from "./MenuTrigger";
 import { MobileMenu } from "./MobileMenu";
-import type { MobileMenuContent } from "../_content/siteContent";
+import { DESKTOP_NAVIGATION_MEDIA_QUERY, resolveActiveNavigationId } from "./navigation";
+import type { MobileMenuContent, NavigationItem } from "../_content/siteContent";
 
 type MenuPhase = "closed" | "opening" | "open" | "closing";
 type CloseReason = "control" | "escape" | "backdrop" | "navigation";
 
 export interface MobileNavigationProps {
   content?: MobileMenuContent;
+  navigation?: readonly NavigationItem[];
 }
 
-export function MobileNavigation({ content = siteContent.mobileMenu }: MobileNavigationProps) {
-  const pathname = usePathname();
+function subscribeToHashChange(onStoreChange: () => void) {
+  window.addEventListener("hashchange", onStoreChange);
+  return () => window.removeEventListener("hashchange", onStoreChange);
+}
+
+function currentHash() {
+  return window.location.hash;
+}
+
+export function MobileNavigation({
+  content = siteContent.mobileMenu,
+  navigation = siteContent.navigation,
+}: MobileNavigationProps) {
+  const pathname = usePathname() ?? "/";
+  const hash = useSyncExternalStore(subscribeToHashChange, currentHash, () => "");
   const [phase, setPhase] = useState<MenuPhase>("closed");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const overflowRef = useRef<string | null>(null);
   const closeTimerRef = useRef<number | null>(null);
+  const openTimerRef = useRef<number | null>(null);
 
   const cleanup = useCallback((restoreFocus: boolean) => {
     if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    if (openTimerRef.current !== null) window.clearTimeout(openTimerRef.current);
     closeTimerRef.current = null;
+    openTimerRef.current = null;
     if (dialogRef.current?.open) dialogRef.current.close();
     if (overflowRef.current !== null) {
       document.documentElement.style.overflow = overflowRef.current;
@@ -40,10 +58,6 @@ export function MobileNavigation({ content = siteContent.mobileMenu }: MobileNav
   const close = useCallback((reason: CloseReason) => {
     if (phase === "closed" || phase === "closing") return;
     const restoreFocus = reason !== "navigation";
-    if (reason === "navigation") {
-      cleanup(false);
-      return;
-    }
     setPhase("closing");
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       cleanup(restoreFocus);
@@ -66,20 +80,23 @@ export function MobileNavigation({ content = siteContent.mobileMenu }: MobileNav
       overflowRef.current = document.documentElement.style.overflow;
       document.documentElement.style.overflow = "hidden";
       closeButtonRef.current?.focus();
-      window.setTimeout(() => setPhase("open"), 0);
+      openTimerRef.current = window.setTimeout(() => {
+        openTimerRef.current = null;
+        setPhase("open");
+      }, 0);
     } catch {
-      window.setTimeout(() => cleanup(false), 0);
+      openTimerRef.current = window.setTimeout(() => cleanup(false), 0);
     }
   }, [cleanup, phase]);
 
   useEffect(() => () => cleanup(false), [cleanup]);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 40rem)");
-    const handleChange = () => { if (media.matches) close("control"); };
+    const media = window.matchMedia(DESKTOP_NAVIGATION_MEDIA_QUERY);
+    const handleChange = () => { if (media.matches) cleanup(false); };
     media.addEventListener?.("change", handleChange);
     return () => media.removeEventListener?.("change", handleChange);
-  }, [close]);
+  }, [cleanup]);
 
   const handleCancel = (event: React.SyntheticEvent<HTMLDialogElement>) => {
     event.preventDefault();
@@ -112,12 +129,12 @@ export function MobileNavigation({ content = siteContent.mobileMenu }: MobileNav
     }
   };
 
-  const activeId = pathname === "/sobre" ? "about" : "home";
+  const activeId = resolveActiveNavigationId(pathname, hash);
 
   return (
     <div className="mobileNavigation">
       <MenuTrigger ref={triggerRef} expanded={phase !== "closed"} controlsId="mobile-menu-panel" onExpandedChange={(expanded) => expanded ? open() : close("control")} />
-      {phase !== "closed" ? <MobileMenu content={content} activeId={activeId} onClose={() => close("control")} onCancel={handleCancel} onBackdropClick={handleBackdrop} onKeyDown={handleKeyDown} dialogRef={dialogRef} closeButtonRef={closeButtonRef} phase={phase === "closing" ? "closing" : phase} /> : null}
+      {phase !== "closed" ? <MobileMenu content={content} navigation={navigation} activeId={activeId} onClose={() => close("control")} onNavigate={() => close("navigation")} onCancel={handleCancel} onBackdropClick={handleBackdrop} onKeyDown={handleKeyDown} dialogRef={dialogRef} closeButtonRef={closeButtonRef} phase={phase === "closing" ? "closing" : phase} /> : null}
     </div>
   );
 }

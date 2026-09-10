@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { RouteTransition } from "./_components/RouteTransition";
+import { SiteHeader } from "./_components/SiteHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,11 +20,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://images.unsplash.com" />
       </head>
-      <body>{children}</body>
+      <body>
+        <RouteTransition header={<SiteHeader />}>{children}</RouteTransition>
+      </body>
     </html>
   );
 }

@@ -58,11 +58,11 @@ describe("AboutPage", () => {
     });
   });
 
-  it("mantém o cabeçalho flutuante fechado, indisponível e sem painel de menu", () => {
+  it("não duplica o cabeçalho global dentro da rota", () => {
     render(<AboutPage />);
 
-    expect(screen.getByRole("banner")).toHaveAttribute("data-presentation", "floating");
-    expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
+    expect(screen.queryByRole("banner")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Abrir menu" })).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: /menu principal/i })).not.toBeInTheDocument();
   });
@@ -73,7 +73,7 @@ describe("AboutPage", () => {
     const footer = screen.getByRole("contentinfo");
     expect(within(footer).getByRole("link", { name: "Início" })).toHaveAttribute("href", "/");
     expect(within(footer).getByRole("link", { name: "Sobre" })).toHaveAttribute("href", "/sobre");
-    expect(within(footer).getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "/#projetos");
+    expect(within(footer).getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "/projetos");
   });
 });
 

@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "highlights": [
+    { "projectId": "residencia-piscina-area-gourmet", "order": 1 },
+    { "projectId": "coffee-comfort", "order": 2 },
+    { "projectId": "jardim-vertical-residencial", "order": 3 }
+  ]
+}

@@ -1,35 +1,39 @@
 import { BrandLockup } from "./Brand";
-import { ContactButton } from "./ButtonLink";
+import { ButtonLink } from "./ButtonLink";
+import { DesktopNavigation } from "./DesktopNavigation";
 import { MobileNavigation } from "./MobileNavigation";
+import { configuredWhatsAppHref } from "./navigation";
+import { siteContent } from "../_content/siteContent";
+import type { ConfiguredContact, MobileMenuContent, NavigationItem } from "../_content/siteContent";
 
 export interface SiteHeaderProps {
-  contactHref?: string;
-  contactLabel?: string;
-  presentation?: "standard" | "floating";
-  showContact?: boolean;
+  navigation?: readonly NavigationItem[];
+  mobileMenu?: MobileMenuContent;
+  whatsapp?: ConfiguredContact;
 }
 
 export function SiteHeader({
-  contactHref,
-  contactLabel,
-  presentation = "standard",
-  showContact = true,
+  navigation = siteContent.navigation,
+  mobileMenu = siteContent.mobileMenu,
+  whatsapp = siteContent.mobileMenu.contacts.whatsapp,
 }: SiteHeaderProps) {
-  const hasContact = showContact && contactHref && contactLabel;
+  const whatsappHref = configuredWhatsAppHref(whatsapp);
 
   return (
     <header
-      className={`siteHeader siteHeader--${presentation}`}
+      className="siteHeader siteHeader--floating"
       data-region="header"
-      data-presentation={presentation}
+      data-presentation="floating"
+      data-has-action={whatsappHref ? "true" : "false"}
     >
       <BrandLockup compact />
-      <div className="siteHeader__actions">
-        {hasContact ? (
-          <ContactButton className="siteHeader__contact" href={contactHref} label={contactLabel} />
-        ) : null}
-        <MobileNavigation />
-      </div>
+      <DesktopNavigation navigation={navigation} />
+      {whatsappHref ? (
+        <ButtonLink className="siteHeader__contact" href={whatsappHref}>
+          Fale no WhatsApp
+        </ButtonLink>
+      ) : null}
+      <MobileNavigation content={mobileMenu} navigation={navigation} />
     </header>
   );
 }

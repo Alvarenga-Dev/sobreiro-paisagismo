@@ -1,19 +1,20 @@
 import type { FooterNavGroupData, LegalContent, SocialLink } from "../_components/SiteFooter";
 import type { LineIconName } from "../_components/LineIcon";
 
-export type MobileNavigationItem = {
-  readonly id: "home" | "about" | "projects" | "benefits" | "contact";
+export type NavigationItemId = "home" | "about" | "projects" | "benefits" | "contact";
+
+export interface NavigationItem {
+  readonly id: NavigationItemId;
   readonly label: string;
   readonly href: string;
   readonly icon: Extract<LineIconName, "home" | "user" | "leaf" | "sprout" | "mail">;
-};
+}
 
 export type ConfiguredContact =
   | { readonly status: "configured"; readonly href: string }
   | { readonly status: "unavailable" };
 
 export interface MobileMenuContent {
-  readonly navigation: readonly MobileNavigationItem[];
   readonly contacts: {
     readonly whatsapp: ConfiguredContact;
     readonly phone: ConfiguredContact;
@@ -45,15 +46,15 @@ const homeFooterGroups = [
     links: [
       { label: "Início", href: "#inicio" },
       { label: "Sobre", href: "/sobre" },
-      { label: "Projetos", href: "#projetos" },
+      { label: "Projetos", href: "/projetos" },
       { label: "Por que um projeto?", href: "#beneficios" },
     ],
   },
   {
     label: "Fale conosco",
     links: [
-      { label: "contato@sobreiro.com.br", href: contactHref },
-      { label: "Rio de Janeiro, RJ", href: "#contato" },
+      { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
+      { label: "Rio de Janeiro, RJ", icon: "pin", href: "#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];
@@ -64,28 +65,28 @@ const internalFooterGroups = [
     links: [
       { label: "Início", href: "/" },
       { label: "Sobre", href: "/sobre" },
-      { label: "Projetos", href: "/#projetos" },
+      { label: "Projetos", href: "/projetos" },
       { label: "Por que um projeto?", href: "/#beneficios" },
     ],
   },
   {
     label: "Fale conosco",
     links: [
-      { label: "contato@sobreiro.com.br", href: contactHref },
-      { label: "Rio de Janeiro, RJ", href: "/#contato" },
+      { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
+      { label: "Rio de Janeiro, RJ", icon: "pin", href: "/#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];
 
 export const siteContent = {
+  navigation: [
+    { id: "home", label: "Início", href: "/", icon: "home" },
+    { id: "about", label: "Sobre", href: "/sobre", icon: "user" },
+    { id: "projects", label: "Projetos", href: "/projetos", icon: "leaf" },
+    { id: "benefits", label: "Por que um projeto?", href: "/#beneficios", icon: "sprout" },
+    { id: "contact", label: "Contato", href: "/#contato", icon: "mail" },
+  ] satisfies readonly NavigationItem[],
   mobileMenu: {
-    navigation: [
-      { id: "home", label: "Início", href: "/", icon: "home" },
-      { id: "about", label: "Sobre", href: "/sobre", icon: "user" },
-      { id: "projects", label: "Projetos", href: "/#projetos", icon: "leaf" },
-      { id: "benefits", label: "Por que um projeto?", href: "/#beneficios", icon: "sprout" },
-      { id: "contact", label: "Contato", href: "/#contato", icon: "mail" },
-    ] satisfies readonly MobileNavigationItem[],
     contacts: {
       whatsapp: { status: "unavailable" },
       phone: { status: "unavailable" },
