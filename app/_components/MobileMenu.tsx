@@ -70,7 +70,7 @@ export function MobileMenu({ content, navigation, activeId, onClose, onNavigate,
           <LineIcon name="close" />
         </button>
         <div className="mobileMenu__brand">
-          <BrandLockup presentation="stacked" />
+          <BrandLockup presentation="stacked" emblem="flower" />
         </div>
         <nav aria-label="Navegação principal">
           <ul className="mobileMenu__list">

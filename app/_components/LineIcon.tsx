@@ -16,6 +16,7 @@ export const lineIconNames = [
   "home",
   "instagram",
   "youtube",
+  "whatsapp",
   "graduationCap",
   "leaf",
   "lotus",
@@ -85,6 +86,12 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
     <>
       <rect x="3" y="6" width="18" height="12" rx="3" />
       <path d="m10 9 5 3-5 3V9Z" fill="currentColor" stroke="none" />
+    </>
+  ),
+  whatsapp: (
+    <>
+      <path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z" />
+      <path d="M8.2 7.6c.3-.3.8-.2 1 .2l1 2c.2.3.1.7-.2.9l-.8.6a8 8 0 0 0 3.5 3.5l.6-.8c.2-.3.6-.4.9-.2l2 1c.4.2.5.7.2 1-.7.9-1.8 1.3-2.9.9a10.5 10.5 0 0 1-6.2-6.2c-.4-1.1 0-2.2.9-2.9Z" />
     </>
   ),
   graduationCap: (

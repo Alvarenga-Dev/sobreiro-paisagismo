@@ -32,6 +32,8 @@ não participa dessa decisão.
 
 Em 09/09/2026, o responsável pelo produto aprovou explicitamente todos os oito
 slugs para páginas individuais. Os registros estão declarados como `published`.
+Em 10/09/2026, Jéssica Sobreiro confirmou a autoria dos oito projetos e a
+autorização para exibi-los publicamente com os ativos atuais.
 Nenhuma frase, mídia específica de hero ou solução aplicada foi confirmada; esses
 campos opcionais permanecem omitidos e o hero usa o fallback de `cover`.
 
@@ -62,8 +64,8 @@ O arquivo de destaques não duplica galeria, capa ou texto. Qualquer alteração
 ## Pendências editoriais
 
 - A referência `01-paisagismo-residencial/residencia-piscina-area-gourmet/07-composicao-noturna.jpg` estava declarada no catálogo original, mas não foi fornecida; foi removida para evitar uma URL quebrada e deve ser reposta somente após confirmação do arquivo.
-- `casa-suspensa-na-mata` permanece em `conceitos-e-renders` e não deve ser apresentada como obra executada sem confirmação.
-- Revisar direitos, autoria e possíveis marcas d’água antes da publicação final, especialmente nos registros com status que pedem confirmação.
+- `casa-suspensa-na-mata` permanece em `conceitos-e-renders` e não é apresentada como obra executada.
+- Novos projetos ou ativos devem receber confirmação de autoria e autorização pública antes de entrar em `public/images/portfolio`.
 - Revisar os textos alternativos com a Jéssica para confirmar ambientes e espécies vegetais.
 - Confirmar, quando disponível, frase, hero específico e soluções aplicadas para
   cada projeto; ausência de confirmação implica omissão, não despublicação.

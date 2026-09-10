@@ -9,7 +9,7 @@ export interface AboutMedia {
   readonly height: number;
   readonly sizes: string;
   readonly position: string;
-  readonly status: "provisional";
+  readonly status: "approved";
 }
 
 export interface AboutHeroContent {
@@ -152,7 +152,7 @@ export const aboutContent = {
       height: 1328,
       sizes: "100vw",
       position: "62% center",
-      status: "provisional",
+      status: "approved",
     },
   } satisfies AboutHeroContent,
   essence: {
@@ -166,13 +166,13 @@ export const aboutContent = {
       "Nossos compromissos e valores guiam cada etapa do projeto — do conceito à execução — sempre com escuta ativa, criatividade e dedicação.",
     ],
     media: {
-      src: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1400&q=86",
-      alt: "Jardim gramado junto a uma residência contemporânea",
-      width: 1400,
-      height: 1050,
+      src: "/images/portfolio/01-paisagismo-residencial/residencia-piscina-area-gourmet/04-detalhe-de-vegetacao.jpg",
+      alt: "Detalhe de vegetação ornamental em projeto da Sobreiro Paisagismo",
+      width: 1600,
+      height: 849,
       sizes: "(max-width: 639px) 100vw, (max-width: 895px) 46vw, 42vw",
       position: "center",
-      status: "provisional",
+      status: "approved",
     },
     mediaCallout: {
       title: "Natureza que faz sentido",
@@ -244,7 +244,7 @@ export const aboutContent = {
         height: 904,
         sizes: "(max-width: 639px) 100vw, (max-width: 895px) 46vw, 34vw",
         position: "center",
-        status: "provisional",
+        status: "approved",
       },
       callout: "Beleza, equilíbrio e propósito em cada detalhe.",
     },

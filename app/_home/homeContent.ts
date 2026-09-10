@@ -128,9 +128,9 @@ export const homeContent = {
       href: "/sobre",
     },
     media: {
-      src: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=86",
-      alt: "Profissional de paisagismo cuidando de um jardim",
-      position: "center",
+      src: "/images/portfolio/profile-jess.webp",
+      alt: "Jéssica Sobreiro, paisagista e fundadora da Sobreiro Paisagismo",
+      position: "center 28%",
     },
     quote: {
       text: "Cada jardim começa pela escuta: do lugar, da arquitetura e de quem vai vivê-lo.",

@@ -42,6 +42,29 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
     }
   }
 
+  function handleScroll() {
+    const track = trackRef.current;
+    const firstSlide = track?.children.item(0);
+
+    if (!(track instanceof HTMLElement) || !(firstSlide instanceof HTMLElement)) return;
+
+    const snapPosition = track.scrollLeft + firstSlide.offsetLeft;
+    let closestIndex = 0;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    Array.from(track.children).forEach((slide, index) => {
+      if (!(slide instanceof HTMLElement)) return;
+
+      const distance = Math.abs(slide.offsetLeft - snapPosition);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    setActiveIndex((currentIndex) => currentIndex === closestIndex ? currentIndex : closestIndex);
+  }
+
   return (
     <div
       className="projectCarousel"
@@ -51,7 +74,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      <ul className="projectCarousel__track" ref={trackRef}>
+      <ul className="projectCarousel__track" ref={trackRef} onScroll={handleScroll}>
         {projects.map((project) => (
           <li className="projectCarousel__slide" key={project.id}>
             <ProjectCard project={project} />
@@ -61,7 +84,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       <div className="projectCarousel__navigation">
         <button
           type="button"
-          className="projectCarousel__arrow"
+          className="projectCarousel__arrow projectCarousel__arrow--previous"
           aria-label="Projeto anterior"
           disabled={activeIndex === 0}
           onClick={() => goTo(activeIndex - 1)}
@@ -76,7 +99,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
         />
         <button
           type="button"
-          className="projectCarousel__arrow"
+          className="projectCarousel__arrow projectCarousel__arrow--next"
           aria-label="Próximo projeto"
           disabled={activeIndex === lastIndex}
           onClick={() => goTo(activeIndex + 1)}
