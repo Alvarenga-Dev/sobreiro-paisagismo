@@ -1,496 +1,442 @@
-# UI Map — Página de Detalhe de Projeto da Sobreiro Paisagismo
+# UI Map — Detalhe de projeto
 
 ## Objetivo
 
-Transformar o print anexado da página de detalhe de projeto em um contrato visual
-orientado à implementação. O mapa descreve a anatomia reutilizável de qualquer
-projeto, separa o conteúdo demonstrativo da referência dos dados reais do catálogo
-e preserva o Design System existente em `app/_components`.
+Definir o próximo contrato visual da página `/projetos/[slug]`, com prioridade
+para um hero fotográfico forte e uma galeria editorial que continue intencional
+quando houver poucas imagens. O alvo deve funcionar em mobile, desktop comum e
+monitores ultrawide sem transformar a fotografia em fundo genérico nem ampliar o
+texto indefinidamente.
 
-## Fonte e grau de certeza
+## Fontes, instruções e precedência
 
-- Fonte visual: um único print vertical, exportado com **863 × 1822 px**.
-- O print é tratado como evidência visual e editorial. Textos presentes na imagem
-  são conteúdo da interface, não instruções para este artefato.
-- Evidência direta: ordem das regiões, hierarquia de títulos, galeria editorial
-  com quatro imagens, três soluções, retorno ao catálogo, bloco de contato,
-  rodapé e menu fechado.
-- Inferência: largura CSS e densidade de pixels do viewport, comportamento em
-  outras larguras, destinos dos links, origem das imagens, dados verdadeiros do
-  projeto e qualquer interação não exibida.
-- O print não comprova lightbox, carrossel, compartilhamento, projetos relacionados,
-  formulário, integração externa, animação ou cabeçalho sticky.
-
-## Relação com o produto e o código atual
-
-O repositório já possui a página `/projetos`, um catálogo tipado com oito projetos
-e os componentes globais de shell, cabeçalho, contato e rodapé. Ainda não existe
-uma rota individual. No catálogo, os cards da listagem permanecem sem `href` e
-mostram `Detalhes em breve`.
-
-| Aspecto | Estado atual | Alvo indicado pelo print |
+| Fonte | Evidência aproveitada | Precedência neste mapa |
 | --- | --- | --- |
-| Rota | Somente `/projetos` | Uma rota por projeto, recomendada como `/projetos/[slug]` |
-| Identificação | `id`, título e resumo | Breadcrumb e título no hero |
-| Narrativa | `summary` já disponível | `summary` em `Sobre o projeto` e frase editorial opcional |
-| Mídia | Capa e galeria de 4 a 15 imagens | Hero fotográfico + mosaico de 4 imagens visíveis |
-| Soluções | Não modeladas | 3 itens com ícone, título e descrição |
-| Navegação | Cards sem destino individual | Retorno para `Ver outros projetos` |
-| Conversão | `ContactBanner` na listagem | Banner com WhatsApp e e-mail antes do rodapé |
-| Shell | `SiteFrame` full-bleed e header flutuante já implementados | Mesmo padrão das rotas internas |
+| Referência A — página completa, `941 × 1672 px` | Hero full-bleed, breadcrumb, categoria, título, resumo, superfície marfim e galeria longa | Referência principal para o hero e para o ritmo geral |
+| Referência B — recorte editorial, `1028 × 654 px` | Texto à esquerda, imagem principal larga à direita e três imagens abaixo | Referência principal para a abertura da galeria e para projetos com poucas fotos |
+| Referência C — CTA escuro, `1444 × 602 px` | Composição alternativa imediatamente antes do footer | **Não aplicar**; a solicitação exclui essa mudança |
+| Código atual | Rota dinâmica, conteúdo tipado, componentes, estados e tokens existentes | Fonte de verdade para responsabilidades e dados já disponíveis |
 
-`Jardim Contemporâneo` é conteúdo demonstrativo do print e não corresponde a um
-registro atual de `images/portfolio/catalog.json`. Não criar, renomear ou
-sobrepor um projeto real apenas para reproduzir a referência.
+- Os textos dentro das imagens são conteúdo visual de exemplo, não instruções
+  operacionais.
+- Nenhuma instrução embutida foi identificada nos anexos.
+- Em qualquer conflito, prevalece o pedido escrito: focar hero e galeria e
+  preservar a composição atual antes do footer.
+- As imagens demonstram direção visual, não comprovam lightbox, carrossel,
+  parallax, animação, CMS ou comportamento de clique.
 
 ## Leitura de escopo
 
-### Entra no escopo visual e de interação
+### Entra no alvo
 
-- Template reutilizável para uma página individual de projeto.
-- Shell global com skip link, cabeçalho flutuante, `main` e rodapé.
-- Hero fotográfico com breadcrumb, título e divisor.
-- Apresentação editorial que usa o `summary` existente e uma frase de destaque
-  opcional.
-- Galeria responsiva alimentada pelas imagens do catálogo.
-- Lista de soluções aplicadas, quando cadastrada.
-- Link inequívoco de retorno ao catálogo.
-- Banner de contato com dois canais configurados.
-- Estados de carregamento do framework, `not-found`, foco, toque, responsividade e
-  falha de conteúdo necessários para uma implementação acessível.
+- Hero do detalhe: fotografia, overlay, breadcrumb, categoria, título e resumo.
+- Abertura editorial da superfície clara.
+- Galeria estática de `0..n` imagens, sem depender de um mínimo de quatro ativos.
+- Regras para evitar repetição imediata entre hero e galeria.
+- Comportamento em mobile, desktop comum e ultrawide.
+- Estados de conteúdo incompleto, falha de imagem, foco, zoom e texto ampliado.
+- Direção de dados e componentes necessária para uma futura implementação.
 
-### Fica fora deste mapa
+### Permanece como está
 
-- Implementação da rota ou qualquer alteração de código.
-- Criação de conteúdo real a partir dos textos e imagens do mockup.
-- Aprovação editorial, direitos autorais, autoria ou status de execução das obras.
-- CMS, banco de dados, API, analytics, compartilhamento e persistência.
-- Formulário, agendamento, rastreamento de WhatsApp ou envio de e-mail no site.
-- Conteúdo e animação do menu expandido, já pertencentes ao menu global.
-- Lightbox, zoom, download, carrossel ou navegação por gesto na galeria.
-- Projetos anterior/próximo, recomendações e filtros dentro do detalhe, pois não
-  aparecem no print.
-- A faixa de tipo, categoria, local e ano exibida no print, removida do alvo por
-  decisão explícita de produto.
+- Navbar e menu globais.
+- `Ver outros projetos`.
+- Banner de contato atual do detalhe.
+- Footer global.
+- Ordem `retorno → contato → footer`.
+- 404, metadados e fronteira de publicação atuais, salvo incompatibilidade
+  descoberta durante uma futura implementação.
+
+### Fica fora
+
+- Alteração de código nesta etapa.
+- Aplicação da composição da Referência C ou do CTA diferente visto nos anexos.
+- Lightbox, zoom, download, carrossel, swipe e paginação de imagens.
+- Projetos anterior/próximo e relacionados.
+- Formulário, agenda, analytics, CMS, API ou persistência.
+- Criação de fatos editoriais, textos ou imagens que não existam no catálogo.
+
+## Estado atual versus alvo
+
+| Região | Estado atual | Alvo |
+| --- | --- | --- |
+| Hero | Imagem full-bleed, breadcrumb, título e divisor botânico; `min-height` chega a `82svh` | Hero mais curto e informativo, com categoria e resumo, mantendo a fotografia como tese da página |
+| Título | Texto integral em branco | Acento oliva opcional e editorialmente definido; nunca inferido por quebra automática |
+| Resumo | Aparece somente em `Sobre o projeto` | Aparece no hero; não deve ser repetido logo abaixo |
+| Abertura clara | `Sobre o projeto` e statement opcional em duas colunas | Narrativa à esquerda e primeira foto disponível à direita, como na Referência B |
+| Galeria | Padrão rígido `panorama → alta + duas empilhadas`; imagens adicionais entram em duas colunas | Composição derivada da quantidade real de imagens, sem células vazias nem recortes extremos |
+| Mídia repetida | O hero normalmente é a capa e essa mesma imagem reaparece como primeiro item | Evitar repetição imediata quando existir outra mídia única |
+| Largura | Hero e galeria limitados pelo mesmo `--width-content: 76rem` | Texto continua em `76rem`; trilho fotográfico pode chegar a `90rem` no ultrawide |
+| Pré-footer | Retorno, `ContactBanner` e footer atuais | Sem mudança |
+
+O catálogo versionado hoje contém de 4 a 15 imagens por projeto, mas o contrato
+alvo não usa esse intervalo como pré-condição: novos projetos podem chegar com
+menos material sem quebrar a composição.
+
+## Direção visual
+
+O detalhe deve parecer um percurso editorial por um jardim: a primeira dobra cria
+atmosfera e orienta; a superfície clara desacelera a leitura; a galeria alterna
+vistas amplas e detalhes sem virar uma grade de catálogo.
+
+- **Paleta:** preservar os tokens funcionais existentes — marfim
+  `--color-surface-light-primary`, verde profundo `--color-surface-deep`, texto
+  escuro e oliva semântico. Não introduzir branco ou preto puros.
+- **Tipografia:** manter a serifada de display nos títulos e a sem serifa no
+  corpo, breadcrumb e categoria. A fotografia e a composição carregam a
+  personalidade; não criar um terceiro estilo tipográfico.
+- **Assinatura:** a primeira imagem da galeria compartilha a mesma linha editorial
+  da narrativa, maior e deslocada para a direita. Esse gesto aproxima projeto e
+  explicação e substitui ornamentos sem função.
+- **Ritmo:** bordas arredondadas discretas, gutters curtos entre fotos e espaços
+  maiores entre capítulos. Evitar sombras de card na galeria.
+- **Movimento:** nenhum movimento próprio. A experiência é fotográfica e estática;
+  somente estados globais e transições discretas já existentes permanecem.
 
 ## Mapa macro
 
-A página alterna `hero fotográfico escuro → conteúdo editorial claro → CTA escuro
-→ rodapé escuro`. A superfície clara concentra narrativa, galeria, soluções e
-retorno ao catálogo; o banner cria a transição para o rodapé.
-
-| Ordem | Região | Proporção vertical observada | Superfície | Composição no print |
-| --- | --- | ---: | --- | --- |
-| 1 | Hero + cabeçalho | ~20% | Fotografia com overlay verde quase preto | Header flutuante; conteúdo à esquerda e paisagem ao fundo |
-| 2 | Apresentação | ~17% | Marfim | `summary` à esquerda; frase e ornamento à direita |
-| 3 | Galeria | ~29% | Marfim | 1 imagem panorâmica + mosaico 1/2 com 3 imagens |
-| 4 | Soluções + retorno | ~17% | Marfim | 3 cards em linha e faixa escura de navegação |
-| 5 | Banner de contato | ~9% | Verde profundo | Mensagem à esquerda e 2 ações empilhadas à direita |
-| 6 | Rodapé | ~8% | Verde profundo | Marca, navegação, contato e barra legal |
-
-As proporções servem somente como ritmo relativo. Altura e quantidade de linhas
-devem ser determinadas pelo conteúdo, nunca por valores fixos derivados do PNG.
-
-## Árvore de composição proposta
-
 ```text
-ProjectDetailPage
-└── SiteFrame (reuso; fullBleed)
-    ├── SiteHeader (reuso; floating, sem CTA)
-    │   ├── BrandLockup
-    │   └── MobileNavigation
+GlobalSiteShell
+├── SiteHeader                                      ← reuso, sem mudança
+└── ProjectDetailPage
     ├── ProjectDetailHero
-    │   ├── ProjectHeroMedia
-    │   ├── Breadcrumb
-    │   ├── DisplayHeading
-    │   └── BotanicalDivider
-    ├── ProjectDetailSurface
-    │   └── ProjectDetailInner
-    │       ├── ProjectOverview
-    │       │   ├── SectionHeading
-    │       │   ├── SupportingCopy (project.summary)
-    │       │   ├── ProjectStatement (opcional)
-    │       │   └── BotanicalDecoration
-    │       ├── ProjectGallery
-    │       │   └── ProjectGalleryImage × n
-    │       ├── AppliedSolutions
-    │       │   ├── SectionHeading
-    │       │   └── SolutionCard × n
-    │       └── ProjectsReturnLink
-    ├── ContactBanner (reuso; variante com 2 botões)
-    └── SiteFooter (reuso)
+    │   ├── HeroMedia
+    │   ├── ContrastOverlay
+    │   └── HeroContent
+    │       ├── Breadcrumb
+    │       ├── ProjectCategory
+    │       ├── ProjectTitle
+    │       └── ProjectSummary
+    ├── ProjectStorySurface
+    │   └── ProjectMediaRail
+    │       ├── ProjectStoryGallery
+    │       │   ├── ProjectNarrative
+    │       │   ├── LeadGalleryImage?              ← depende da quantidade
+    │       │   └── GalleryImage × 0..n
+    │       └── AppliedSolutions?                  ← comportamento atual
+    ├── ProjectsReturnLink                         ← congelado neste mapa
+    ├── ProjectDetailContact                       ← congelado neste mapa
+    └── SiteFooter                                 ← reuso, sem mudança
 ```
 
-## Contrato visual da tela
+## Wireframes responsivos
 
-- Faça o hero ocupar toda a largura e use a imagem em `cover`. O recorte deve
-  preservar o foco paisagístico e arquitetônico, sem depender de uma mídia
-  específica para sustentar o layout.
-- Aplique overlay escuro mais denso à esquerda e na base. Breadcrumb e título
-  precisam manter contraste mesmo quando a fotografia mudar.
-- Posicione o cabeçalho sobre o hero com o mesmo tratamento flutuante usado nas
-  demais rotas internas: inset, fundo escuro translúcido, contorno oliva, raio e
-  sombra discretos.
-- Limite o título a uma coluna curta. Use tipografia serifada e oliva como acento
-  editorial controlado.
-- Use marfim, não branco puro, em toda a superfície de conteúdo. Cards recebem
-  uma diferença tonal sutil, sem elevação forte.
-- Alinhe apresentação, galeria, soluções e retorno ao mesmo eixo central e ao
-  limite `--width-content`.
-- Na apresentação, o `summary` do catálogo ocupa a área dominante à esquerda. A
-  frase curta em caixa alta e o ornamento botânico equilibram o espaço à direita
-  e são opcionais por conteúdo.
-- A galeria usa raios médios e gutters estreitos. A primeira imagem é panorâmica;
-  abaixo, uma imagem alta ocupa a coluna esquerda e duas imagens baixas se empilham
-  à direita.
-- Os cards de solução são informativos, com ícone linear oliva, título semibold e
-  descrição curta. Não sugerir clique por sombra, cursor ou hover.
-- `Ver outros projetos` é uma faixa escura de largura total do conteúdo, com ícone
-  de grade, rótulo e seta. Todo o bloco pode ser um único link.
-- O banner de contato é full-bleed, sem canto arredondado na transição com a página.
-  As duas ações têm peso equivalente de descoberta, com WhatsApp preenchido e
-  e-mail em contorno.
-- Ornamentos botânicos permanecem em baixa opacidade, atrás do conteúdo, sem
-  interferir em leitura, clique ou foco.
+### Ultrawide, `≥ 1600 px`
+
+```text
+┌──────────────────────────────────────────────────────────────────────────┐
+│ [navbar limitada ao shell]                                               │
+│                                                                          │
+│  breadcrumb                                                              │
+│  CATEGORIA                      título e texto não passam de 76rem        │
+│  Título do projeto                                                       │
+│  resumo                                      fotografia ocupa o restante │
+└──────────────────────────────────────────────────────────────────────────┘
+
+      ┌──────────── 90rem no máximo ────────────────────────────────┐
+      │ narrativa 4/12 │ imagem principal 8/12                      │
+      ├────────────────┴────────────────────────────────────────────┤
+      │ imagem 4/12     │ imagem 4/12      │ imagem 4/12            │
+      └──────────────────────────────────────────────────────────────┘
+```
+
+O conteúdo fica centralizado. A área excedente revela mais da fotografia do
+hero, não aumenta fonte, largura de leitura ou altura da galeria.
+
+### Desktop comum, `1024–1599 px`
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ hero full-bleed; conteúdo inferior esquerdo; recorte focal   │
+└──────────────────────────────────────────────────────────────┘
+┌───────────────────┬──────────────────────────────────────────┐
+│ narrativa 4/12    │ imagem principal 8/12                    │
+├───────────────────┴──────────────────────────────────────────┤
+│ imagens em 2 ou 3 colunas conforme largura e quantidade     │
+└──────────────────────────────────────────────────────────────┘
+```
+
+Em `1024–1199 px`, priorizar duas colunas para as imagens secundárias. Três
+colunas só entram quando cada foto mantém largura útil e o texto não é comprimido.
+
+### Mobile, `< 768 px`
+
+```text
+┌──────────────────────────┐
+│ hero                     │
+│ breadcrumb               │
+│ categoria                │
+│ título                   │
+│ resumo                   │
+└──────────────────────────┘
+┌──────────────────────────┐
+│ narrativa                │
+├──────────────────────────┤
+│ imagem 1                 │
+├──────────────────────────┤
+│ imagem 2                 │
+├──────────────────────────┤
+│ ...                      │
+└──────────────────────────┘
+```
+
+A ordem DOM é a ordem visual. Não preservar mosaico desktop por meio de fotos
+minúsculas, recortes agressivos, `order` ou posicionamento absoluto.
+
+## Contrato do hero
+
+### Conteúdo e hierarquia
+
+1. Breadcrumb: `Início / Projetos / {projeto}`.
+2. Categoria editorial real do catálogo, em eyebrow; por exemplo,
+   `PAISAGISMO RESIDENCIAL`.
+3. Um único `h1` com o título do projeto.
+4. `summary` em uma ou duas linhas de leitura no desktop e crescimento natural no
+   mobile.
+
+O divisor botânico atual sai do alvo: categoria e resumo passam a fornecer a
+estrutura que ele tentava sugerir. Não adicionar outro ornamento para preencher
+o espaço.
+
+### Fotografia e contraste
+
+- Hero full-bleed, `object-fit: cover`, sem largura máxima na imagem.
+- Altura alvo: `clamp(34rem, 68svh, 46rem)` em desktop e
+  `clamp(30rem, 76svh, 40rem)` em mobile. A altura pode crescer para acomodar
+  texto ampliado; o conteúdo nunca é cortado.
+- O recorte deve usar o `position` editorial existente. Se um mesmo ponto focal
+  não servir a desktop e mobile, admitir `positionMobile` opcional em vez de
+  duplicar a mídia.
+- Overlay em duas camadas: gradiente lateral para o texto e gradiente inferior
+  para a zona de leitura. Em mobile, usar cobertura mais uniforme.
+- Título limitado a aproximadamente `15ch`; resumo a `46–58ch`.
+- Não escalar o título depois de aproximadamente `5.25rem` no ultrawide.
+- O header deve manter seu clearance; breadcrumb nunca fica atrás da Navbar.
+- Se a imagem falhar, a superfície verde profunda e o overlay ainda sustentam
+  contraste suficiente.
+
+### Acento do título
+
+O oliva pode destacar o fragmento semântico final, como `área gourmet`, mas a
+decisão deve vir de dado editorial (`titleFragments` ou `accentText`). Não usar
+`lastIndexOf`, número de palavras, quebra de linha ou CSS para adivinhar o trecho.
+Na ausência desse dado, todo o título permanece na cor principal.
+
+### Responsividade do hero
+
+| Faixa | Regra |
+| --- | --- |
+| `< 480 px` | Ocultar visualmente o item atual do breadcrumb se ele repetir um `h1` longo; mantê-lo acessível. Título e resumo usam a largura total disponível. |
+| `480–767 px` | Preservar os três níveis do breadcrumb quando couberem; conteúdo ancorado na base. |
+| `768–1199 px` | Conteúdo ocupa no máximo cerca de 62% da largura; recorte protege o assunto principal. |
+| `1200–1599 px` | Conteúdo acompanha `--width-content`; imagem ganha área negativa à direita. |
+| `≥ 1600 px` | Hero continua full-bleed, mas o bloco textual não se afasta do eixo do restante da página. Não aumentar altura só porque há largura. |
+
+## Contrato da narrativa e da galeria
+
+### Preparação das mídias
+
+Defina `galleryMedia` sem alterar a ordem do catálogo:
+
+1. Resolva a mídia do hero pelo contrato atual (`heroFile` ou fallback de capa).
+2. Remova duplicatas exatas por `file` apenas da apresentação visual.
+3. Se o arquivo do hero também for o primeiro de `images` e existirem outras
+   mídias únicas, não o repita imediatamente na galeria.
+4. Se só existir uma mídia única, use-a no hero e não fabrique uma galeria vazia.
+5. Preserve todos os demais arquivos na ordem editorial declarada.
+
+Essa regra evita a repetição hero → primeira foto, mas não exclui fotos parecidas
+que representem enquadramentos distintos.
+
+### Narrativa
+
+- A coluna textual usa eyebrow `SOBRE O PROJETO`, um heading editorial e corpo
+  curto, como na Referência B.
+- `summary` já foi usado no hero e não deve aparecer de novo.
+- O heading e o corpo abaixo do hero são opcionais e precisam de conteúdo real.
+  Campos recomendados: `details.introHeading` e `details.body` como parágrafos.
+- `details.statement` pode alimentar o heading editorial quando fizer sentido,
+  sem caixa alta obrigatória.
+- Se não houver narrativa adicional, omitir o bloco; a galeria começa alinhada ao
+  topo da superfície clara, sem texto placeholder.
+
+### Matriz por quantidade
+
+`N` abaixo é o total de `galleryMedia` após a regra de não repetição.
+
+| N | Composição desktop | Composição mobile |
+| ---: | --- | --- |
+| 0 | Somente narrativa, com largura de leitura; se ela também não existir, reduzir o padding da superfície antes das soluções | Nenhuma região de galeria; não renderizar heading vazio |
+| 1 | Narrativa `4/12` + foto `8/12`; sem linha secundária | Narrativa seguida da foto |
+| 2 | Narrativa `4/12` + foto 1 `8/12`; foto 2 panorâmica abaixo | Narrativa → foto 1 → foto 2 |
+| 3 | Narrativa + foto 1; fotos 2 e 3 em duas colunas abaixo | Uma coluna em ordem |
+| 4 | Narrativa + foto 1; fotos 2–4 em três colunas, como a Referência B | Uma coluna em ordem |
+| `5+` | Narrativa + foto 1; continuar com linhas de 2 ou 3 itens e alternar proporções `7/5` e `5/7` sem mudar a ordem DOM | Uma coluna em ordem; opcionalmente duas colunas somente acima de `40rem` e com proporções compatíveis |
+
+### Regras de composição
+
+- Usar Grid explícito e determinístico; não usar masonry baseada em JavaScript.
+- A primeira foto disponível é a imagem principal do bloco e deve ter proporção
+  próxima de `16:9` ou `3:2`, respeitando o ponto focal.
+- Fotos secundárias usam proporção derivada do grupo: `4:3` em pares e entre
+  `4:5` e `1:1` em trios. Não impor retrato a uma fotografia panorâmica.
+- A última linha nunca deixa uma célula vazia visível. Um item órfão ocupa a
+  largura total útil; dois itens dividem a linha.
+- Gutter sugerido: `clamp(0.5rem, 1vw, 1rem)`. O espaçamento entre narrativa e
+  nova linha de fotos é maior que o gutter interno.
+- Raio usa `--radius-card`; não criar moldura, sombra ou legenda flutuante.
+- Todas as fotos têm largura e altura intrínsecas, `sizes` coerente com a célula,
+  `object-fit: cover` e `object-position` editorial.
+- Nenhuma foto é link, botão ou recebe `tabIndex` enquanto não houver lightbox.
+- Cada imagem informativa usa seu `alt` existente. O hero mantém `alt=""` somente
+  quando a mesma mídia também aparece com descrição na galeria; se for a única
+  ocorrência do arquivo, o hero recebe o `alt` editorial da mídia.
+
+## Largura, escala e falha de conteúdo
+
+| Contexto | Trilho textual | Trilho de mídia | Comportamento esperado |
+| --- | --- | --- | --- |
+| Mobile | `100%` menos gutter e safe area | Igual ao textual | Uma coluna, sem overflow horizontal |
+| Tablet | Até `--width-content` | Até `--width-content` | Narrativa pode continuar empilhada até a composição caber |
+| Desktop comum | Até `76rem` | Até `76rem` | Relação `4/12 + 8/12`; pares/trios por largura útil |
+| Ultrawide | Até `76rem` para leitura | Novo limite funcional sugerido de `90rem` | Galeria respira mais que o texto, mas permanece centralizada |
+
+- Introduzir um token funcional como `--width-media: 90rem` somente se a
+  implementação confirmar reuso em outras páginas fotográficas.
+- Nunca usar `100vw` dentro do corpo para simular largura ultrawide; isso quebra
+  gutters, scrollbar e alinhamento.
+- Zoom de 200%, títulos longos e parágrafos adicionais expandem a altura.
+- Breakpoints devem ocorrer quando a célula deixa de sustentar imagem e texto,
+  não para reproduzir exatamente as larguras dos screenshots.
 
 ## Mapeamento por região
 
-| ID | Região | Papel | Reuso atual | Estado no código | Direção de implementação |
-| --- | --- | --- | --- | --- | --- |
-| R01 | Shell | Estruturar skip link, header, `main` e footer | `SiteFrame` | Variante `fullBleed` já existe | Reusar sem criar shell específico do detalhe |
-| R02 | Cabeçalho flutuante | Marca e acesso à navegação global | `SiteHeader`, `BrandLockup`, `MobileNavigation` | `floating` e `showContact={false}` já usados em `/projetos` | Reusar a mesma configuração e o mesmo contrato do menu |
-| R03 | Hero de projeto | Identificar o projeto e criar contexto emocional | `DisplayHeading` | Não existe como seção; `ProjectsHero` é da listagem | Criar `ProjectDetailHero` local à rota dinâmica; não adicionar modos incompatíveis a `ProjectsHero` |
-| R04 | Breadcrumb | Relacionar Início, Projetos e item atual | Padrão semântico já documentado em `/sobre` | Não há primitive compartilhada | Criar uma primitive compartilhada somente se o padrão realmente for usado por duas rotas; usar `nav` + lista ordenada |
-| R05 | Mídia do hero | Sustentar o título e antecipar a atmosfera | `PortfolioImage`, `next/image` | Catálogo tem `cover` e `images`, mas não `hero` explícito | Permitir `hero` editorial opcional e fallback documentado para `cover`; manter alt vazio se a mídia for redundante |
-| R06 | Apresentação | Explicar conceito, relação com o espaço e intenção | `SectionHeading`, `SupportingCopy` | `summary` já existe em todos os projetos | Consumir `project.summary` diretamente; não criar um segundo campo de descrição longa |
-| R07 | Frase de destaque | Reforçar mensagem editorial curta | `BotanicalDecoration` e fragmentos tipados | Não existe dado equivalente | Modelar como campo opcional; omitir o bloco e reequilibrar a grade quando ausente |
-| R08 | Galeria editorial | Mostrar conjunto visual da obra | `PortfolioImage[]`, `next/image` | Todas as mídias já são validadas e dimensionadas | Criar `ProjectGallery` local com layout por posição; não alterar a ordem editorial dos arquivos |
-| R09 | Imagem da galeria | Exibir mídia informativa com recorte estável | Tratamento de imagem de `ProjectCard` | Não há primitive de mídia pública | Criar slot local com `width`, `height`, `sizes`, alt e `object-position`; só promover após segundo consumidor compatível |
-| R10 | Soluções aplicadas | Explicar decisões de projeto | `CardSurface`, `LineIcon` | Não modeladas no catálogo | Criar `AppliedSolutions` e `SolutionCard` locais, alimentados por uma lista tipada opcional |
-| R11 | Retorno ao catálogo | Voltar à exploração do portfólio | `ButtonLink` ou `SectionAction`, `LineIcon` | Não há variante de faixa escura | Preferir `ButtonLink` com variante semântica nova apenas se os tokens existentes não cobrirem a faixa; destino `/projetos` |
-| R12 | Banner de contato | Converter após a leitura do case | `ContactBanner`, `ContactButton` | Suporta mensagem, descrição, CTA e ação secundária textual | Evoluir a ação secundária para apresentação opcional em botão com ícone de e-mail; preservar o padrão atual |
-| R13 | Rodapé | Navegação global, marca, contatos e legal | `SiteFooter` e subcomponentes | Já corresponde à estrutura observada | Reusar `siteContent.internalFooter` com `currentPath="/projetos"` |
-| R14 | Estado inexistente | Responder a slug desconhecido ou projeto não publicável | Recursos do App Router | Não existe rota dinâmica | Usar `notFound()` e uma página 404 coerente; não renderizar projeto indisponível |
-
-## Conteúdo observado no print
-
-Este conteúdo registra a referência, mas não deve ser publicado como dado real.
-
-### Hero
-
-| Região | Conteúdo visível |
-| --- | --- |
-| Breadcrumb | `Início / Projetos` |
-| Título | `Jardim Contemporâneo`, com `Contemporâneo` em oliva |
-
-O texto de apoio visível no hero não possui hoje um campo independente no
-catálogo. Para evitar duplicar `summary`, o alvo deste mapa mantém somente o título
-no hero e usa `summary` na seção `Sobre o projeto`.
-
-O breadcrumb do print não exibe o título atual. Para orientação completa, a
-estrutura recomendada é `Início / Projetos / {Título}`, podendo ocultar apenas o
-item atual visualmente em largura estreita. Se a decisão for reproduzir literalmente
-os dois níveis, nenhum deles recebe `aria-current="page"`, pois ambos levam a
-páginas ancestrais; o `h1` continua identificando a página atual.
-
-### Apresentação e frase editorial
-
-| Região | Conteúdo visível |
-| --- | --- |
-| Título | `Sobre o projeto`, com `projeto` em oliva |
-| Corpo | `Um jardim contemporâneo que valoriza a conexão entre o design arquitetônico, a vegetação e o bem-estar, com espaços fluidos, iluminação acolhedora e espécies tropicais que trazem vida e personalidade ao ambiente.` |
-| Frase | `NATUREZA QUE FAZ PARTE DA SUA HISTÓRIA.` |
-
-Na implementação, o corpo observado acima é substituído por `project.summary`, já
-presente no catálogo. Não criar `description`, `longDescription` ou cópia paralela
-para esta seção.
-
-### Soluções aplicadas
-
-| Ordem | Título | Descrição visível | Ícone sugerido |
-| ---: | --- | --- | --- |
-| 1 | `Integração com a arquitetura` | `Paisagismo em harmonia com o projeto, criando transição natural entre os espaços.` | `leaf` |
-| 2 | `Iluminação paisagística` | `Valoriza a vegetação e cria atmosferas únicas ao entardecer.` | novo `lightbulb` ou desenho aprovado |
-| 3 | `Vegetação tropical` | `Espécies selecionadas para beleza, sombra e bem-estar o ano todo.` | `sprout` |
-
-### Navegação, conversão e rodapé
-
-| Região | Conteúdo visível |
-| --- | --- |
-| Retorno | `Ver outros projetos` |
-| Banner | `Vamos transformar seu espaço juntos?` |
-| Apoio | `Fale com a nossa equipe e descubra como o paisagismo pode transformar a sua vida.` |
-| CTA principal | `Fale no WhatsApp` |
-| CTA secundário | `Envie um e-mail` |
-| Descrição da marca | `Projetos de paisagismo que conectam natureza, bem-estar e estilo de vida.` |
-| Navegação | `Início`, `Sobre`, `Projetos`, `Por que um projeto?`, `Contato` |
-| Contatos | `(21) 98765-4321`, `contato@sobreiro.com.br`, `Rio de Janeiro, RJ` |
-| Copyright | `© 2024 Sobreiro Paisagismo. Todos os direitos reservados.` |
-| Crédito | `Desenvolvido com ♡ para conectar pessoas à natureza.` |
-
-Telefone, e-mail, localização, ano legal e links são dados do mockup até
-confirmação. A implementação deve consumir os valores globais já centralizados em
-`app/_content/siteContent.ts`, não copiar estes textos.
-
-## Inventário de reuso do Design System
-
-### Reusar sem mudança de responsabilidade
-
-| Componente / contrato | Uso no detalhe |
-| --- | --- |
-| `SiteFrame` | Shell full-bleed e skip link |
-| `SiteHeader` | Cabeçalho flutuante sem CTA duplicado |
-| `BrandLockup`, `MobileNavigation` | Marca e menu global |
-| `DisplayHeading` | Único `h1` do hero |
-| `SectionHeading` | `Sobre o projeto` e `Soluções aplicadas` |
-| `SupportingCopy` | `summary` do projeto e apoio do banner |
-| `CardSurface` | Soluções informativas |
-| `LineIcon` | Soluções, setas, contato e rodapé |
-| `BotanicalDecoration` | Ornamentos semânticos ocultos |
-| `ContactButton` | Ação principal de WhatsApp quando configurada |
-| `SiteFooter` | Rodapé global alimentado por `siteContent` |
-| `PortfolioProject`, `PortfolioImage` | Identidade, capa, `summary` e galeria |
-
-### Evoluir por API pequena
-
-| Componente / contrato | Extensão recomendada | Restrição |
-| --- | --- | --- |
-| `LineIcon` | Adicionar `lightbulb` e `grid` se os desenhos do print forem aprovados | Manter `currentColor`, viewBox, traço e contrato acessível |
-| `ContactBanner` | Permitir ação secundária `button` com ícone `mail` | O default textual atual não muda; não transformar o componente em lista genérica de contatos |
-| Catálogo de portfólio | Adicionar apenas frase, hero e soluções opcionais | Não duplicar `id`, título, `summary`, capa ou imagens |
-| `toProjectCardData` | Gerar `href` para detalhes publicáveis | Não criar links para registros sem conteúdo suficiente ou não aprovados |
-
-### Manter local à rota `/projetos/[slug]`
-
-- `ProjectDetailHero` e `ProjectHeroMedia`.
-- `ProjectOverview` e `ProjectStatement`.
-- `ProjectGallery` e seu slot de imagem.
-- `AppliedSolutions` e `SolutionCard`.
-- `ProjectsReturnLink`.
-- Funções de obtenção de slug, metadados e paths estáticos, caso não sejam
-  reutilizadas fora da rota.
-
-Não reutilize `app/projetos/_components/ProjectsHero.tsx` ou
-`ProjectsCatalog.tsx`: ambos modelam a listagem, não o detalhe. Compartilhe tipos,
-conteúdo global e primitivas, sem acoplar uma rota à composição da outra.
-
-## Modelo de dados recomendado
-
-O catálogo atual já é a fonte única de títulos, `summary` e imagens. Estenda o
-registro somente para o conteúdo que ainda não existe.
-
-```ts
-interface ProjectSolution {
-  readonly id: string;
-  readonly icon: LineIconName;
-  readonly title: string;
-  readonly description: string;
-}
-
-interface PortfolioProjectDetails {
-  readonly statement?: string;
-  readonly heroFile?: string;
-  readonly solutions?: readonly ProjectSolution[];
-}
-
-interface PortfolioProject {
-  // Campos atuais relevantes para o detalhe.
-  readonly id: string;
-  readonly title: string;
-  readonly summary: string;
-  readonly status: string;
-  readonly cover: PortfolioImage;
-  readonly images: readonly PortfolioImage[];
-  readonly details?: PortfolioProjectDetails;
-}
-```
-
-- Use `id` como slug estável enquanto o produto não definir outro campo.
-- `heroFile`, quando presente, deve referenciar um arquivo já incluído em `images`;
-  isso evita mídia duplicada e mantém a validação centralizada.
-- `summary` é o corpo de `Sobre o projeto`. Não criar outro campo para o mesmo
-  conteúdo nem repeti-lo no hero.
-- `status` é controle editorial interno. Não exponha observações como “confirmar
-  autoria” na interface pública; use-as para decidir se a página é publicável.
-- `details` é opcional porque frase, hero específico e soluções também são
-  opcionais. A ausência desse objeto não impede a página quando título, `summary`,
-  capa e imagens já estiverem aprovados.
-
-## Contrato da galeria
-
-O print prova uma galeria estática com quatro imagens, mas o catálogo atual possui
-entre quatro e quinze imagens por projeto.
-
-1. Preserve a ordem declarada em `images`; ela é a ordem editorial.
-2. Use a primeira imagem da galeria como panorama largo, exceto quando ela já foi
-   consumida como hero e houver decisão editorial explícita para evitar repetição.
-3. Para as quatro primeiras posições, reproduza a composição observada:
-   `panorama → alta à esquerda + duas baixas à direita`.
-4. Para imagens adicionais, a direção recomendada — não comprovada pelo print — é
-   continuar em uma grade simples de duas colunas, sem esconder ativos.
-5. Em mobile estreito, empilhe todas as imagens na ordem do DOM. Não preserve o
-   mosaico por meio de recortes excessivos ou alturas ilegíveis.
-6. Use dimensões intrínsecas, `sizes`, `aspect-ratio` e ponto de recorte por mídia.
-   Evite `fill` sem contêiner reservado.
-7. Imagens são informativas e usam os textos alternativos já existentes. Não
-   repita no alt “imagem de” nem o título quando ele não descrever a cena.
-8. Não faça as imagens focáveis: não há evidência de zoom ou lightbox.
+| ID | Região | Papel | Reuso / estado atual | Direção |
+| --- | --- | --- | --- | --- |
+| R01 | Shell | Manter skip link, header, main e footer | `SiteFrame`, `SiteHeader`, `SiteFooter` | Reusar sem mudança de responsabilidade |
+| R02 | Hero | Contextualizar e emocionar | `ProjectDetailHero` já existe | Incluir categoria e resumo; remover divisor decorativo |
+| R03 | Breadcrumb | Orientar na hierarquia | Já possui links ancestrais e item atual | Preservar semântica; adaptar visualmente em títulos longos |
+| R04 | Hero media | Sustentar atmosfera | `project.hero`, `next/image` | Preservar prioridade e dimensões; admitir foco mobile opcional |
+| R05 | Título | Identificar o projeto | `DisplayHeading` | Aceitar acento editorial explícito, com fallback simples |
+| R06 | Resumo | Explicar rapidamente o case | Hoje vive em `ProjectOverview` | Mover para o hero e não duplicar |
+| R07 | Narrativa | Aprofundar intenção e contexto | `ProjectOverview` usa summary + statement | Remodelar como conteúdo adicional opcional |
+| R08 | Galeria | Mostrar vistas e detalhes | `ProjectGallery` renderiza toda a lista em ordem | Tornar layout dependente da quantidade e evitar repetição do hero |
+| R09 | Soluções | Explicar decisões do projeto | `AppliedSolutions`, opcional | Manter após a galeria; fora da revisão visual prioritária |
+| R10 | Retorno | Voltar ao catálogo | `ProjectsReturnLink` | Congelado neste mapa |
+| R11 | Contato | Converter após a leitura | `ContactBanner` atual | Congelado; não aplicar Referência C |
+| R12 | Footer | Navegação e dados globais | `SiteFooter` | Reusar sem mudança |
 
 ## Estados e interações
 
-| Elemento | Estado observado | Estados necessários | Regra de comportamento |
-| --- | --- | --- | --- |
-| Breadcrumb | `Início / Projetos` | repouso, hover quando disponível, focus-visible, active, atual | `Início` leva a `/`; `Projetos` leva a `/projetos`; o item atual não é link |
-| Menu | Fechado | contrato global de fechado, aberto, foco e redução de movimento | Reusar `MobileNavigation`; o detalhe não cria um segundo menu |
-| Hero | Conteúdo disponível | carregado e fallback visual de mídia | Texto permanece legível se a imagem falhar ou estiver lenta |
-| Galeria | 4 imagens estáticas | 1..n imagens válidas | Ordem estável; sem controles ou foco se não houver lightbox aprovado |
-| Soluções | 3 cards informativos | ausente ou 1..n itens | Omitir a seção inteira quando não houver soluções; cards não recebem `tabIndex` |
-| Retorno | Link ativo | hover, focus-visible, active | Link único para `/projetos`; seta e ícone são decorativos |
-| WhatsApp | Botão preenchido | configurado ou fallback seguro | Consumir o contato global; não gerar `wa.me` com telefone de mockup |
-| E-mail | Botão de contorno | configurado | Usar o `mailto:` global confirmado; ícone é decorativo |
-| Slug | Projeto existente | desconhecido ou não publicável | Slug desconhecido usa 404; conteúdo não aprovado permanece sem link no catálogo |
-| Rodapé | `Projetos` como seção corrente | repouso, hover, focus-visible, active, current | Usar `aria-current="page"` em `Projetos`, não criar item para cada slug |
-
-## Contrato de movimento
-
-- Não há evidência de animação no print.
-- Hero, narrativa, galeria, soluções, banner e rodapé permanecem estáticos.
-- Não introduzir parallax, revelação por scroll, zoom automático ou transição de
-  layout da galeria.
-- Hover e foco podem usar os tokens existentes de cor, borda e deslocamento
-  discreto, sem provocar salto de layout.
-- O comportamento do menu segue o contrato global e respeita
-  `prefers-reduced-motion: reduce`.
-
-## Contrato responsivo
-
-O print comprova apenas uma composição visual ampla. As adaptações são direção por
-falha de conteúdo, não reprodução de outros frames.
-
-| Faixa lógica | Composição recomendada |
-| --- | --- |
-| Mobile estreito | Header mantém marca + menu; hero recebe overlay mais uniforme; apresentação vira 1 coluna; galeria empilha; soluções e CTAs empilham |
-| Tablet / referência | Apresentação em 2 áreas; galeria editorial 1 + 3; soluções em 3 colunas; banner em 2 colunas |
-| Desktop largo | Limitar o conteúdo por `--width-content`; preservar largura de leitura; ampliar gutters e respiro, não escalar indiscriminadamente imagens e texto |
-
-- Defina breakpoints pela falha do conteúdo, especialmente na galeria, nas
-  soluções e no banner.
-- A ordem DOM é sempre hero → apresentação → galeria → soluções → retorno
-  → contato, independentemente do grid visual.
-- Preserve o título sem sobrepor o header e limite a largura de leitura do
-  `summary`, inclusive em zoom de 200%.
-- Use `min-height` apenas no hero; nenhuma outra seção recebe altura fixa.
-- Textos maiores, traduções futuras e parágrafos extras expandem os cards e seções
-  sem corte, elipse ou sobreposição.
+| Estado | Regra visual | Regra funcional |
+| --- | --- | --- |
+| Carregado | Hero e mídia aparecem sem salto de layout | Reservar espaço pelas dimensões intrínsecas |
+| Imagem do hero indisponível | Fundo verde profundo mantém contraste | O conteúdo e a navegação permanecem completos |
+| Galeria sem mídia adicional | Nenhuma caixa vazia ou heading visível | Omitir a região e seguir para soluções/retorno |
+| 1–3 imagens | Composição usa a matriz reduzida | Não duplicar ou esticar ativos para preencher slots |
+| Muitas imagens | Linhas editoriais continuam até o fim | Renderizar todos os ativos na ordem do catálogo |
+| Narrativa ausente | Galeria assume o início do trilho | Não repetir `summary` nem inserir texto genérico |
+| Hover | Fotos não sugerem clique | Nenhuma transformação ou cursor de ação |
+| Foco | Somente breadcrumb e ações posteriores recebem foco visível | Galeria estática fica fora da ordem de tabulação |
+| Movimento reduzido | Nenhuma diferença na galeria estática | Contrato global continua respeitando `prefers-reduced-motion` |
 
 ## Acessibilidade e semântica
 
-- Mantenha um único `h1` com o nome do projeto. `Sobre o projeto`, `Soluções
-  aplicadas` e contato usam `h2`; títulos de solução usam `h3`.
-- Use `<nav aria-label="Breadcrumb">` com lista ordenada. O item atual recebe
-  `aria-current="page"` e não precisa ser link.
-- Modele soluções como lista semântica.
-- O hero pode usar alt vazio se a mesma imagem aparecer na galeria e for puramente
-  atmosférica. Imagens da galeria são informativas e precisam de alt específico.
-- Ícones que repetem rótulos são decorativos. Nenhum card informativo recebe foco,
-  papel de botão ou cursor de ação.
-- Relacione apresentação, galeria, soluções e banner aos seus títulos com
-  `aria-labelledby`. Se a galeria não tiver heading visual, forneça nome acessível
-  curto sem introduzir um título falso no layout.
-- O link `Ver outros projetos` e os CTAs mantêm foco visível, nome acessível e alvo
-  mínimo de 44 × 44 px.
-- Valide contraste do oliva em texto pequeno, ícones e divisores sobre marfim e
-  verde profundo segundo WCAG 2.2 AA.
-- Ornamentos usam `aria-hidden="true"`, `focusable="false"` e
-  `pointer-events: none`.
-- Não use anúncio `aria-live` para imagens estáticas ou carregamento normal do
-  servidor. O status HTTP e o heading da página de erro cobrem o `not-found`.
+- Manter um único `h1` no hero.
+- Breadcrumb usa `nav` com lista ordenada; o projeto atual usa
+  `aria-current="page"` e não é link.
+- Categoria é texto auxiliar, não heading.
+- Narrativa usa `section aria-labelledby` somente quando seu heading existir.
+- Galeria usa lista semântica. Se houver mídia, manter um `h2` visualmente oculto
+  como nome da região; se não houver mídia, não renderizar a seção.
+- A regra de deduplicação não pode apagar a única descrição acessível de uma
+  fotografia: mídia exclusiva do hero recebe `alt` informativo.
+- Não transmitir informação apenas pela cor do fragmento oliva.
+- Garantir contraste WCAG 2.2 AA do resumo e breadcrumb sobre qualquer recorte.
+- Áreas clicáveis preservadas pelo shell têm ao menos `44 × 44 px` e foco visível.
+- Em 200% de zoom, o hero cresce e a galeria empilha sem corte ou rolagem lateral.
 
-## SEO, metadados e geração da rota
+## Contrato de dados sugerido
 
-- Gere `title` e `description` a partir de título e resumo reais do catálogo.
-- Use o ID/slug do projeto para paths estáveis. Uma alteração de slug publicada
-  exige redirecionamento, não apenas renomear o campo.
-- `generateStaticParams` pode derivar somente projetos editorialmente aprovados;
-  conteúdo ainda em validação continua sem rota pública. `details` não é requisito,
-  pois todos os seus campos são opcionais.
-- `generateMetadata` deve tratar slug inexistente sem afirmar conteúdo que não foi
-  carregado.
-- Open Graph precisa de imagem com direitos confirmados e proporção adequada; não
-  inferir que a capa atual já está aprovada para compartilhamento.
-- Se forem adicionados dados estruturados, validar o tipo Schema.org apropriado e
-  fatos reais. O print não autoriza marcação de obra concluída, autor, cliente ou
-  endereço.
+Somente campos que representam decisões editoriais novas devem ser adicionados.
 
-## Lacunas antes da implementação final
+```ts
+interface PortfolioImage {
+  readonly file: string;
+  readonly alt: string;
+  readonly position?: string;
+  readonly positionMobile?: string;
+}
 
-1. Quais projetos do catálogo estão aprovados para receber página individual.
-2. Conteúdo real da frase editorial e das soluções, caso essas regiões sejam
-   mantidas para todos os projetos.
-3. Política editorial para o campo interno `status` e critério de publicação.
-4. Imagem específica do hero ou regra aprovada de fallback para `cover`.
-5. Regra para galerias com mais de quatro imagens e confirmação de que nenhuma
-   mídia deve ser omitida.
-6. Decisão sobre repetir ou não a mídia do hero na galeria.
-7. Direitos, autoria, alt e pontos de recorte de todas as fotografias.
-8. Estrutura final do breadcrumb: dois níveis visuais como no print ou três níveis
-   incluindo o projeto atual.
-9. Destinos reais de WhatsApp e e-mail e política de abertura de links externos.
-10. Texto final do banner e validação dos dados globais exibidos no rodapé.
-11. Ícones oficiais para iluminação, grade e soluções.
-12. Necessidade futura de lightbox ou projeto anterior/próximo; ambos ficam fora
-    da primeira implementação até existir especificação própria.
+interface PortfolioProjectDetails {
+  readonly heroFile?: string;
+  readonly titleAccent?: string;
+  readonly introHeading?: string;
+  readonly body?: readonly string[];
+  readonly statement?: string;
+  readonly solutions?: readonly ProjectSolution[];
+}
+```
 
-## Direção sugerida de implementação
+- Categoria, título, `summary`, hero e imagens continuam derivados do catálogo.
+- `titleAccent` precisa ser substring exata do título; entrada inválida falha na
+  validação, em vez de produzir marcação incorreta.
+- `body` é opcional e não substitui `summary`: ele aprofunda a história depois do
+  hero.
+- Não adicionar campos de layout por índice (`featured`, `tall`, `column`) ao
+  catálogo nesta etapa. A composição é derivada de quantidade e proporção.
 
-1. Estender `images/portfolio/catalog.json` e o parser de
-   `app/_content/portfolioCatalog.ts` com `details` opcional e validação estrita.
-2. Definir claramente quais registros são publicáveis e gerar `href` apenas para
-   esses cards; preservar `Detalhes em breve` nos demais.
-3. Criar `app/projetos/[slug]/page.tsx` como Server Component, com
-   `generateStaticParams`, `generateMetadata` e `notFound()`.
-4. Criar componentes exclusivos em `app/projetos/[slug]/_components/`, sem
-   importar composições da listagem ou da Home.
-5. Reusar `SiteFrame`, `SiteHeader`, `SiteFooter`, tipografia, superfícies, ícones
-   e dados globais. Evoluir apenas `ContactBanner` e `LineIcon` pelas APIs pequenas
-   descritas neste mapa.
-6. Implementar primeiro hero e narrativa; depois galeria, soluções, retorno
-   e contato. A página permanece no servidor se a galeria continuar estática.
-7. Adicionar testes para slug válido, `not-found`, metadados, uso de `summary`,
-   ordem/alt da galeria, seção de soluções ausente, link de retorno, cards
-   publicáveis e preservação do rodapé corrente.
-8. Validar TypeScript, Jest, ESLint CLI e build; inspecionar visualmente em 320,
-   640, 863 e 1440 px, além de teclado, zoom, contraste e movimento reduzido.
+## Lacunas para implementação
+
+1. Aprovar o conteúdo real de `introHeading` e `body` para cada projeto, ou
+   confirmar que a galeria pode iniciar sem narrativa adicional.
+2. Definir os fragmentos de título que recebem acento; não derivá-los
+   automaticamente.
+3. Validar pontos focais em desktop e mobile para todas as mídias de hero.
+4. Confirmar se a mídia do hero deve reaparecer mais tarde em algum case por
+   intenção editorial específica.
+5. Definir se o trilho de `90rem` merece token global ou permanece local.
+6. Confirmar direitos, autoria e alt das mídias marcadas como referência ou
+   renderização no catálogo.
+7. Decidir se projetos futuros podem ter zero imagens adicionais; o mapa suporta
+   esse estado, mas publicação continua sendo decisão editorial.
+
+## Direção de implementação
+
+1. Ajustar e validar o modelo do catálogo antes da apresentação.
+2. Evoluir `ProjectDetailHero` com categoria, resumo, acento explícito e foco
+   responsivo.
+3. Substituir a relação independente `ProjectOverview + ProjectGallery` por uma
+   composição local `ProjectStoryGallery`, mantendo subcomponentes pequenos.
+4. Derivar uma lista visual sem repetição e uma variante de layout por quantidade,
+   sem alterar o array fonte.
+5. Manter a implementação como Server Components; não há estado interativo novo.
+6. Preservar `AppliedSolutions`, `ProjectsReturnLink`, `ContactBanner` e
+   `SiteFooter` durante esta mudança.
+7. Cobrir em testes `0`, `1`, `2`, `3`, `4` e `5+` imagens, ordem, deduplicação,
+   alt, ausência de foco, título longo e narrativa opcional.
+8. Validar visualmente em `360`, `390`, `768`, `1024`, `1440`, `1920` e `2560 px`,
+   além de zoom de 200% e falha da imagem do hero.
 
 ## Referências técnicas prováveis
 
-| Arquivo | Uso esperado |
+| Arquivo | Papel |
 | --- | --- |
-| `images/portfolio/catalog.json` | Fonte única; `summary` alimenta a apresentação e apenas frase, hero e soluções podem exigir extensão opcional |
-| `app/_content/portfolioCatalog.ts` | Validação, tipos, resolução de mídia e consulta por slug |
-| `app/_components/ProjectCard.tsx` | Receber os destinos das páginas publicáveis |
-| `app/projetos/page.tsx` | Catálogo e retorno do detalhe |
-| `app/projetos/_components/ProjectsCatalog.tsx` | Consumidor dos cards com ou sem link |
-| `app/projetos/[slug]/page.tsx` | Composição futura da rota dinâmica |
-| `app/projetos/[slug]/_components/` | Hero, narrativa, galeria, soluções e retorno locais |
-| `app/_components/SiteFrame.tsx` | Shell full-bleed existente |
-| `app/_components/SiteHeader.tsx` | Cabeçalho flutuante existente |
-| `app/_components/ContactBanner.tsx` | Conversão com duas ações visuais |
-| `app/_components/SiteFooter.tsx` | Rodapé global e item corrente |
-| `app/_components/Typography.tsx` | Títulos e corpo editorial |
-| `app/_components/CardSurface.tsx` | Superfícies claras informativas |
-| `app/_components/LineIcon.tsx` | Ícones atuais e extensões necessárias |
-| `app/_components/Brand.tsx` | Marca e ornamentos botânicos |
-| `app/_content/siteContent.ts` | Contatos e conteúdo global confirmados |
-| `app/globals.css`, `app/color-tokens.css` | Layout, tokens, estados e responsividade |
-| `docs/PROJECTS-CONTENT.md` | Estado atual do catálogo, mídia e pendências |
-| `docs/DESIGN-SYSTEM.md` | Contrato vigente das primitives compartilhadas |
+| `images/portfolio/catalog.json` | Conteúdo, ordem editorial, hero e mídias |
+| `app/_content/portfolioCatalog.ts` | Tipos, validação e resolução de mídia |
+| `app/projetos/[slug]/page.tsx` | Composição e fornecimento de categoria/resumo |
+| `app/projetos/[slug]/_components/ProjectDetailHero.tsx` | Hero alvo |
+| `app/projetos/[slug]/_components/ProjectOverview.tsx` | Narrativa atual a ser remodelada |
+| `app/projetos/[slug]/_components/ProjectGallery.tsx` | Galeria e variantes por quantidade |
+| `app/projetos/[slug]/_components/AppliedSolutions.tsx` | Região preservada após a galeria |
+| `app/projetos/[slug]/_components/ProjectsReturnLink.tsx` | Início da região congelada |
+| `app/projetos/[slug]/projectDetailContent.ts` | Conteúdo do banner preservado |
+| `app/globals.css`, `app/color-tokens.css` | Tokens, layout e breakpoints |
+| `app/projetos/[slug]/ProjectDetailPage.test.tsx` | Contratos atuais e novos cenários |
 
-## Resultado esperado deste artefato
+## Resultado esperado
 
-Permitir que cada projeto aprovado ganhe uma página individual acessível,
-responsiva e majoritariamente server-rendered, com narrativa e galeria próprias,
-sem duplicar o catálogo nem publicar como reais os dados demonstrativos do print.
-O template deve preservar a identidade de “jardim noturno editorial”, adaptar-se
-à quantidade real de conteúdo e manter projetos incompletos honestamente sem link
-de detalhe até a aprovação editorial.
+Uma página de detalhe reconhecível como Sobreiro, com hero mais informativo e
+galeria cinematográfica sem fragilidade estrutural. Projetos com uma única foto
+continuam completos e honestos; projetos extensos ganham ritmo editorial; o bloco
+de conversão e o footer permanecem exatamente fora desta revisão.

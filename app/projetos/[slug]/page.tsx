@@ -12,10 +12,10 @@ import {
 import { siteContent } from "../../_content/siteContent";
 import { AppliedSolutions } from "./_components/AppliedSolutions";
 import { ProjectDetailHero } from "./_components/ProjectDetailHero";
-import { ProjectGallery } from "./_components/ProjectGallery";
-import { ProjectOverview } from "./_components/ProjectOverview";
+import { ProjectStoryGallery } from "./_components/ProjectStoryGallery";
 import { ProjectsReturnLink } from "./_components/ProjectsReturnLink";
 import { projectDetailBanner, projectDetailContactActions } from "./projectDetailContent";
+import { prepareProjectDetailMedia } from "./projectDetailMedia";
 
 interface ProjectDetailPageProps {
   readonly params: Promise<{ readonly slug: string }>;
@@ -46,19 +46,33 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 }
 
 export function ProjectDetailPageView({ project }: { readonly project: PortfolioProject }) {
+  const preparedMedia = prepareProjectDetailMedia(project.hero, project.images);
+  const hasStorySurface = preparedMedia.galleryMedia.length > 0
+    || project.details?.introHeading !== undefined
+    || project.details?.statement !== undefined
+    || Boolean(project.details?.solutions?.length);
+
   return (
     <SiteFrame
       variant="fullBleed"
       footer={<SiteFooter {...siteContent.internalFooter} currentPath="/projetos" />}
     >
-      <ProjectDetailHero title={project.title} media={project.hero} />
-      <div className="projectDetailSurface">
-        <div className="projectDetailInner">
-          <ProjectOverview summary={project.summary} statement={project.details?.statement} />
-          <ProjectGallery images={project.images} />
-          <AppliedSolutions solutions={project.details?.solutions} />
+      <ProjectDetailHero
+        title={project.title}
+        category={project.category}
+        summary={project.summary}
+        titleAccent={project.details?.titleAccent}
+        media={preparedMedia.hero}
+        heroAlt={preparedMedia.heroAlt}
+      />
+      {hasStorySurface ? (
+        <div className="projectDetailSurface">
+          <div className="projectDetailInner">
+            <ProjectStoryGallery details={project.details} images={preparedMedia.galleryMedia} />
+            <AppliedSolutions solutions={project.details?.solutions} />
+          </div>
         </div>
-      </div>
+      ) : null}
       <ProjectsReturnLink />
       <div className="projectDetailContact">
         <ContactBanner

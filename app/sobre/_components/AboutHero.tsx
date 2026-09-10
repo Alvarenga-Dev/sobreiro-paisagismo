@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { BotanicalDecoration } from "../../_components/Brand";
+import { LineIcon } from "../../_components/LineIcon";
 import { DisplayHeading, SupportingCopy } from "../../_components/Typography";
 import type { AboutHeroContent } from "../aboutContent";
 
@@ -18,14 +18,20 @@ export function AboutHero({ content }: { content: AboutHeroContent }) {
         style={{ objectPosition: content.media.position }}
       />
       <div className="aboutHero__inner">
-        <nav className="breadcrumb" aria-label="Breadcrumb">
-          <ol>
-            <li><Link href="/">Início</Link></li>
-            <li aria-current="page">Sobre</li>
-          </ol>
-        </nav>
-        <DisplayHeading id="sobre-hero-title" fragments={content.title} />
-        <SupportingCopy context="onDark">{content.introduction}</SupportingCopy>
+        <div className="aboutHero__editorial">
+          <p className="aboutHero__eyebrow">{content.eyebrow}</p>
+          <DisplayHeading id="sobre-hero-title" fragments={content.title} />
+          <SupportingCopy context="onDark">{content.introduction}</SupportingCopy>
+        </div>
+        <div className="aboutHero__closing">
+          <a className="aboutHero__historyLink" href={content.historyLink.href}>
+            <span aria-hidden="true" className="aboutHero__historyIcon">
+              <LineIcon name="arrowRight" />
+            </span>
+            {content.historyLink.label}
+          </a>
+          <p className="aboutHero__statement">{content.statement}</p>
+        </div>
       </div>
       <BotanicalDecoration className="aboutHero__decoration" />
     </section>

@@ -31,7 +31,8 @@ const contactHref = "mailto:contato@sobreiro.com.br";
 const footerDescription =
   "Projetos de paisagismo que conectam natureza, bem-estar e estilo de vida.";
 const footerSocialLinks = [
-  { label: "Instagram da Sobreiro", href: "https://www.instagram.com/", icon: "instagram" },
+  { label: "Instagram da Sobreiro", href: "https://www.instagram.com/sobreiropaisagismo/", icon: "instagram" },
+  { label: "YouTube da Sobreiro", href: "https://www.youtube.com/@SobreiroPaisagismo", icon: "youtube" },
   { label: "Enviar mensagem para a Sobreiro", href: contactHref, icon: "message" },
 ] satisfies readonly SocialLink[];
 const footerLegal = {
@@ -48,13 +49,14 @@ const homeFooterGroups = [
       { label: "Sobre", href: "/sobre" },
       { label: "Projetos", href: "/projetos" },
       { label: "Por que um projeto?", href: "#beneficios" },
+      { label: "Contato", href: "#contato" },
     ],
   },
   {
     label: "Fale conosco",
     links: [
       { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
-      { label: "Rio de Janeiro, RJ", icon: "pin", href: "#contato" },
+      { label: "Saudades, SC", icon: "pin", href: "#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];
@@ -67,13 +69,14 @@ const internalFooterGroups = [
       { label: "Sobre", href: "/sobre" },
       { label: "Projetos", href: "/projetos" },
       { label: "Por que um projeto?", href: "/#beneficios" },
+      { label: "Contato", href: "/#contato" },
     ],
   },
   {
     label: "Fale conosco",
     links: [
       { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
-      { label: "Rio de Janeiro, RJ", icon: "pin", href: "/#contato" },
+      { label: "Saudades, SC", icon: "pin", href: "/#contato" },
     ],
   },
 ] satisfies readonly FooterNavGroupData[];

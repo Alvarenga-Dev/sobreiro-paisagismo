@@ -61,7 +61,7 @@ export const homeContent = {
     description:
       "Projetos de paisagismo que unem estética, funcionalidade e bem-estar para valorizar cada detalhe do seu espaço.",
     media: {
-      src: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1800&q=88",
+      src: "/images/portfolio/hero.png",
       alt: "Caminho envolvido por um jardim tropical iluminado",
       position: "58% center",
     },

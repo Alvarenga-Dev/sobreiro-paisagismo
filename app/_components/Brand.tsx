@@ -1,19 +1,49 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
+
+const flowerEmblemSources = {
+  olive: "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
+  light: "/images/portfolio/logo/flor-sobreiro-neutra-clara.svg",
+} as const;
+
+export type BrandEmblemArtwork = "fallback" | "flower";
+export type BrandFlowerTone = keyof typeof flowerEmblemSources;
 
 export interface BrandEmblemProps {
   label?: string;
   decorative?: boolean;
+  artwork?: BrandEmblemArtwork;
+  flowerTone?: BrandFlowerTone;
   className?: string;
 }
 
 export function BrandEmblem({
   label = "Emblema da Sobreiro Paisagismo",
   decorative = false,
+  artwork = "fallback",
+  flowerTone = "olive",
   className = "",
 }: BrandEmblemProps) {
   const accessibilityProps = decorative
     ? { "aria-hidden": true as const }
     : { role: "img", "aria-label": label };
+
+  if (artwork === "flower") {
+    return (
+      <span
+        className={`brandEmblem brandEmblem--flower ${className}`.trim()}
+        {...accessibilityProps}
+      >
+        <Image
+          className="brandEmblem__artwork"
+          src={flowerEmblemSources[flowerTone]}
+          alt=""
+          width={658}
+          height={537}
+        />
+      </span>
+    );
+  }
 
   return (
     <svg
@@ -34,17 +64,24 @@ export interface BrandLockupProps {
   href?: string;
   compact?: boolean;
   presentation?: "horizontal" | "stacked";
+  emblem?: BrandEmblemArtwork;
   className?: string;
 }
 
-export function BrandLockup({ href = "/", compact = false, presentation = "horizontal", className = "" }: BrandLockupProps) {
+export function BrandLockup({
+  href = "/",
+  compact = false,
+  presentation = "horizontal",
+  emblem = "fallback",
+  className = "",
+}: BrandLockupProps) {
   return (
     <a
       className={`brandLockup ${compact ? "brandLockup--compact" : ""} ${presentation === "stacked" ? "brandLockup--stacked" : ""} ${className}`.trim()}
       href={href}
       aria-label="Sobreiro Paisagismo — página inicial"
     >
-      <BrandEmblem decorative />
+      <BrandEmblem artwork={emblem} decorative />
       <span className="brandLockup__wordmark" translate="no">
         <strong>Sobreiro</strong>
         <small>Paisagismo</small>
@@ -61,7 +98,7 @@ export interface FooterBrandProps {
 export function FooterBrand({ description, children }: FooterBrandProps) {
   return (
     <div className="footerBrand">
-      <BrandLockup />
+      <BrandLockup emblem="flower" />
       <p>{description}</p>
       {children}
     </div>

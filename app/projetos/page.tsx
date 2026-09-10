@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { ContactBanner } from "../_components/ContactBanner";
 import { SiteFrame } from "../_components/SiteFrame";
 import { SiteFooter } from "../_components/SiteFooter";
 import { siteContent } from "../_content/siteContent";
 import { ProjectsHero } from "./_components/ProjectsHero";
 import { ProjectsCatalog } from "./_components/ProjectsCatalog";
+import { ProjectsContactBanner } from "./_components/ProjectsContactBanner";
 import { catalogProjects, projectCategories, projectsContent, projectContactActions } from "./projectsContent";
 import { filterProjects, normalizeCategory, projectFilterHref, type ProjectSearchParams } from "./projectFilters";
 
@@ -25,9 +25,13 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       <div className="projectsPage__surface">
         <div className="projectsPage__inner">
           <ProjectsCatalog category={category} destinations={destinations} projects={filterProjects(catalogProjects, category)} />
-          <ContactBanner id="projects-contact-title" {...projectsContent.banner} {...projectContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact)} />
         </div>
       </div>
+      <ProjectsContactBanner
+        id="projects-contact-title"
+        {...projectsContent.banner}
+        {...projectContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact)}
+      />
     </SiteFrame>
   );
 }

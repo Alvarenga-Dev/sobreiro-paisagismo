@@ -26,7 +26,7 @@ export function SiteHeader({
       data-presentation="floating"
       data-has-action={whatsappHref ? "true" : "false"}
     >
-      <BrandLockup compact />
+      <BrandLockup compact emblem="flower" />
       <DesktopNavigation navigation={navigation} />
       {whatsappHref ? (
         <ButtonLink className="siteHeader__contact" href={whatsappHref}>

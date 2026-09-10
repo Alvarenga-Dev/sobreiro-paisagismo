@@ -10,6 +10,8 @@ export type ProjectDetailPublication = "draft" | "published";
 
 export interface PortfolioImage extends ProjectMedia {
   readonly file: string;
+  readonly position?: string;
+  readonly positionMobile?: string;
 }
 
 export interface ProjectSolution {
@@ -22,6 +24,9 @@ export interface ProjectSolution {
 export interface PortfolioProjectDetails {
   readonly statement?: string;
   readonly heroFile?: string;
+  readonly titleAccent?: string;
+  readonly introHeading?: string;
+  readonly body?: readonly string[];
   readonly solutions?: readonly ProjectSolution[];
 }
 
@@ -124,6 +129,28 @@ function optionalString(record: UnknownRecord, key: string, pathname: string): s
   return record[key] === undefined ? undefined : requiredString(record, key, pathname);
 }
 
+const focalKeywordPattern = /^(?:(?:left|center|right) (?:top|center|bottom)|(?:top|center|bottom) (?:left|center|right)|left|center|right|top|bottom)$/;
+const percentageToken = "(?:0|[1-9]\\d?(?:\\.\\d+)?|100(?:\\.0+)?)%";
+const focalPercentagePattern = new RegExp(`^${percentageToken} ${percentageToken}$`);
+
+function optionalFocalPoint(
+  record: UnknownRecord,
+  key: string,
+  pathname: string,
+): string | undefined {
+  const value = optionalString(record, key, pathname);
+  if (value === undefined) return undefined;
+
+  const normalized = value.trim().replace(/\s+/g, " ");
+  if (!focalKeywordPattern.test(normalized) && !focalPercentagePattern.test(normalized)) {
+    invalid(
+      `${pathname}.${key}`,
+      "esperada uma posição por keywords ou um par percentual entre 0% e 100%",
+    );
+  }
+  return normalized;
+}
+
 function detailPublication(record: UnknownRecord, pathname: string): ProjectDetailPublication {
   const value = requiredString(record, "detailPublication", pathname);
   if (value !== "draft" && value !== "published") {
@@ -132,12 +159,38 @@ function detailPublication(record: UnknownRecord, pathname: string): ProjectDeta
   return value;
 }
 
-function parseDetails(record: UnknownRecord, pathname: string): PortfolioProjectDetails | undefined {
+function parseDetails(
+  record: UnknownRecord,
+  pathname: string,
+  projectTitle: string,
+): PortfolioProjectDetails | undefined {
   if (record.details === undefined) return undefined;
 
   const detailsPath = `${pathname}.details`;
   const detailsRecord = asRecord(record.details, detailsPath);
   const statement = optionalString(detailsRecord, "statement", detailsPath);
+  const titleAccent = optionalString(detailsRecord, "titleAccent", detailsPath);
+  if (titleAccent !== undefined && !projectTitle.includes(titleAccent)) {
+    invalid(
+      `${detailsPath}.titleAccent`,
+      `o fragmento ${JSON.stringify(titleAccent)} não pertence ao título ${JSON.stringify(projectTitle)}`,
+    );
+  }
+  const introHeading = optionalString(detailsRecord, "introHeading", detailsPath);
+  const body = detailsRecord.body === undefined
+    ? undefined
+    : asArray(detailsRecord.body, `${detailsPath}.body`).map((value, index) => {
+        if (typeof value !== "string" || value.trim() === "") {
+          invalid(`${detailsPath}.body[${index}]`, "esperado um texto não vazio");
+        }
+        return value;
+      });
+  if (body?.length && introHeading === undefined && statement === undefined) {
+    invalid(
+      `${detailsPath}.body`,
+      "parágrafos exigem details.introHeading ou details.statement para nomear a narrativa",
+    );
+  }
   const heroFile = detailsRecord.heroFile === undefined
     ? undefined
     : relativeFile(detailsRecord, "heroFile", detailsPath);
@@ -163,6 +216,9 @@ function parseDetails(record: UnknownRecord, pathname: string): PortfolioProject
   return {
     ...(statement === undefined ? {} : { statement }),
     ...(heroFile === undefined ? {} : { heroFile }),
+    ...(titleAccent === undefined ? {} : { titleAccent }),
+    ...(introHeading === undefined ? {} : { introHeading }),
+    ...(body === undefined ? {} : { body }),
     ...(solutions === undefined ? {} : { solutions }),
   };
 }
@@ -230,6 +286,8 @@ function resolveImage(
     invalid(`${pathname}.file`, "dimensões inválidas");
   }
   const src = `/images/portfolio/${file.split("/").map(encodeURIComponent).join("/")}`;
+  const position = optionalFocalPoint(record, "position", pathname) ?? "center center";
+  const positionMobile = optionalFocalPoint(record, "positionMobile", pathname) ?? position;
   return {
     file,
     src,
@@ -237,7 +295,8 @@ function resolveImage(
     width: dimensions.width,
     height: dimensions.height,
     sizes,
-    position: "center center",
+    position,
+    positionMobile,
   };
 }
 
@@ -270,7 +329,7 @@ function parseCatalog(input: unknown, assetRoot: string): readonly PortfolioCate
       const summary = requiredString(projectRecord, "summary", projectPath);
       const status = requiredString(projectRecord, "status", projectPath);
       const publication = detailPublication(projectRecord, projectPath);
-      const details = parseDetails(projectRecord, projectPath);
+      const details = parseDetails(projectRecord, projectPath, title);
       const coverFile = relativeFile(projectRecord, "cover", projectPath);
       const imageRecords = asArray(projectRecord.images, `${projectPath}.images`);
       if (imageRecords.length === 0) invalid(`${projectPath}.images`, "a galeria não pode ser vazia");

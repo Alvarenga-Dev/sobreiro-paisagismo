@@ -52,6 +52,10 @@ describe("shell compartilhado", () => {
     const header = screen.getByRole("banner");
     const navigation = within(header).getByRole("navigation", { name: "Navegação principal" });
     expect(within(header).getByRole("link", { name: "Sobreiro Paisagismo — página inicial" })).toHaveAttribute("href", "/");
+    expect(header.querySelector(".brandEmblem--flower img")).toHaveAttribute(
+      "src",
+      "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
+    );
     expect(within(navigation).getAllByRole("link").map((link) => link.textContent)).toEqual(
       siteContent.navigation.map((item) => item.label),
     );
