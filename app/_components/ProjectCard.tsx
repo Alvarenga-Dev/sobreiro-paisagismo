@@ -19,12 +19,22 @@ export interface ProjectCardData {
   media: ProjectMedia;
 }
 
+export type ProjectCardDirection = "mediaFirst" | "contentFirst";
+export type ProjectCardSurface = "dark" | "light";
+
 export interface ProjectCardProps {
   project: ProjectCardData;
   layout?: "stacked" | "split";
+  direction?: ProjectCardDirection;
+  surface?: ProjectCardSurface;
 }
 
-export function ProjectCard({ project, layout = "stacked" }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  layout = "stacked",
+  direction = "mediaFirst",
+  surface = "dark",
+}: ProjectCardProps) {
   const content = (
     <>
         <div className="projectCard__media">
@@ -49,7 +59,12 @@ export function ProjectCard({ project, layout = "stacked" }: ProjectCardProps) {
   );
 
   return (
-    <article className={`projectCard projectCard--${layout}`} data-project-id={project.id}>
+    <article
+      className={`projectCard projectCard--${layout} projectCard--${direction} projectCard--${surface}`}
+      data-direction={direction}
+      data-project-id={project.id}
+      data-surface={surface}
+    >
       {project.href ? (
         <a className="projectCard__link" href={project.href} aria-label={`Conhecer o projeto ${project.title}`}>
           {content}

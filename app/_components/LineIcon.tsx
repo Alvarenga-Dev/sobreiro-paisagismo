@@ -15,6 +15,7 @@ export const lineIconNames = [
   "grid",
   "home",
   "instagram",
+  "youtube",
   "graduationCap",
   "leaf",
   "lotus",
@@ -78,6 +79,12 @@ const iconPaths: Record<LineIconName, React.ReactNode> = {
       <rect x="4" y="4" width="16" height="16" rx="5" />
       <circle cx="12" cy="12" r="3.5" />
       <circle cx="17.5" cy="6.5" r=".7" fill="currentColor" stroke="none" />
+    </>
+  ),
+  youtube: (
+    <>
+      <rect x="3" y="6" width="18" height="12" rx="3" />
+      <path d="m10 9 5 3-5 3V9Z" fill="currentColor" stroke="none" />
     </>
   ),
   graduationCap: (

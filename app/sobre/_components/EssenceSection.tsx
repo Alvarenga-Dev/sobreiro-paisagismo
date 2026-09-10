@@ -19,17 +19,25 @@ function ValueCard({ value }: { value: AboutValue }) {
 }
 
 export function EssenceSection({ content }: { content: AboutEssenceContent }) {
+  const approvedMetrics = content.metrics.filter((metric) => metric.status === "approved");
+
   return (
-    <section className="essenceSection" aria-labelledby="essencia-title" data-region="essence">
+    <section id="essencia" className="essenceSection" aria-labelledby="essencia-title" data-region="essence">
       <div className="aboutSectionInner essenceSection__layout">
-        <figure className="essenceMedia">
-          <Image
-            src={content.media.src}
-            alt={content.media.alt}
-            fill
-            sizes={content.media.sizes}
-            style={{ objectPosition: content.media.position }}
-          />
+        <figure className="essenceMediaComposite">
+          <div className="essenceMedia">
+            <Image
+              src={content.media.src}
+              alt={content.media.alt}
+              fill
+              sizes={content.media.sizes}
+              style={{ objectPosition: content.media.position }}
+            />
+          </div>
+          <figcaption className="essenceMediaCallout">
+            <strong>{content.mediaCallout.title}</strong>
+            <span>{content.mediaCallout.description}</span>
+          </figcaption>
         </figure>
         <div className="essenceSection__copy">
           <SectionHeading
@@ -41,6 +49,16 @@ export function EssenceSection({ content }: { content: AboutEssenceContent }) {
             {content.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
         </div>
+        {approvedMetrics.length > 0 ? (
+          <ul className="metricsList" aria-label="Indicadores da Sobreiro Paisagismo">
+            {approvedMetrics.map((metric) => (
+              <li key={metric.id}>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <ul className="valuesGrid" aria-label="Valores da Sobreiro Paisagismo">
           {content.values.map((value) => <ValueCard key={value.id} value={value} />)}
         </ul>

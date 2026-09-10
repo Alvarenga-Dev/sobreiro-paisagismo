@@ -135,6 +135,110 @@ describe("adaptador do catálogo de portfólio", () => {
     expect(withHero.hero.file).toBe(selectedHeroFile);
   });
 
+  it("normaliza acento, narrativa e pontos focais editoriais opcionais", () => {
+    const project = copyPortfolioCatalog().categories[0].projects[0];
+    const catalog = buildPortfolioCatalog(
+      replaceFirstProject({
+        ...project,
+        details: {
+          titleAccent: "área gourmet",
+          introHeading: "Um jardim para viver a casa por inteiro.",
+          body: [
+            "O percurso verde acompanha as áreas de convivência.",
+            "Texturas tropicais aproximam arquitetura e paisagem.",
+          ],
+        },
+        images: project.images.map((image, index) => index === 0
+          ? { ...image, position: "65% 40%", positionMobile: "right center" }
+          : image),
+      }),
+      rawHomeCatalog,
+    );
+    const parsed = catalog.projects[0];
+
+    expect(parsed.details).toMatchObject({
+      titleAccent: "área gourmet",
+      introHeading: "Um jardim para viver a casa por inteiro.",
+      body: [
+        "O percurso verde acompanha as áreas de convivência.",
+        "Texturas tropicais aproximam arquitetura e paisagem.",
+      ],
+    });
+    expect(parsed.images[0]).toMatchObject({
+      position: "65% 40%",
+      positionMobile: "right center",
+    });
+  });
+
+  it("aplica os fallbacks de foco sem preencher campos editoriais ausentes", () => {
+    const project = copyPortfolioCatalog().categories[0].projects[0];
+    const withDesktopFocus = buildPortfolioCatalog(
+      replaceFirstProject({
+        ...project,
+        images: project.images.map((image, index) => index === 0
+          ? { ...image, position: "left top" }
+          : image),
+      }),
+      rawHomeCatalog,
+    ).projects[0];
+    const legacy = buildPortfolioCatalog(rawPortfolioCatalog, rawHomeCatalog).projects[0];
+
+    expect(withDesktopFocus.images[0]).toMatchObject({
+      position: "left top",
+      positionMobile: "left top",
+    });
+    expect(legacy.images[0]).toMatchObject({
+      position: "center center",
+      positionMobile: "center center",
+    });
+    expect(legacy.details).toBeUndefined();
+  });
+
+  it("rejeita acento vazio ou ausente do título de forma determinística", () => {
+    const project = copyPortfolioCatalog().categories[0].projects[0];
+
+    expect(() => buildPortfolioCatalog(
+      replaceFirstProject({ ...project, details: { titleAccent: " " } }),
+      rawHomeCatalog,
+    )).toThrow("details.titleAccent: esperado um texto não vazio");
+    expect(() => buildPortfolioCatalog(
+      replaceFirstProject({ ...project, details: { titleAccent: "jardim inexistente" } }),
+      rawHomeCatalog,
+    )).toThrow('details.titleAccent: o fragmento "jardim inexistente" não pertence ao título');
+  });
+
+  it("rejeita parágrafos vazios e corpo sem heading editorial", () => {
+    const project = copyPortfolioCatalog().categories[0].projects[0];
+
+    expect(() => buildPortfolioCatalog(
+      replaceFirstProject({
+        ...project,
+        details: { introHeading: "Uma paisagem habitada.", body: ["Primeiro parágrafo.", " "] },
+      }),
+      rawHomeCatalog,
+    )).toThrow("details.body[1]: esperado um texto não vazio");
+    expect(() => buildPortfolioCatalog(
+      replaceFirstProject({ ...project, details: { body: ["Corpo sem título."] } }),
+      rawHomeCatalog,
+    )).toThrow("details.body: parágrafos exigem details.introHeading ou details.statement");
+  });
+
+  it("rejeita CSS arbitrário e percentuais fora do intervalo nos pontos focais", () => {
+    const project = copyPortfolioCatalog().categories[0].projects[0];
+
+    for (const position of ["calc(50% + 1rem) center", "101% 50%", "left 20%", "inherit"]) {
+      expect(() => buildPortfolioCatalog(
+        replaceFirstProject({
+          ...project,
+          images: project.images.map((image, index) => index === 0
+            ? { ...image, position }
+            : image),
+        }),
+        rawHomeCatalog,
+      )).toThrow("position: esperada uma posição por keywords ou um par percentual entre 0% e 100%");
+    }
+  });
+
   it("rejeita hero externo à galeria e frase vazia", () => {
     const project = copyPortfolioCatalog().categories[0].projects[0];
 

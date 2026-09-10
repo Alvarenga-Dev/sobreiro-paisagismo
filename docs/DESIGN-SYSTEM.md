@@ -105,7 +105,7 @@ hero e mídias usam `min-height` ou `aspect-ratio` para reservar espaço.
 | `app/_home/ProjectsSection.tsx` | `ProjectsSection` |
 | `app/_home/ProjectCarousel.tsx` | `ProjectCarousel` |
 | `app/_home/AboutPanel.tsx` | `AboutPanel`, `MediaFrame`, `QuoteCard`, `MediaQuoteComposite` |
-| `app/sobre/_components/` | `AboutHero`, `EssenceSection`, `FounderSection`, `ContactMethodsSection` e `ContactMethodCard` |
+| `app/sobre/_components/` | `AboutHero`, `EssenceSection`, `TeamProfileSection`, `ContactMethodsSection` e `ContactMethodCard` |
 | `app/page.tsx` | `HomePage` |
 | `app/sobre/page.tsx` | `AboutPage` |
 
@@ -124,8 +124,8 @@ independentes porque não têm consumidor ou API própria. Não há nó órfão 
 | `LineIcon` | Caixa SVG com `currentColor`. `name`, `size`, `decorative`, `label`. | `sm`, `md`, `lg`; 11 desenhos. | herda cor e stroke. | Decorativo por padrão com `aria-hidden`; informativo usa `role=img` e rótulo. |
 | `CardSurface` | Superfície e geometria sem decidir marcação. `children`, `tone`. | `light`, `dark`, `media`. | borda e fundo por contexto. | Não adiciona papel ARIA; consumidor escolhe semântica. |
 | `PaginationDots` | Comunica e, opcionalmente, altera página. `count`, `activeIndex`, `label`, `onSelect`. | estático ou interativo. | idle, active, hover, focus. | Interativo usa botões de 44 px, `aria-current=page` e rótulos com posição; estático fornece texto oculto. |
-| `BrandEmblem` | Fallback de emblema com caixa estável. `label`, `decorative`. | informativo ou decorativo. | cor via `currentColor`. | Informativo usa `role=img`; decoração usa `aria-hidden`. |
-| `BrandLockup` | Link da marca. `href`, `compact`. | padrão, compacto. | foco sobre escuro. | O texto visível nomeia a marca e o link tem nome completo; fallback não depende de arquivo. |
+| `BrandEmblem` | Emblema com caixa estável. `label`, `decorative`, `artwork`, `flowerTone`. | `fallback` vetorial ou flor oficial `olive`/`light`; informativo ou decorativo. | fallback via `currentColor`; flor oficial em SVG oliva ou neutro claro. | Informativo usa `role=img`; decoração usa `aria-hidden`; a arte preserva proporção sem alterar a caixa. |
+| `BrandLockup` | Link da marca. `href`, `compact`, `emblem`. | padrão, compacto; fallback ou flor oficial. | foco sobre escuro; Navbar e footer usam a flor oliva. | O texto visível nomeia a marca e o link tem nome completo; outros consumidores preservam o fallback até migração explícita. |
 | `BotanicalDecoration` | Ornamento linear. `position`. | esquerda, direita. | baixa opacidade e sem interação. | Sempre `aria-hidden`, `focusable=false`, `pointer-events:none`. |
 
 ### Exemplo de primitiva
@@ -271,7 +271,7 @@ enquanto superfícies e mídias podem alcançar as bordas do viewport.
 
 | Item provisório | Estado atual | Ponto de substituição sem alterar API |
 | --- | --- | --- |
-| Logo, emblema e ornamentos | SVGs lineares fallback em `Brand.tsx` | Fazer `BrandEmblem`/`BrandLockup` consumir os arquivos oficiais mantendo caixa e rótulos. |
+| Logo, emblema e ornamentos | Navbar e footer usam a flor oficial oliva; `ContactBanner` usa a versão neutra clara como marca-d'água | Migrar os consumidores restantes de forma explícita, mantendo caixa, proporção e rótulos. |
 | Fontes | Georgia + pilha sans do sistema | Alterar `--font-display` e `--font-body` ou integrar fonte aprovada no layout. |
 | Hero e projetos | Fotografias provisórias do Unsplash | Trocar `src`, `alt`, `position` e dimensões em `homeContent.ts`. |
 | Destino de contato | `mailto:contato@sobreiro.com.br` | Alterar `siteContent.contact`; consumidores globais recebem o destino por props. |
@@ -349,73 +349,94 @@ Guidelines em 31/08/2026; nenhuma divergência permaneceu nos arquivos da Home.
 
 ## 12. Extensões da página Sobre
 
-### Variantes compartilhadas
+### Composição sucessora e propriedade
 
-| Componente | API adicionada | Padrão preservado | Uso em `/sobre` |
-| --- | --- | --- | --- |
-| `SiteFrame` | `variant: "inset" \| "fullBleed"` | O shell da rota não aplica moldura externa nem possui header | `fullBleed`; o conteúdo de cada região continua limitado por `--width-content` |
-| `SiteHeader` | propriedade global no layout | A superfície flutuante e a navegação persistem entre rotas | Sobre não instancia nem configura outro header |
-| `LineIcon` | desenhos `award`, `calendar`, `graduationCap` e `users` | caixa, tamanhos, `currentColor` e modo decorativo existentes | valores, credenciais e agendamento |
+`/sobre` usa `SiteFrame` em `fullBleed` e mantém a ordem DOM
+`about-hero → essence → team-profile → contact-methods`. A Navbar e o skip link
+pertencem exclusivamente ao shell persistente em `app/layout.tsx`; a rota não
+recebe prop de header, não copia navegação e reutiliza `SiteFooter` com os dados
+globais de `app/_content/siteContent.ts`.
 
-O `SiteFooter` não precisou de nova API. Seus dados agora pertencem a
-`app/_content/siteContent.ts`, preservando exatamente a saída observável da Home
-e permitindo o reuso pela rota interna sem dependência de `_home`.
+Os componentes locais continuam Server Components. A direção visual é o jardim
+noturno editorial: fotografia atmosférica no hero, superfície marfim para
+Essência e contato, faixa verde profunda para o perfil e tipografia serifada nos
+gestos editoriais. Callouts, indicadores, ornamentos e cards não introduzem
+animação, parallax, reveal, bounce nem contador.
 
-### Propriedade e estados locais
+### APIs locais e estados editoriais
 
-Os componentes em `app/sobre/_components/` pertencem somente à rota. O conteúdo
-e seus contratos readonly ficam em `app/sobre/aboutContent.ts`; a página e as
-seções continuam Server Components; as ilhas de navegação permanecem no layout
-global e não tornam a página cliente.
+| Contrato | Campos e estados | Saída observável |
+| --- | --- | --- |
+| `AboutHeroContent` | `eyebrow`, `title`, `introduction`, `statement`, `historyLink` tipado como hash e mídia | Um `h1`, texto completo sobre overlay e um `<a href="#essencia">`; sem breadcrumb |
+| `AboutEssenceContent` | mídia, `mediaCallout`, narrativa, `metrics` e quatro valores | Mídia/callout → narrativa → indicadores aprovados → valores, na mesma ordem do DOM |
+| `AboutMetric` | `approved` possui `value`/`label`; `pendingApproval` possui apenas campos `candidate*` | Somente o estado aprovado é publicado; valores candidatos não entram no HTML |
+| `AboutTeamContent` | identidade, papel, `TeamMediaContent` e credenciais | Linguagem institucional, sem pessoa, registro, biografia ou semântica de retrato |
+| `TeamMediaContent` | `configured` exige mídia; `unavailable` exige mensagem; ambos exigem `callout` | Imagem botânica com alt contextual ou fallback verdadeiro, sempre com callout textual |
+| `AboutCredential` | `approved` exige `detail`; `pendingApproval` exige `pendingMessage` | Lista de quatro categorias com o estado editorial verdadeiro |
+| `ContactMethod` | `configured` exige `href` e `accessibleLabel`; `unavailable` exige mensagem | Card inteiro como um único link ou superfície informativa não focável |
 
-`ContactMethod` é uma união discriminada:
+No conteúdo vigente, `+100` e `100%` permanecem candidatos pendentes e não são
+renderizados; somente o indicador neutro `Natureza` está aprovado. Hero e
+processo ainda usam ativos remotos provisórios; a mídia botânica da equipe está
+indisponível. Somente o e-mail está configurado; WhatsApp e agenda permanecem sem
+URL. Esses pontos são substituídos exclusivamente em `aboutContent.ts` após
+aprovação editorial e de licenciamento.
 
-- `configured`: exige `href` e `accessibleLabel` e renderiza um único `<a>` nativo
-  envolvendo toda a superfície;
-- `unavailable`: exige uma mensagem explícita e renderiza conteúdo informativo
-  sem `href`, `tabIndex`, papel de botão ou estado de hover acionável.
+### Layout, tokens e responsividade
 
-No estado atual, somente o e-mail global está configurado. WhatsApp e agenda não
-fabricam destinos. O perfil usa identidade neutra, omite registro e assinatura e
-mostra um fallback informativo para o retrato. Credenciais não aprovadas aparecem
-como categorias em validação editorial, nunca como fatos profissionais.
+Nenhum token novo foi necessário. A página reutiliza `--width-content`,
+`--navbar-clearance`, `--size-touch`, espaços, raios, hairlines, cores
+contextuais, camadas, foco e movimento existentes.
 
-### Responsividade e acessibilidade
+- Base: todas as regiões empilham; callouts ficam no fluxo e os cards de contato
+  e valores usam uma coluna.
+- `40rem`: Essência usa mídia + narrativa, indicadores descem em faixa própria;
+  perfil usa duas áreas; valores e contatos usam duas colunas.
+- `56rem`: os quatro valores cabem em uma linha, sem reduzir texto.
+- `68.75rem`: Essência e perfil usam três zonas; callouts só então cruzam a borda
+  com espaço reservado; indicadores ficam em coluna; contatos usam três cards.
+- `80rem`: contato assume grade assimétrica título → introdução/métodos.
+- `100rem`: em monitores ultrawide, os contêineres internos passam a acompanhar
+  os gutters da Home em vez de permanecerem como uma ilha central de 76rem; a
+  estrutura e as grades das regiões não mudam.
+- Abaixo de `100rem`, o conteúdo interno para de crescer em `--width-content`;
+  superfícies continuam full-bleed. Imagens usam `aspect-ratio`, `object-fit` e
+  ponto focal configurado, e nenhuma seção tem `height` fixa.
 
-- Em 320 px, regiões, valores, perfil e contatos usam uma coluna; em 640 px,
-  Essência ganha duas colunas, valores usam grade 2 × 2 e contatos usam duas
-  colunas; a partir de 896 px, valores ocupam quatro colunas e o perfil distribui
-  introdução, retrato e credenciais em três áreas. Contatos só usam três colunas
-  quando os seus rótulos cabem sem fragmentação.
-- Regiões não têm altura fixa. Hero usa `min-height`; mídias reservam espaço por
-  `aspect-ratio`, `sizes`, fallback de superfície e `object-position` configurado.
-- O breadcrumb é uma navegação nomeada, o hero contém o único `h1`, cada região
-  principal aponta para seu `h2`, e coleções informativas usam listas.
-- Ícones repetitivos e ornamentos são decorativos. Somente links reais recebem
-  foco; os alvos mantêm ao menos `--size-touch` (44 px) e o foco muda conforme a
-  superfície.
-- A regra global de `prefers-reduced-motion` cobre as transições adicionadas. Não
-  há animação de entrada, ocultação dependente de scroll, painel de menu ou
-  reordenação visual do DOM; o header global permanece fixo.
+### Semântica, teclado e movimento
 
-### Validação da rota Sobre — 07/09/2026
+- O hero contém o único `h1`; Essência, perfil e contato usam `aria-labelledby`
+  com seus `h2`. A seção `#essencia` aplica `scroll-margin-top` compatível com a
+  Navbar fixa.
+- Indicadores, valores, credenciais e métodos de contato são listas. Cards
+  informativos e callouts não têm `tabIndex`, cursor de ação ou papel interativo.
+- A foto atmosférica do hero usa alt vazio; a mídia de processo usa alternativa
+  contextual. Ícones repetitivos e ornamentos usam `aria-hidden`; SVGs também
+  usam `focusable="false"` e ornamentos ignoram o ponteiro.
+- A ordem de foco acompanha o DOM. Links reais têm foco visível por superfície e
+  alvos mínimos de `--size-touch` (44 × 44 px).
+- A regra global de `prefers-reduced-motion` troca scroll suave por imediato e
+  reduz transições não essenciais; a página não depende de movimento.
+
+### Validação visual — 10/09/2026
 
 | Viewport | Resultado observado |
 | --- | --- |
-| 320 × 900 px | Regiões, valores e contatos em uma coluna; título e cabeçalho preservados; e-mail sem fragmentação; `scrollWidth` igual a 320 px |
-| 640 × 900 px | Essência em duas colunas, valores 2 × 2, contatos 2 + 1 e rodapé em duas áreas legíveis, sem conteúdo cortado |
-| 896 × 900 px | Quatro valores, perfil em três áreas e contatos em duas colunas orientadas pelo conteúdo; nenhuma imagem quebrada |
-| 1440 × 1000 px | Conteúdo interno limitado a 1216 px, composição assimétrica ampla, contatos em três colunas e gutters crescentes |
+| 320 × 800 px | Uma coluna, callouts no fluxo, hero e Navbar legíveis, âncora funcional, alvos ≥ 44 px e sem overflow horizontal |
+| 640 × 900 px | Essência em duas zonas, valores 2 × 2, perfil e contatos empilhando sem corte |
+| 1024 × 900 px | Navbar desktop sem colisão; valores em quatro colunas; perfil em duas áreas e credenciais abaixo |
+| 1440 × 960 px | Essência e perfil em três zonas, callouts sobrepostos com reserva, contato assimétrico e conteúdo limitado |
+| 2435 × 1200 px | Hero, Essência, perfil, contato e rodapé compartilham os gutters de 88 px da Home, sem overflow horizontal |
 
-Em todos os casos a ordem DOM permaneceu `hero → essência → perfil → contato`,
-sem overflow horizontal. A inspeção encontrou um único `h1`, zero focáveis nos
-dois contatos indisponíveis e alvos acionáveis com altura mínima de 44 px. As
-relações recorrentes de contraste usadas pela rota medem 7,40:1 para acento em
-escuro, 10,09:1 para texto muted em escuro, 5,99:1 para acento em claro e 4,61:1
-para texto muted em claro; o foco quente sobre escuro mede 12,79:1.
+Em todas as larguras permaneceram um banner global, um `main`, um footer, um
+`h1` e a ordem narrativa prevista, sem overflow horizontal. A paleta reutiliza as
+relações de contraste já auditadas: 7,40:1 para acento sobre escuro, 10,09:1 para
+muted sobre escuro, 5,99:1 para acento sobre claro e 4,61:1 para muted sobre
+claro; o foco quente sobre escuro mede 12,79:1.
 
-TypeScript, 23 testes Jest, ESLint e o build de produção passaram. O Next.js
-classificou `/sobre` como rota estática.
+TypeScript, 101 testes Jest, ESLint e o build de produção passaram; o Next.js
+classificou `/sobre` como rota estática. A revisão das Web Interface Guidelines
+vigentes em 10/09/2026 não encontrou divergências nos arquivos alterados.
 
 ## 9. Navegação mobile
 
@@ -446,23 +467,32 @@ e contenção de foco, com contenção de Tab como reforço; o scroll inline ant
 
 ## Extensões do catálogo de Projetos
 
-`ProjectCard` mantém `project: ProjectCardData` e acrescenta `layout?: "stacked" | "split"`
-(default `stacked`). `href` é opcional: com destino, todo o card é um único link
-acionável por Tab/Enter, com foco e hover existentes. Sem destino, o mesmo conteúdo
-fica em uma superfície informativa, sem tab stop, cursor ou hover de ação, e mostra
-“Detalhes em breve”. Não usar links fictícios. A variante split usa `LineIcon`
-`arrowRight`; stacked mantém a seta e a distribuição anteriores.
+`ProjectCard` mantém `project` e `layout?: "stacked" | "split"` e acrescenta as
+variantes ortogonais `direction?: "mediaFirst" | "contentFirst"` e
+`surface?: "dark" | "light"`. Os defaults continuam `stacked`, `mediaFirst` e
+`dark`, preservando Home e demais consumidores. Classes e atributos de dados
+expõem as variantes para CSS e testes. A ordem DOM é sempre mídia → categoria →
+título → resumo → affordance; `contentFirst` troca somente as áreas da grade em
+desktop amplo.
 
-Split empilha abaixo de 48rem e usa mídia/conteúdo em 42/58 a partir dessa faixa.
-A mídia reserva espaço, tem fallback e `object-fit: cover`; `media.position` e
-`media.sizes` continuam por consumidor. Títulos h3, categoria e resumo crescem sem
-truncamento. A variante usa `--color-surface-dark-primary`, texto on-dark,
-`--radius-card`, `--space-xl`, tamanho de corpo e caption para tag.
+`href` continua opcional. Com destino, todo o card é um único link acionável por
+Tab/Enter, possui foco visível e comunica “Ver detalhes”. Sem destino, o card é
+um artigo informativo, sem tab stop, cursor ou hover de ação, e comunica
+“Detalhes em breve”. Ambas as superfícies usam tokens contextuais próprios para
+texto, apoio, borda, acento e foco; títulos e resumos crescem sem truncamento.
 
-`ContactBanner.description?: string` (default ausente) adiciona `SupportingCopy`
-ao grupo do h2. Ausente preserva a anatomia anterior. Mantém os contratos de CTA e
-supportingAction, teclado nativo e ornamentos ocultos. Na rota, o banner se alinha
-aos filtros/lista e empilha as ações em telas estreitas.
+A composição exclusiva de `/projetos` usa `ProjectsHero`, `ProjectsCatalog` e
+`ProjectsContactBanner`, todos Server Components. Conteúdo editorial local e o
+estado de mídia pertencem a `projectsContent.ts`; categorias, projetos, capas,
+copy, publicação e destinos continuam exclusivamente no catálogo versionado. A
+tabela readonly de apresentação é indexada por ID e validada contra ausências,
+duplicatas e IDs desconhecidos, portanto a variante não muda após filtragem.
+
+O banner local usa a união discriminada `pendingApproval | approved`. O primeiro
+publica uma superfície verde profunda completa e não cria `src` vazio; o segundo
+exige `src`, `alt`, dimensões, `sizes` e ponto focal e recebe overlay independente
+do crop. A primitiva compartilhada `ContactBanner` não mudou. Ações só são links
+quando existe destino configurado; indisponibilidade não fabrica rota ou tab stop.
 
 `SiteFooter.currentPath?: string`, também aceito por `FooterNavGroup`, marca links
 de página com `aria-current="page"`, sublinhado e peso; queries são ignoradas e
@@ -473,13 +503,30 @@ preservando currentColor, tamanhos e semântica. `SectionAction` usa seu rótulo
 visível como nome acessível, pois agora pode navegar para uma página.
 
 `ProjectFilters`, `ProjectsCatalog` e `ResultsAnnouncement` são locais à rota.
-A URL é a única fonte de seleção, sem estado duplicado. Sete links com push e
-`scroll={false}` preservam os demais parâmetros. Seleção combina cor, sublinhado,
-peso e aria-current, sem semântica de tabs. Alvos mínimos usam `--size-touch`;
-rótulos quebram integralmente, em duas, três ou sete colunas. A região de status
-persistente anuncia categoria + contagem com pluralização e aria-atomic. O estado
-vazio mantém filtros e oferece “Ver todos”. Todas as transições respeitam a regra
-global de movimento reduzido. Fontes, cores e gutters reutilizam os tokens atuais.
+A URL é a única fonte de seleção, sem estado duplicado. Oito links reais usam
+`flex-wrap`, largura intrínseca e `scroll={false}`, preservando os demais
+parâmetros. Seleção combina cor, sublinhado, peso e `aria-current`, sem semântica
+de tabs. Alvos mínimos usam `--size-touch`; cada pill quebra como uma unidade. A
+região de status persistente anuncia categoria + contagem com pluralização e
+`aria-atomic`; o estado vazio mantém introdução, filtros, contato e “Ver todos”.
+
+A página empilha tudo na base; a partir de 48rem, cards isolados podem usar a
+divisão 42/58 já existente. Em 56rem, statements editoriais ocupam uma segunda
+zona sem mudar a ordem DOM. Em 68.75rem, a coleção passa a duas colunas e os cards
+usam metades equivalentes, incluindo a inversão visual por áreas nomeadas. As
+quatro linhas usam a mesma altura fluida, com mínimo de 20rem; a mídia preenche a
+linha e o maior conteúdo pode expandir todas elas sem truncamento. A partir de
+100rem, hero, catálogo e contato deixam o limite de `--width-content` e acompanham
+os gutters da viewport, como a Home, sem alterar sua estrutura. Hero e banner são
+full-bleed; em larguras menores o catálogo continua limitado por
+`--width-content`. Todos preservam safe areas e crescimento de texto. Não há
+altura fixa, parallax ou animação de entrada; a regra global de
+`prefers-reduced-motion` cobre as transições compartilhadas.
+
+Hero, catálogo e contato usam `aria-labelledby`; o hero contém o único `h1` e os
+projetos usam `h3` em artigos dentro de uma lista. A Navbar, o skip link e o rodapé
+permanecem no shell global. A frase botânica e os statements são texto real; o
+único glifo ornamental da introdução está oculto para tecnologia assistiva.
 
 Fontes editoriais, exceções visuais e evidências: [PROJECTS-CONTENT.md](PROJECTS-CONTENT.md)
 e [PROJECTS-VALIDATION.md](PROJECTS-VALIDATION.md).
@@ -507,23 +554,47 @@ a apresentação textual por default.
 
 ### Padrões locais da rota
 
-`ProjectDetailHero`, `ProjectOverview`, `ProjectGallery`, `AppliedSolutions` e
-`ProjectsReturnLink` pertencem a `/projetos/[slug]`; não são primitives. A rota é
-Server Component e segue hero escuro → superfície marfim → retorno escuro →
-contato/rodapé escuros. Nenhum token novo foi necessário: superfícies, texto,
-bordas, foco, espaços, raios e overlay usam os papéis existentes.
+`ProjectDetailHero`, `ProjectStoryGallery`, `ProjectNarrative`, `ProjectGallery`,
+`AppliedSolutions` e `ProjectsReturnLink` pertencem a `/projetos/[slug]`; não são
+primitives. A rota continua um Server Component e segue hero escuro → superfície
+marfim → retorno escuro → contato/rodapé escuros. Nenhum token global novo foi
+necessário: a largura fotográfica de até `90rem` é uma variável local, enquanto
+texto e regiões preservadas continuam limitados por `--width-content` e
+`--width-reading`.
 
-A galeria é uma lista estática. Em telas amplas, as quatro primeiras posições
-formam panorama + mídia alta + duas mídias baixas; excedentes seguem em duas
-colunas. Abaixo de 48rem, todas empilham na ordem do DOM. Imagens possuem tamanho
-intrínseco, `sizes`, alt do catálogo e não recebem link, botão, `tabIndex`, cursor
-de ação, listener, lightbox, zoom ou gesto. O hero repete a mídia somente como
-atmosfera com alt vazio e mantém um fundo profundo sob o overlay para falha ou
-carregamento lento.
+O hero recebe categoria, título, `summary` e a mídia do mesmo registro publicado.
+`details.titleAccent` pode destacar somente uma substring literal validada do
+título; sem o campo, o título permanece integral e sem acento inferido.
+`PortfolioImage.position` aceita keywords seguras ou dois percentuais e cai em
+`center center`; `positionMobile` cai no foco desktop. O componente usa uma única
+imagem prioritária e troca o foco por CSS, sobre superfície verde e gradientes
+lateral e inferior independentes.
 
-Frase e soluções são opcionais e removidas estruturalmente quando ausentes. O
-resumo usa `summary` do catálogo. Breadcrumb e retorno são navegação nativa;
-Início e Projetos são ancestrais acionáveis, o projeto atual usa
-`aria-current="page"`, e o rodapé mantém Projetos como seção corrente. Todo alvo
-interativo preserva 44 px, foco visível e safe areas; não há animação local, e a
-regra global de movimento reduzido cobre transições compartilhadas.
+A narrativa nunca repete `summary`. Ela exige um heading editorial real, resolvido
+por `details.introHeading ?? details.statement`, e pode renderizar os parágrafos de
+`details.body` na ordem declarada. Sem heading, a região “Sobre o projeto” é
+omitida. Os campos são opcionais para permitir adoção editorial gradual; o parser
+rejeita corpo sem heading, parágrafo vazio e acento incompatível.
+
+Antes de renderizar, `prepareProjectDetailMedia` deduplica a coleção por `file`
+sem mutar o catálogo. Quando o hero é a primeira mídia e existe outra fotografia
+única, essa repetição imediata sai da galeria. O hero recebe `alt` informativo se
+for a única ocorrência apresentada e `alt=""` somente quando o mesmo arquivo
+continua descrito na lista.
+
+A galeria é uma única lista estática, nomeada por heading visualmente oculto. A
+primeira mídia é o destaque; as restantes usam linhas integrais, pares alternados
+`7/5`–`5/7` ou trios. Quatro itens restantes fecham em dois pares, panoramas que
+não sustentam trio passam para linha integral e a orientação intrínseca define
+proporções compatíveis. De 320 a 767 px todas as fotos empilham; de 768 a 1199 px
+pares podem dividir o trilho; a composição `4/12 + 8/12` e trios entram a partir
+de 1200 px; acima de 1600 px a mídia respira até o limite local sem ampliar texto,
+hero ou tipografia indefinidamente.
+
+Imagens abaixo do hero preservam lazy loading, dimensões intrínsecas, `sizes` por
+papel e ponto focal. Elas não recebem link, botão, `tabIndex`, cursor de ação,
+listener, hover de transformação, lightbox, zoom ou gesto. Breadcrumb e retorno
+são navegação nativa; o item atual permanece no DOM com `aria-current="page"` e
+pode ser ocultado apenas visualmente abaixo de 480 px. Safe areas, foco visível e
+o crescimento do texto permanecem no fluxo; não há movimento local, e a regra
+global de `prefers-reduced-motion` cobre somente transições compartilhadas.

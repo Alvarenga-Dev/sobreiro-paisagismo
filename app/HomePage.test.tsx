@@ -50,10 +50,23 @@ describe("HomePage", () => {
   it("mantém CTAs e conteúdo configurável em português do Brasil", () => {
     render(<HomePage />);
 
+    const contactBanner = screen
+      .getByRole("heading", { name: /vamos transformar seu espaço juntos/i })
+      .closest("section");
+    const footer = screen.getByRole("contentinfo");
     const contactLinks = screen.getAllByRole("link", { name: "Fale com a Sobreiro" });
     expect(contactLinks.length).toBeGreaterThanOrEqual(2);
     contactLinks.forEach((link) => expect(link).toHaveAttribute("href", "mailto:contato@sobreiro.com.br"));
     expect(screen.getByText(/projetos de paisagismo que conectam natureza/i)).toBeVisible();
+    expect(contactBanner?.querySelector(".contactBanner__decoration img")).toHaveAttribute(
+      "src",
+      "/images/portfolio/logo/flor-sobreiro-neutra-clara.svg",
+    );
+    expect(contactBanner?.querySelector(".botanicalDecoration")).toBeNull();
+    expect(footer.querySelector(".footerBrand .brandEmblem--flower img")).toHaveAttribute(
+      "src",
+      "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
+    );
   });
 
   it("deixa o cabeçalho global fora da rota e preserva rodapé e destinos", () => {

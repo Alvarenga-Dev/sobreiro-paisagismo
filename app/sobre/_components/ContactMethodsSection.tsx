@@ -1,7 +1,7 @@
 import { BotanicalDecoration } from "../../_components/Brand";
 import { CardSurface } from "../../_components/CardSurface";
 import { LineIcon } from "../../_components/LineIcon";
-import { SectionHeading } from "../../_components/Typography";
+import { SectionHeading, SupportingCopy } from "../../_components/Typography";
 import type { AboutContactContent, ContactMethod } from "../aboutContent";
 
 export function ContactMethodCard({ method }: { method: ContactMethod }) {
@@ -40,9 +40,12 @@ export function ContactMethodsSection({ content }: { content: AboutContactConten
           eyebrow={content.eyebrow}
           fragments={content.title}
         />
-        <ul className="contactMethodsGrid" aria-label="Métodos de contato">
-          {content.methods.map((method) => <li key={method.id}><ContactMethodCard method={method} /></li>)}
-        </ul>
+        <div className="contactMethodsSection__actions">
+          <SupportingCopy>{content.introduction}</SupportingCopy>
+          <ul className="contactMethodsGrid" aria-label="Métodos de contato">
+            {content.methods.map((method) => <li key={method.id}><ContactMethodCard method={method} /></li>)}
+          </ul>
+        </div>
       </div>
     </section>
   );

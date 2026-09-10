@@ -1,4 +1,4 @@
-import { BotanicalDecoration, BrandEmblem } from "./Brand";
+import { BrandEmblem } from "./Brand";
 import { ButtonLink, ContactButton } from "./ButtonLink";
 import { LineIcon, type LineIconName } from "./LineIcon";
 import { SupportingCopy, type TextFragment } from "./Typography";
@@ -39,8 +39,12 @@ export function ContactBanner({
 }: ContactBannerProps) {
   return (
     <section className="contactBanner" aria-labelledby={id} data-region="contact">
-      <BotanicalDecoration position="left" />
-      <BrandEmblem decorative />
+      <BrandEmblem
+        artwork="flower"
+        flowerTone="light"
+        className="contactBanner__decoration"
+        decorative
+      />
       {description ? (
         <div className="contactBanner__message">
           <BannerMessage id={id} fragments={message} />
