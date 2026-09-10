@@ -2,8 +2,8 @@
 
 Este documento descreve o sistema implementado pela mudança
 `build-home-component-design-system`. A Home é a composição de referência. O
-sistema usa CSS nativo global, Server Components por padrão e duas fronteiras
-cliente: `MenuTrigger` e `ProjectCarousel`.
+sistema usa CSS nativo global, Server Components por padrão e fronteiras cliente
+pequenas para navegação, transição de rota e carrossel.
 
 ## 1. Direção visual
 
@@ -66,14 +66,15 @@ fontes oficiais. Títulos usam `text-wrap: balance`; corpo usa `text-wrap: prett
 
 ### 2.4 Ritmo, geometria, camada e movimento
 
-- Espaço: `--space-2xs` até `--space-3xl`, `--space-section`, gutter editorial e inset próprio da navbar flutuante.
+- Espaço: `--space-2xs` até `--space-3xl`, `--space-section`, gutter editorial e `--navbar-inset-*`.
 - Largura: `--width-content` e `--width-reading`.
 - Alvo: `--size-touch` fixa o mínimo de 44 px.
 - Geometria: `--radius-control`, `--radius-card` e `--radius-panel`.
 - Borda: `--border-hairline`.
 - Elevação: `--shadow-soft` e `--shadow-control`.
-- Camadas: `--z-base`, `--z-media`, `--z-content` e `--z-decoration`.
-- Movimento: `--motion-fast`, `--motion-base`, `--motion-slow` e `--ease-standard`.
+- Camadas: `--z-base`, `--z-media`, `--z-content`, `--z-decoration` e `--navbar-layer`.
+- Navbar: `--navbar-offset-block`, `--navbar-min-height`, `--navbar-clearance`, `--navbar-surface` e `--navbar-indicator-motion`.
+- Movimento: `--motion-fast`, `--motion-base`, `--motion-slow`, `--route-transition-motion` e `--ease-standard`.
 
 Não existe autoplay. `prefers-reduced-motion: reduce` remove deslocamento suave,
 animações e transições não essenciais. Nenhuma seção depende de altura fixa;
@@ -91,6 +92,9 @@ hero e mídias usam `min-height` ou `aspect-ratio` para reservar espaço.
 | `app/_components/CardSurface.tsx` | `CardSurface` |
 | `app/_components/PaginationDots.tsx` | `PaginationDots` |
 | `app/_components/MenuTrigger.tsx` | `MenuTrigger` |
+| `app/_components/DesktopNavigation.tsx` | `DesktopNavigation` e indicador ativo |
+| `app/_components/MobileNavigation.tsx` | `MobileNavigation` e ciclo do diálogo |
+| `app/_components/RouteTransition.tsx` | shell persistente e viewport mutável da rota |
 | `app/_components/ProjectCard.tsx` | `ProjectCard` |
 | `app/_components/SiteFrame.tsx` | `SiteFrame` |
 | `app/_components/SiteHeader.tsx` | `SiteHeader` |
@@ -148,10 +152,12 @@ Use `ButtonLink` para navegação. Ações que só alteram estado de interface u
 | `SecondaryButton` | `href`, `label`; preset `outlineNeutral`. | Apoio em superfícies claras. | Link nativo. | Largura pelo conteúdo, quebra do grupo em estreito. |
 | `SectionAction` | `href`, `label`; preset `outlineInverse` com seta. | Navegação secundária sobre escuro. | Nome acessível explicita navegação. | Fica junto ao heading ou quebra abaixo. |
 | `ActionGroup` | `children`, `className`. | Agrupa links sem mudar semântica. | Ordem DOM igual à visual. | Flex e quebra; ações podem preencher linha estreita. |
-| `MenuTrigger` | `expanded`, `controlsId`, `onExpandedChange`, `disabled`. | fechado, pressed, focus, expanded e não expansível. | Botão nativo; Enter/Espaço; `aria-expanded`, `aria-controls` e nome dinâmico. | 44 px mínimo. Na Home fica desabilitado porque o painel não foi definido. |
+| `MenuTrigger` | `expanded`, `controlsId`, `onExpandedChange`, `disabled`. | fechado, pressed, focus e expanded. | Botão nativo; Enter/Espaço; `aria-expanded`, `aria-controls` e nome dinâmico. | 44 px mínimo; apresentado abaixo de `64rem`. |
 | `ProjectCard` | `project` com ID, destino, textos e mídia tipada. | hover, active, focus-visible; recorte estável. | Um único link nomeado; nenhuma ação aninhada. | Aspect ratio fixo; ocupa a coluna definida pelo carrossel. |
-| `SiteFrame` | slots `header`, `children`, `footer`; variante `fullBleed` usada pelas rotas atuais. | Shell full-bleed, overflow e canvas escuro entre seções; sem margem, largura máxima, borda, raio ou sombra externos. | Inclui skip link e `main` nomeável por estrutura; a ordem permanece header → main → footer. | Ocupa toda a largura e ao menos a altura do viewport sem criar overflow horizontal. |
-| `SiteHeader` | `contactHref`, `contactLabel`, `presentation` e `showContact`. | Superfície flutuante sobre o hero, com fundo escuro, contorno, raio, sombra e menu não expansível. | Landmark `banner`, link de marca, link de contato e botão nomeado; foco visível e skip link ficam acima da sobreposição. | Inset lateral/superior próprio com safe areas; CTA aparece a partir de 640 px, enquanto marca e menu preservam alvos de 44 px. |
+| `SiteFrame` | slots `children` e `footer`; variante `inset` ou `fullBleed`. | Frame da rota sem possuir navegação global. | Fornece um único `main#conteudo-principal` focalizável e o rodapé da rota. | Ocupa toda a largura e ao menos a altura do viewport sem criar overflow horizontal. |
+| `SiteHeader` | `navigation`, `mobileMenu` e `whatsapp`, todos com defaults globais. | Cápsula flutuante escura; marca, lista desktop, CTA condicional e menu mobile. | Landmark `banner`; marca volta ao Início; a navegação se chama “Navegação principal”; exatamente um destino conhecido usa `aria-current=page`. | Lista desktop a partir de `64rem`; gatilho mobile abaixo; CTA só aparece no desktop quando uma URL HTTPS oficial do WhatsApp é válida. |
+| `DesktopNavigation` | coleção readonly de cinco `NavigationItem`. | Texto ativo e indicador oliva único medido por transform/largura; hover, pressed e foco. | Lista de links nativos; rota/hash atual é semântico imediatamente, independentemente do movimento visual. | Só participa da apresentação a partir de `64rem`; primeira medida e movimento reduzido não interpolam. |
+| `RouteTransition` | slots persistente `header` e mutável `children`. | Fases visible, leaving e entering somente no viewport da rota. | Skip link precede a marca; viewport oculto recebe `inert`/`aria-hidden`; após navegação controlada, restaura a interação antes de focar o `main`. | Navbar permanece fixa no topo e não remonta; movimento reduzido navega sem espera artificial. |
 | `FooterNavGroup` | `label`, `links`, `index`. | links com hover/focus. | Cada grupo é `nav` com heading exclusivo; links são lista. | Coluna da grade compacta. |
 | `SocialLinks` | lista de `label`, `href`, `icon`. | ícones em alvos circulares. | `nav` distinguível; cada link tem nome completo. | Mantém alvos de 44 px. |
 | `LegalBar` | copyright, crédito e destino. | links discretos. | Texto e link nativos na última ordem de leitura. | Uma coluna no estreito e duas a partir de 640 px. |
@@ -175,7 +181,7 @@ Use `ButtonLink` para navegação. Ações que só alteram estado de interface u
 | `QuoteCard` | citação, autoria e papel. | Sobreposição visual sobre a mídia. | `figure`, `blockquote` e `figcaption` mantêm relação semântica. | Fica abaixo da mídia no estreito; sobreposição cresce com espaço. |
 | `MediaQuoteComposite` | mídia + citação. | Coordena sobreposição sem reordenar DOM. | Leitura mantém mídia antes de citação/autoria. | Não inverte conteúdo; remove pressão de sobreposição no estreito. |
 | `AboutPanel` | conteúdo institucional tipado. | Composição de mídia, texto, ação e ornamento. | Seção nomeada; ornamento oculto. | Empilha no estreito e usa duas colunas a partir de 640 px. |
-| `HomePage` | consome `homeContent` e ordena slots do `SiteFrame`. | Sem estado ou infraestrutura. | Ordem: header, main com hero/benefícios/projetos/sobre/contato, footer; um `h1`. | Conteúdo muda sem alterar marcação estrutural. |
+| `HomePage` | consome `homeContent` e ordena os filhos e o rodapé do `SiteFrame`. | Sem estado ou infraestrutura. | `main` com hero/benefícios/projetos/sobre/contato, seguido do footer; um `h1`. | Conteúdo muda sem remontar a navegação do layout. |
 
 ### Exemplo de conteúdo substituível
 
@@ -199,15 +205,16 @@ Os breakpoints representam falha de conteúdo, não medição do PNG:
 | --- | --- |
 | 320–431 px | Shell encosta às bordas; navbar usa inset compacto; CTA do header fica oculto; benefícios/projetos continuam roláveis e os alvos não são reduzidos. |
 | 432–639 px | Cabeçalho de projetos volta à linha; coleções continuam roláveis. |
-| 640–895 px | CTA do header aparece; navbar e hero mantêm clearance; Sobre e banner ganham duas colunas; projetos mostram ~2 cards. |
-| 896–1099 px | Benefícios passam para 5 colunas; densidade do mobile de referência é preservada. |
-| 1100 px ou mais | Conteúdo e mídia permanecem full-bleed; projetos mostram 3 cards, e gutters editoriais e sobreposição da citação aumentam. |
+| 640–895 px | Navbar e hero mantêm clearance; Sobre e banner ganham duas colunas; projetos mostram ~2 cards. |
+| 896–1023 px | Benefícios passam para 5 colunas; a navegação continua no menu mobile porque os cinco rótulos ainda não cabem com segurança. |
+| 1024 px ou mais (`64rem`) | Lista desktop substitui integralmente o gatilho mobile; conteúdo e mídia permanecem full-bleed. |
 
 O inset da navbar, sua altura mínima e o clearance do hero são tokens funcionais
 distintos de `--gutter-section`. O hero reserva a soma do deslocamento superior,
 da altura mínima do cabeçalho e de uma margem de segurança, inclusive quando o
-texto quebra ou é ampliado. O CTA do cabeçalho é a primeira ação omitida quando
-falta largura; marca, menu e foco visível permanecem prioritários.
+texto quebra ou é ampliado. O breakpoint CSS `64rem` espelha
+`DESKTOP_NAVIGATION_MEDIA_QUERY`; nunca reduzir tipografia ou alvos para manter a
+lista desktop antes de ela caber.
 
 Coleções usam scroll horizontal como fallback progressivo; conteúdo nunca some
 sem JavaScript. Os limites de leitura permanecem nos contêineres internos,
@@ -222,10 +229,32 @@ enquanto superfícies e mídias podem alcançar as bordas do viewport.
 - Ícones e ornamentos decorativos são ocultos; mídia informativa tem alt.
 - O carrossel não usa autoplay, possui botões, setas de teclado, estado de
   início/fim, `aria-current` e anúncio polite.
-- O menu não inventa painel: na Home ele é anunciado como conteúdo em definição
-  e fica desabilitado. O contrato controlado está testado para uso futuro.
+- Abaixo de `64rem`, o menu modal substitui integralmente a lista desktop; ao
+  abrir, o foco vai para “Fechar menu” e o fundo deixa de ser interativo.
 - Ordem DOM, ordem visual e ordem de tabulação permanecem equivalentes.
 - `prefers-reduced-motion` desativa scroll suave e transições não essenciais.
+
+### 8.1 Navbar persistente
+
+- **Propriedade global:** `app/layout.tsx` fornece uma única instância de
+  `SiteHeader` e do skip link ao coordenador persistente. Páginas fornecem apenas
+  `main` e `footer` por `SiteFrame`.
+- **Conteúdo:** desktop e mobile consomem os cinco `NavigationItem` de
+  `siteContent.navigation`, na ordem Início, Sobre, Projetos, Por que um projeto?
+  e Contato.
+- **Variantes responsivas:** a lista horizontal existe na apresentação a partir
+  de `64rem`; abaixo disso, somente o gatilho e o diálogo mobile ficam operáveis.
+- **Estados:** links oferecem repouso, hover, foco visível e pressionado. O item
+  atual recebe ênfase textual, indicador oliva único e `aria-current="page"`.
+- **Movimento:** o indicador usa transform/largura por
+  `--navbar-indicator-motion`; a primeira medida e movimento reduzido não
+  interpolam. Somente `routeViewport` usa saída/entrada de rota.
+- **Teclado e leitor de tela:** a ordem inicial é skip link → marca → navegação;
+  o landmark se chama “Navegação principal”, o diálogo se chama “Menu principal”
+  e o foco retorna ao gatilho ou segue para o `main` conforme a ação.
+- **CTA:** `Fale no WhatsApp` só é renderizado no desktop para estado
+  `configured` com URL HTTPS em `wa.me` ou `api.whatsapp.com`; indisponibilidade
+  ou URL incompatível não cria placeholder nem ação enganosa.
 
 ## 9. Recomendações de uso
 
@@ -246,7 +275,7 @@ enquanto superfícies e mídias podem alcançar as bordas do viewport.
 | Fontes | Georgia + pilha sans do sistema | Alterar `--font-display` e `--font-body` ou integrar fonte aprovada no layout. |
 | Hero e projetos | Fotografias provisórias do Unsplash | Trocar `src`, `alt`, `position` e dimensões em `homeContent.ts`. |
 | Destino de contato | `mailto:contato@sobreiro.com.br` | Alterar `siteContent.contact`; consumidores globais recebem o destino por props. |
-| Menu | Gatilho não expansível | Fornecer painel, `controlsId`, estado e callback sem mudar `MenuTrigger`. |
+| WhatsApp da Navbar | Indisponível | Configurar `siteContent.mobileMenu.contacts.whatsapp` com URL HTTPS oficial; a área aparece sem alterar a composição dos demais destinos. |
 | Projetos | 3 itens demonstrativos e destinos `#contato` | Trocar a lista local e os destinos, mantendo `ProjectCardData`. |
 | Instagram | Destino genérico | Substituir em `homeContent.footer.socialLinks`. |
 | Texto e autoria | Conteúdo editorial provisório | Substituir objetos locais sem mudar componentes. |
@@ -279,6 +308,23 @@ npm run build
 | 941 × 1000 px | Composição de referência confirmada: 5 benefícios e 3 projetos integralmente visíveis, Sobre em 2 colunas, banner horizontal e rodapé em grade compacta. |
 | 1440 × 1000 px | Frame limitado a 1313 px no ambiente de teste, 5 benefícios e 3 projetos, respiro ampliado e nenhuma imagem quebrada. |
 
+### Validação da Navbar persistente — 09/09/2026
+
+Home, Sobre, Projetos e um detalhe publicado foram inspecionados em 320, 640,
+1024 e 1440 pixels CSS. Em todas as 16 combinações houve um `main`, um footer,
+um header, nenhum resíduo de `inert`, nenhum overlap entre Navbar e `h1` e nenhum
+overflow horizontal. Em 320/640 somente o menu mobile participou da apresentação;
+em 1024/1440 somente a lista desktop participou. O reflow equivalente a 200% de
+zoom em uma janela física de 1024 px foi validado em 512 pixels CSS nas quatro
+rotas, com a mesma integridade.
+
+Teclado e árvore de acessibilidade confirmaram skip link → marca → navegação,
+foco inicial e contenção no diálogo, fechamento por Escape, retorno ao gatilho,
+`aria-current` por pathname/hash e foco no `main` depois da navegação controlada.
+Cliques entre rotas, hashes, query string e Back foram repetidos sem remontar o
+header nem deixar o viewport oculto. Após a decisão posterior de produto, o
+header usa `position: fixed` e conserva o mesmo inset superior durante o scroll.
+
 Em todas as larguras, `scrollWidth` não superou a largura interna do viewport,
 nenhum controle visível ficou abaixo de 44 × 44 px e não houve imagem concluída
 com `naturalWidth` igual a zero.
@@ -307,8 +353,8 @@ Guidelines em 31/08/2026; nenhuma divergência permaneceu nos arquivos da Home.
 
 | Componente | API adicionada | Padrão preservado | Uso em `/sobre` |
 | --- | --- | --- | --- |
-| `SiteFrame` | `variant: "inset" \| "fullBleed"` | API preservada; o shell base não aplica moldura externa | `fullBleed`; o conteúdo de cada região continua limitado por `--width-content` |
-| `SiteHeader` | `presentation: "standard" \| "floating"` e `showContact` | API preservada; a Home seleciona `floating` com CTA responsivo | `floating`, com superfície escura insetada e CTA omitido |
+| `SiteFrame` | `variant: "inset" \| "fullBleed"` | O shell da rota não aplica moldura externa nem possui header | `fullBleed`; o conteúdo de cada região continua limitado por `--width-content` |
+| `SiteHeader` | propriedade global no layout | A superfície flutuante e a navegação persistem entre rotas | Sobre não instancia nem configura outro header |
 | `LineIcon` | desenhos `award`, `calendar`, `graduationCap` e `users` | caixa, tamanhos, `currentColor` e modo decorativo existentes | valores, credenciais e agendamento |
 
 O `SiteFooter` não precisou de nova API. Seus dados agora pertencem a
@@ -319,8 +365,8 @@ e permitindo o reuso pela rota interna sem dependência de `_home`.
 
 Os componentes em `app/sobre/_components/` pertencem somente à rota. O conteúdo
 e seus contratos readonly ficam em `app/sobre/aboutContent.ts`; a página e as
-seções continuam Server Components, e `MenuTrigger` permanece a única fronteira
-cliente herdada.
+seções continuam Server Components; as ilhas de navegação permanecem no layout
+global e não tornam a página cliente.
 
 `ContactMethod` é uma união discriminada:
 
@@ -349,8 +395,8 @@ como categorias em validação editorial, nunca como fatos profissionais.
   foco; os alvos mantêm ao menos `--size-touch` (44 px) e o foco muda conforme a
   superfície.
 - A regra global de `prefers-reduced-motion` cobre as transições adicionadas. Não
-  há animação de entrada, sticky header, painel de menu ou reordenação visual do
-  DOM.
+  há animação de entrada, ocultação dependente de scroll, painel de menu ou
+  reordenação visual do DOM; o header global permanece fixo.
 
 ### Validação da rota Sobre — 07/09/2026
 
@@ -373,13 +419,15 @@ classificou `/sobre` como rota estática.
 
 ## 9. Navegação mobile
 
-`MobileNavigation` é a única fronteira cliente do menu e compõe `MenuTrigger` e
+`MobileNavigation` é a fronteira cliente do menu e compõe `MenuTrigger` e
 `MobileMenu`. O gatilho é controlado, usa `aria-expanded`/`aria-controls` e só é
-visível abaixo de `40rem`; em telas maiores o conjunto fica fora da ordem de foco.
+visível abaixo de `64rem`; em telas maiores o conjunto fecha, restaura scroll e
+fica fora da apresentação e da ordem de foco.
 
 `MobileMenu` usa um `<dialog>` modal nativo nomeado “Menu principal”. A API
-aceita `MobileMenuContent`, cujos cinco itens são readonly e possuem `id`,
-`label`, `href` e `LineIconName`. Cada `MobileMenuItem` é um único link de linha
+aceita `MobileMenuContent` para contatos/editorial e a mesma coleção global
+readonly de `NavigationItem` usada no desktop. Cada item possui `id`, `label`,
+`href` e `LineIconName`; cada `MobileMenuItem` é um único link de linha
 inteira, marca o destino atual com `aria-current="page"` e mantém chevron e ícone
 decorativos. A ordem DOM é fechar, marca empilhada, navegação, contatos e rodapé.
 
@@ -395,3 +443,87 @@ e contenção de foco, com contenção de Tab como reforço; o scroll inline ant
 `prefers-reduced-motion` reduz a transição a uma conclusão imediata. O painel usa
 `100dvh`, safe areas e rolagem interna para preservar rótulos e alvos de 44 px em
 320 px e em paisagem.
+
+## Extensões do catálogo de Projetos
+
+`ProjectCard` mantém `project: ProjectCardData` e acrescenta `layout?: "stacked" | "split"`
+(default `stacked`). `href` é opcional: com destino, todo o card é um único link
+acionável por Tab/Enter, com foco e hover existentes. Sem destino, o mesmo conteúdo
+fica em uma superfície informativa, sem tab stop, cursor ou hover de ação, e mostra
+“Detalhes em breve”. Não usar links fictícios. A variante split usa `LineIcon`
+`arrowRight`; stacked mantém a seta e a distribuição anteriores.
+
+Split empilha abaixo de 48rem e usa mídia/conteúdo em 42/58 a partir dessa faixa.
+A mídia reserva espaço, tem fallback e `object-fit: cover`; `media.position` e
+`media.sizes` continuam por consumidor. Títulos h3, categoria e resumo crescem sem
+truncamento. A variante usa `--color-surface-dark-primary`, texto on-dark,
+`--radius-card`, `--space-xl`, tamanho de corpo e caption para tag.
+
+`ContactBanner.description?: string` (default ausente) adiciona `SupportingCopy`
+ao grupo do h2. Ausente preserva a anatomia anterior. Mantém os contratos de CTA e
+supportingAction, teclado nativo e ornamentos ocultos. Na rota, o banner se alinha
+aos filtros/lista e empilha as ações em telas estreitas.
+
+`SiteFooter.currentPath?: string`, também aceito por `FooterNavGroup`, marca links
+de página com `aria-current="page"`, sublinhado e peso; queries são ignoradas e
+âncoras não são marcadas como páginas. Default sem seleção. `FooterLink.icon?`
+aceita `LineIconName`; os dados globais só o preenchem nos contatos existentes.
+Ícones são decorativos. `LineIcon` acrescenta utensils, waves, plant e building,
+preservando currentColor, tamanhos e semântica. `SectionAction` usa seu rótulo
+visível como nome acessível, pois agora pode navegar para uma página.
+
+`ProjectFilters`, `ProjectsCatalog` e `ResultsAnnouncement` são locais à rota.
+A URL é a única fonte de seleção, sem estado duplicado. Sete links com push e
+`scroll={false}` preservam os demais parâmetros. Seleção combina cor, sublinhado,
+peso e aria-current, sem semântica de tabs. Alvos mínimos usam `--size-touch`;
+rótulos quebram integralmente, em duas, três ou sete colunas. A região de status
+persistente anuncia categoria + contagem com pluralização e aria-atomic. O estado
+vazio mantém filtros e oferece “Ver todos”. Todas as transições respeitam a regra
+global de movimento reduzido. Fontes, cores e gutters reutilizam os tokens atuais.
+
+Fontes editoriais, exceções visuais e evidências: [PROJECTS-CONTENT.md](PROJECTS-CONTENT.md)
+e [PROJECTS-VALIDATION.md](PROJECTS-VALIDATION.md).
+
+## Extensões do detalhe de Projeto
+
+### APIs compartilhadas
+
+`LineIconName` inclui `grid`, desenhado no `viewBox="0 0 24 24"` com traço
+`currentColor`. O default de `LineIcon` continua decorativo (`aria-hidden` e
+`focusable="false"`); com `decorative={false}`, `label` fornece o nome acessível.
+Não foi adicionado ícone sem consumidor aprovado.
+
+`ContactBanner.supportingAction` preserva `{ label, href }` como link textual
+default e aceita, de forma aditiva, `presentation?: "text" | "outline"` e
+`icon?: LineIconName`. `outline` usa `ButtonLink` `outlineInverse`; o ícone é
+decorativo e o texto visível permanece como nome acessível. O estado hover aumenta
+o contraste, active desloca o controle e focus-visible usa o foco da superfície
+escura. A ausência de `supportingAction` remove a segunda âncora do DOM.
+
+No detalhe, WhatsApp configurado produz a ação preenchida e e-mail produz a ação
+de contorno. WhatsApp indisponível produz somente o e-mail como ação principal,
+sem dois rótulos apontando para o mesmo `mailto:`. Consumidores anteriores mantêm
+a apresentação textual por default.
+
+### Padrões locais da rota
+
+`ProjectDetailHero`, `ProjectOverview`, `ProjectGallery`, `AppliedSolutions` e
+`ProjectsReturnLink` pertencem a `/projetos/[slug]`; não são primitives. A rota é
+Server Component e segue hero escuro → superfície marfim → retorno escuro →
+contato/rodapé escuros. Nenhum token novo foi necessário: superfícies, texto,
+bordas, foco, espaços, raios e overlay usam os papéis existentes.
+
+A galeria é uma lista estática. Em telas amplas, as quatro primeiras posições
+formam panorama + mídia alta + duas mídias baixas; excedentes seguem em duas
+colunas. Abaixo de 48rem, todas empilham na ordem do DOM. Imagens possuem tamanho
+intrínseco, `sizes`, alt do catálogo e não recebem link, botão, `tabIndex`, cursor
+de ação, listener, lightbox, zoom ou gesto. O hero repete a mídia somente como
+atmosfera com alt vazio e mantém um fundo profundo sob o overlay para falha ou
+carregamento lento.
+
+Frase e soluções são opcionais e removidas estruturalmente quando ausentes. O
+resumo usa `summary` do catálogo. Breadcrumb e retorno são navegação nativa;
+Início e Projetos são ancestrais acionáveis, o projeto atual usa
+`aria-current="page"`, e o rodapé mantém Projetos como seção corrente. Todo alvo
+interativo preserva 44 px, foco visível e safe areas; não há animação local, e a
+regra global de movimento reduzido cobre transições compartilhadas.
