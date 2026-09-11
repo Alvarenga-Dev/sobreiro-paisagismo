@@ -29,6 +29,9 @@ export default function HomePage() {
         message={homeContent.banner.message}
         contactHref={homeContent.contact.href}
         contactLabel={homeContent.contact.label}
+        contactIcon={homeContent.contact.icon}
+        contactIconSize="sm"
+        contactExternal={homeContent.contact.external}
         supportingAction={homeContent.banner.supportingAction}
       />
     </SiteFrame>

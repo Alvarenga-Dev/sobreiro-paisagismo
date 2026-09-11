@@ -64,15 +64,20 @@ describe("shell compartilhado", () => {
     expect(screen.getByRole("button", { name: "Abrir menu" })).toBeEnabled();
   });
 
-  it("omite WhatsApp indisponível ou inválido e aceita somente configuração verdadeira", () => {
+  it("usa o WhatsApp configurado no CTA do cabeçalho e abre em nova guia", () => {
     const { rerender } = render(<SiteHeader />);
-    expect(screen.queryByRole("link", { name: "Fale no WhatsApp" })).not.toBeInTheDocument();
+    const contact = screen.getByRole("link", { name: "Fale com a Sobreiro" });
+    expect(contact).toHaveAttribute("href", "https://wa.me/message/CRFBFPI3Y5TJC1");
+    expect(contact).toHaveAttribute("target", "_blank");
+    expect(contact).toHaveAttribute("rel", "noreferrer");
+    expect(contact.querySelector(".lineIcon")).toHaveAttribute("aria-hidden", "true");
+    expect(contact.querySelector(".lineIcon")).toHaveClass("lineIcon--sm");
 
     rerender(<SiteHeader whatsapp={{ status: "configured", href: "https://example.com/whatsapp" }} />);
-    expect(screen.queryByRole("link", { name: "Fale no WhatsApp" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Fale com a Sobreiro" })).not.toBeInTheDocument();
 
     rerender(<SiteHeader whatsapp={{ status: "configured", href: "https://wa.me/5521999999999" }} />);
-    expect(screen.getByRole("link", { name: "Fale no WhatsApp" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute(
       "href",
       "https://wa.me/5521999999999",
     );

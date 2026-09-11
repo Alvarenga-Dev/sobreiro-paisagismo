@@ -102,25 +102,15 @@ export interface AboutTeamContent {
   readonly credentials: readonly AboutCredential[];
 }
 
-interface ContactMethodBase {
+export interface ContactMethod {
   readonly id: string;
-  readonly icon: Extract<LineIconName, "message" | "mail" | "calendar">;
+  readonly icon: Extract<LineIconName, "whatsapp" | "mail">;
   readonly title: string;
   readonly detail: string;
-}
-
-export interface ConfiguredContactMethod extends ContactMethodBase {
-  readonly status: "configured";
   readonly href: string;
   readonly accessibleLabel: string;
+  readonly external?: boolean;
 }
-
-export interface UnavailableContactMethod extends ContactMethodBase {
-  readonly status: "unavailable";
-  readonly unavailableMessage: string;
-}
-
-export type ContactMethod = ConfiguredContactMethod | UnavailableContactMethod;
 
 export interface AboutContactContent {
   readonly eyebrow: string;
@@ -291,28 +281,20 @@ export const aboutContent = {
     methods: [
       {
         id: "whatsapp",
-        icon: "message",
+        icon: "whatsapp",
         title: "Fale no WhatsApp",
-        detail: "Canal em atualização",
-        status: "unavailable",
-        unavailableMessage: "Contato ainda não disponível",
+        detail: "Atendimento direto pelo WhatsApp",
+        href: siteContent.contact.href,
+        accessibleLabel: "Falar com a Sobreiro pelo WhatsApp",
+        external: siteContent.contact.external,
       },
       {
         id: "email",
         icon: "mail",
         title: "Envie um e-mail",
-        detail: siteContent.contact.email,
-        status: "configured",
-        href: siteContent.contact.href,
-        accessibleLabel: `Enviar e-mail para ${siteContent.contact.email}`,
-      },
-      {
-        id: "agenda",
-        icon: "calendar",
-        title: "Agende uma conversa",
-        detail: "Atendimento personalizado",
-        status: "unavailable",
-        unavailableMessage: "Agenda ainda não disponível",
+        detail: siteContent.email.address,
+        href: siteContent.email.href,
+        accessibleLabel: `Enviar e-mail para ${siteContent.email.address}`,
       },
     ],
   } satisfies AboutContactContent,

@@ -12,15 +12,19 @@ export const projectDetailBanner = {
 
 export function projectDetailContactActions(
   whatsapp: ConfiguredContact,
-  contact: { readonly href: string; readonly label: string },
-): Pick<ContactBannerProps, "contactHref" | "contactLabel" | "supportingAction"> {
+  contact: { readonly label: string },
+  email: { readonly href: string },
+): Pick<ContactBannerProps, "contactHref" | "contactLabel" | "contactIcon" | "contactIconSize" | "contactExternal" | "supportingAction"> {
   if (whatsapp.status === "configured") {
     return {
       contactHref: whatsapp.href,
-      contactLabel: "Fale no WhatsApp",
+      contactLabel: contact.label,
+      contactIcon: "whatsapp",
+      contactIconSize: "sm",
+      contactExternal: true,
       supportingAction: {
         label: "Envie um e-mail",
-        href: contact.href,
+        href: email.href,
         presentation: "outline",
         icon: "mail",
       },
@@ -28,7 +32,10 @@ export function projectDetailContactActions(
   }
 
   return {
-    contactHref: contact.href,
-    contactLabel: contact.label,
+    contactHref: email.href,
+    contactLabel: "Envie um e-mail",
+    contactIcon: "mail",
+    contactIconSize: "sm",
+    contactExternal: false,
   };
 }

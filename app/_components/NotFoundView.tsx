@@ -19,7 +19,7 @@ export interface NotFoundViewProps {
  * remain native anchors in DOM order and the decorative artwork is never focusable.
  */
 export function NotFoundView({ copy }: NotFoundViewProps) {
-  const contact = siteContent.contact.href ? siteContent.contact : undefined;
+  const contact = siteContent.contact;
 
   return (
     <SiteFrame
@@ -82,16 +82,15 @@ export function NotFoundView({ copy }: NotFoundViewProps) {
             >
               {copy.recovery.projects}
             </ButtonLink>
-            {contact ? (
-              <ButtonLink
-                href={contact.href}
-                size="lg"
-                variant="outlineNeutral"
-                leadingIcon={<LineIcon name="mail" size="sm" />}
-              >
-                {contact.label}
-              </ButtonLink>
-            ) : null}
+            <ButtonLink
+              href={contact.href}
+              size="lg"
+              variant="outlineNeutral"
+              external={contact.external}
+              leadingIcon={<LineIcon name={contact.icon} size="sm" />}
+            >
+              {contact.label}
+            </ButtonLink>
           </ActionGroup>
         </div>
       </section>

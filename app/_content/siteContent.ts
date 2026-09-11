@@ -27,13 +27,16 @@ export interface MobileMenuContent {
   };
 }
 
-const contactHref = "mailto:contato@sobreiro.com.br";
+const emailAddress = "contato@sobreiro.com.br";
+const emailHref = `mailto:${emailAddress}`;
+const whatsappHref = "https://wa.me/message/CRFBFPI3Y5TJC1";
+const whatsappContact = { status: "configured", href: whatsappHref } as const satisfies ConfiguredContact;
 const footerDescription =
   "Projetos de paisagismo que conectam natureza, bem-estar e estilo de vida.";
 const footerSocialLinks = [
   { label: "Instagram da Sobreiro", href: "https://www.instagram.com/sobreiropaisagismo/", icon: "instagram" },
   { label: "YouTube da Sobreiro", href: "https://www.youtube.com/@SobreiroPaisagismo", icon: "youtube" },
-  { label: "WhatsApp da Sobreiro", href: "https://wa.me/message/CRFBFPI3Y5TJC1", icon: "whatsapp" },
+  { label: "WhatsApp da Sobreiro", href: whatsappHref, icon: "whatsapp" },
 ] satisfies readonly SocialLink[];
 const footerLegal = {
   copyright: "© 2026 Sobreiro Paisagismo. Todos os direitos reservados.",
@@ -55,7 +58,7 @@ const homeFooterGroups = [
   {
     label: "Fale conosco",
     links: [
-      { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
+      { label: emailAddress, href: emailHref, icon: "mail" },
       { label: "Saudades, SC", icon: "pin", href: "#contato" },
     ],
   },
@@ -75,7 +78,7 @@ const internalFooterGroups = [
   {
     label: "Fale conosco",
     links: [
-      { label: "contato@sobreiro.com.br", href: contactHref, icon: "mail" },
+      { label: emailAddress, href: emailHref, icon: "mail" },
       { label: "Saudades, SC", icon: "pin", href: "/#contato" },
     ],
   },
@@ -91,7 +94,7 @@ export const siteContent = {
   ] satisfies readonly NavigationItem[],
   mobileMenu: {
     contacts: {
-      whatsapp: { status: "unavailable" },
+      whatsapp: whatsappContact,
       phone: { status: "unavailable" },
     },
     editorial: {
@@ -102,9 +105,14 @@ export const siteContent = {
     },
   } satisfies MobileMenuContent,
   contact: {
-    href: contactHref,
+    ...whatsappContact,
     label: "Fale com a Sobreiro",
-    email: "contato@sobreiro.com.br",
+    icon: "whatsapp",
+    external: true,
+  },
+  email: {
+    href: emailHref,
+    address: emailAddress,
   },
   footer: {
     description: footerDescription,

@@ -26,15 +26,16 @@ export function MobileMenuItem({ item, active = false, onNavigate }: MobileMenuI
   );
 }
 
-function ContactAction({ contact, children, icon, variant }: {
+function ContactAction({ contact, children, icon, variant, external = false }: {
   contact: ConfiguredContact;
   children: string;
   icon: LineIconName;
   variant: "accent" | "outlineInverse";
+  external?: boolean;
 }) {
   if (contact.status !== "configured") return null;
   return (
-    <ButtonLink href={contact.href} variant={variant} size="lg" className="mobileMenu__contact" leadingIcon={<LineIcon name={icon} />}>
+    <ButtonLink href={contact.href} variant={variant} size="lg" className="mobileMenu__contact" external={external} leadingIcon={<LineIcon name={icon} />}>
       {children}
     </ButtonLink>
   );
@@ -85,7 +86,7 @@ export function MobileMenu({ content, navigation, activeId, onClose, onNavigate,
           </ul>
         </nav>
         <div className="mobileMenu__contacts">
-          <ContactAction contact={content.contacts.whatsapp} icon="message" variant="accent">Fale no WhatsApp</ContactAction>
+          <ContactAction contact={content.contacts.whatsapp} icon="whatsapp" variant="accent" external>Fale com a Sobreiro</ContactAction>
           <ContactAction contact={content.contacts.phone} icon="phone" variant="outlineInverse">Ligar para nós</ContactAction>
         </div>
         <footer className="mobileMenu__editorial">

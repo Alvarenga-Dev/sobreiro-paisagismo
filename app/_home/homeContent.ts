@@ -22,6 +22,8 @@ export interface HeroContentData {
   primaryAction: {
     label: string;
     href: string;
+    icon: LineIconName;
+    external: boolean;
   };
   secondaryAction: {
     label: string;
@@ -68,6 +70,8 @@ export const homeContent = {
     primaryAction: {
       label: "Fale com a Sobreiro",
       href: siteContent.contact.href,
+      icon: siteContent.contact.icon,
+      external: siteContent.contact.external,
     },
     secondaryAction: {
       label: "Ver projetos",
@@ -146,7 +150,7 @@ export const homeContent = {
     ] satisfies readonly TextFragment[],
     supportingAction: {
       label: "Agende uma conversa",
-      href: siteContent.contact.href,
+      href: siteContent.email.href,
     },
   },
   footer: siteContent.footer,

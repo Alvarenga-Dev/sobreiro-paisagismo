@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { LineIcon } from "./LineIcon";
+import { LineIcon, type LineIconName } from "./LineIcon";
 
 export type ButtonLinkVariant = "accent" | "outlineInverse" | "outlineNeutral";
 export type ButtonLinkSize = "md" | "lg";
@@ -62,13 +62,27 @@ export interface PresetButtonProps {
   className?: string;
 }
 
-export function ContactButton({ href, label, className }: PresetButtonProps) {
+export interface ContactButtonProps extends PresetButtonProps {
+  icon?: LineIconName;
+  iconSize?: "sm" | "md" | "lg";
+  external?: boolean;
+}
+
+export function ContactButton({
+  href,
+  label,
+  className,
+  icon = "message",
+  iconSize = "md",
+  external = false,
+}: ContactButtonProps) {
   return (
     <ButtonLink
       href={href}
       className={className}
       variant="accent"
-      leadingIcon={<LineIcon name="message" size="md" />}
+      external={external}
+      leadingIcon={<LineIcon name={icon} size={iconSize} />}
     >
       {label}
     </ButtonLink>

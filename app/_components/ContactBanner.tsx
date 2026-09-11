@@ -9,6 +9,9 @@ export interface ContactBannerProps {
   description?: string;
   contactHref: string;
   contactLabel: string;
+  contactIcon?: LineIconName;
+  contactIconSize?: "sm" | "md" | "lg";
+  contactExternal?: boolean;
   supportingAction?: {
     label: string;
     href: string;
@@ -35,6 +38,9 @@ export function ContactBanner({
   description,
   contactHref,
   contactLabel,
+  contactIcon,
+  contactIconSize,
+  contactExternal,
   supportingAction,
 }: ContactBannerProps) {
   return (
@@ -52,7 +58,13 @@ export function ContactBanner({
         </div>
       ) : <BannerMessage id={id} fragments={message} />}
       <div className="contactBanner__actions">
-        <ContactButton href={contactHref} label={contactLabel} />
+        <ContactButton
+          href={contactHref}
+          label={contactLabel}
+          icon={contactIcon}
+          iconSize={contactIconSize}
+          external={contactExternal}
+        />
         {supportingAction?.presentation === "outline" ? (
           <ButtonLink
             href={supportingAction.href}

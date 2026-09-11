@@ -263,9 +263,15 @@ describe("detalhe de projeto", () => {
     render(<ProjectDetailPageView project={publishedProject} />);
     expect(screen.getByRole("link", { name: "Ver outros projetos" })).toHaveAttribute("href", "/projetos");
     expect(screen.getAllByRole("link", { name: "Ver outros projetos" })).toHaveLength(1);
-    expect(screen.getByRole("link", { name: siteContent.contact.label })).toHaveAttribute(
+    const contact = screen.getByRole("link", { name: siteContent.contact.label });
+    expect(contact).toHaveAttribute(
       "href",
       siteContent.contact.href,
+    );
+    expect(contact).toHaveAttribute("target", "_blank");
+    expect(contact.querySelector("path")).toHaveAttribute(
+      "d",
+      "M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z",
     );
     expect(screen.getAllByRole("link", { name: siteContent.contact.label })).toHaveLength(1);
     const footer = screen.getByRole("contentinfo");
@@ -276,14 +282,16 @@ describe("detalhe de projeto", () => {
     const actions = projectDetailContactActions(
       { status: "configured", href: "https://example.com/whatsapp" },
       siteContent.contact,
+      siteContent.email,
     );
     const { container } = render(
       <ContactBanner id="detail-contact" {...projectDetailBanner} {...actions} />,
     );
-    expect(screen.getByRole("link", { name: "Fale no WhatsApp" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute(
       "href",
       "https://example.com/whatsapp",
     );
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("link", { name: "Envie um e-mail" })).toHaveClass("buttonLink--outlineInverse");
     expect(screen.getByRole("link", { name: "Envie um e-mail" }).querySelector("svg")).toHaveAttribute(
       "aria-hidden",

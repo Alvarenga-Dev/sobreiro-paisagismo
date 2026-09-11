@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ActionGroup, ButtonLink, ContactButton } from "../_components/ButtonLink";
+import { NatureAmbient } from "../_components/NatureAmbient";
 import { DisplayHeading, SupportingCopy } from "../_components/Typography";
 import type { HeroContentData } from "./homeContent";
 
@@ -30,7 +31,13 @@ function HeroContent({ content }: HeroSectionProps) {
       <DisplayHeading id="inicio" fragments={content.title} />
       <SupportingCopy context="onDark">{content.description}</SupportingCopy>
       <ActionGroup>
-        <ContactButton href={content.primaryAction.href} label={content.primaryAction.label} />
+        <ContactButton
+          href={content.primaryAction.href}
+          label={content.primaryAction.label}
+          icon={content.primaryAction.icon}
+          iconSize="sm"
+          external={content.primaryAction.external}
+        />
         <ButtonLink href={content.secondaryAction.href} size="lg" variant="outlineInverse">
           {content.secondaryAction.label}
         </ButtonLink>
@@ -43,6 +50,7 @@ export function HeroSection({ content }: HeroSectionProps) {
   return (
     <section className="homeHero" aria-labelledby="inicio" data-region="hero">
       <HeroBackdrop media={content.media} />
+      <NatureAmbient variant="home" />
       <HeroContent content={content} />
     </section>
   );

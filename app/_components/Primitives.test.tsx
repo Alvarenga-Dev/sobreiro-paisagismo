@@ -14,7 +14,13 @@ describe("primitivas do design system", () => {
         <ButtonLink href="#projetos" leadingIcon={<LineIcon name="leaf" />}>
           Ver projetos
         </ButtonLink>
-        <ContactButton href="mailto:contato@sobreiro.com.br" label="Fale com a Sobreiro" />
+        <ContactButton
+          href="https://wa.me/message/CRFBFPI3Y5TJC1"
+          label="Fale com a Sobreiro"
+          icon="whatsapp"
+          iconSize="sm"
+          external
+        />
         <ButtonLink href="#" disabled>Indisponível</ButtonLink>
       </>,
     );
@@ -22,8 +28,9 @@ describe("primitivas do design system", () => {
     expect(screen.getByRole("link", { name: "Ver projetos" })).toHaveAttribute("href", "#projetos");
     expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute(
       "href",
-      "mailto:contato@sobreiro.com.br",
+      "https://wa.me/message/CRFBFPI3Y5TJC1",
     );
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("target", "_blank");
     expect(screen.getByText("Indisponível").closest("a")).toHaveAttribute("aria-disabled", "true");
   });
 
