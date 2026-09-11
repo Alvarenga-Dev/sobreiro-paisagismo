@@ -1,5 +1,5 @@
 import { BrandLockup } from "./Brand";
-import { ButtonLink } from "./ButtonLink";
+import { ContactButton } from "./ButtonLink";
 import { DesktopNavigation } from "./DesktopNavigation";
 import { MobileNavigation } from "./MobileNavigation";
 import { configuredWhatsAppHref } from "./navigation";
@@ -15,7 +15,7 @@ export interface SiteHeaderProps {
 export function SiteHeader({
   navigation = siteContent.navigation,
   mobileMenu = siteContent.mobileMenu,
-  whatsapp = siteContent.mobileMenu.contacts.whatsapp,
+  whatsapp = siteContent.contact,
 }: SiteHeaderProps) {
   const whatsappHref = configuredWhatsAppHref(whatsapp);
 
@@ -29,9 +29,14 @@ export function SiteHeader({
       <BrandLockup compact emblem="flower" />
       <DesktopNavigation navigation={navigation} />
       {whatsappHref ? (
-        <ButtonLink className="siteHeader__contact" href={whatsappHref}>
-          Fale no WhatsApp
-        </ButtonLink>
+        <ContactButton
+          className="siteHeader__contact"
+          href={whatsappHref}
+          label="Fale com a Sobreiro"
+          icon="whatsapp"
+          iconSize="sm"
+          external
+        />
       ) : null}
       <MobileNavigation content={mobileMenu} navigation={navigation} />
     </header>

@@ -368,14 +368,14 @@ animação, parallax, reveal, bounce nem contador.
 | `AboutTeamContent` | identidade, papel, `TeamMediaContent` e credenciais | Linguagem institucional, sem pessoa, registro, biografia ou semântica de retrato |
 | `TeamMediaContent` | `configured` exige mídia; `unavailable` exige mensagem; ambos exigem `callout` | Imagem botânica com alt contextual ou fallback verdadeiro, sempre com callout textual |
 | `AboutCredential` | `approved` exige `detail`; `pendingApproval` exige `pendingMessage` | Lista de quatro categorias com o estado editorial verdadeiro |
-| `ContactMethod` | `configured` exige `href` e `accessibleLabel`; `unavailable` exige mensagem | Card inteiro como um único link ou superfície informativa não focável |
+| `ContactMethod` | `href`, `accessibleLabel` e opção `external` | Card inteiro como um único link nativo para WhatsApp ou e-mail |
 
 No conteúdo vigente, `+100` e `100%` permanecem candidatos pendentes e não são
 renderizados; somente o indicador neutro `Natureza` está aprovado. Hero e
 processo ainda usam ativos remotos provisórios; a mídia botânica da equipe está
-indisponível. Somente o e-mail está configurado; WhatsApp e agenda permanecem sem
-URL. Esses pontos são substituídos exclusivamente em `aboutContent.ts` após
-aprovação editorial e de licenciamento.
+indisponível. WhatsApp e e-mail estão configurados como os dois caminhos de
+contato da seção; não há fluxo ou promessa de agendamento. O contato usa a flor
+oficial oliva como marca-d’água decorativa, oculta da árvore de acessibilidade.
 
 ### Layout, tokens e responsividade
 

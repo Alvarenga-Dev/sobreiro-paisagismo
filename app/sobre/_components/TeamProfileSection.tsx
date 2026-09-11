@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { BotanicalDecoration } from "../../_components/Brand";
 import { LineIcon } from "../../_components/LineIcon";
 import { SectionHeading, SupportingCopy } from "../../_components/Typography";
 import type { AboutTeamContent } from "../aboutContent";
@@ -11,7 +10,6 @@ export function TeamProfileSection({ content }: { content: AboutTeamContent }) {
       aria-labelledby="equipe-title"
       data-region="team-profile"
     >
-      <BotanicalDecoration className="teamProfileSection__decoration" position="left" />
       <div className="aboutSectionInner teamProfileSection__layout">
         <div className="teamProfileSection__intro">
           <SectionHeading

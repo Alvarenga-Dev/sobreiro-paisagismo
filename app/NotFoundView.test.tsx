@@ -49,8 +49,12 @@ describe("experiência 404 global", () => {
     ]);
     expect(links[0]).toHaveAttribute("href", "/");
     expect(links[1]).toHaveAttribute("href", "/projetos");
-    expect(links[2]).toHaveAttribute("href", "mailto:contato@sobreiro.com.br");
-    expect(screen.queryByRole("link", { name: /whatsapp/i })).not.toBeInTheDocument();
+    expect(links[2]).toHaveAttribute("href", "https://wa.me/message/CRFBFPI3Y5TJC1");
+    expect(links[2]).toHaveAttribute("target", "_blank");
+    expect(links[2].querySelector("path")).toHaveAttribute(
+      "d",
+      "M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z",
+    );
   });
 
   it("trata o artwork como decoração não interativa e mantém o conteúdo independente dele", () => {

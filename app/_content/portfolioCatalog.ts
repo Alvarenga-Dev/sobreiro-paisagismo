@@ -418,11 +418,9 @@ export function toProjectCardData(
   const media = context === "home" ? { ...project.cover, sizes: homeCardSizes } : project.cover;
   return {
     id: project.id,
-    href: context === "home"
-      ? "/projetos"
-      : project.detailPublication === "published"
-        ? `/projetos/${encodeURIComponent(project.id)}`
-        : undefined,
+    href: project.detailPublication === "published"
+      ? `/projetos/${encodeURIComponent(project.id)}`
+      : undefined,
     title: project.title,
     category: project.category,
     summary: project.summary,

@@ -30,7 +30,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       <ProjectsContactBanner
         id="projects-contact-title"
         {...projectsContent.banner}
-        {...projectContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact)}
+        {...projectContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact, siteContent.email)}
       />
     </SiteFrame>
   );

@@ -50,7 +50,13 @@ describe("MobileNavigation", () => {
     );
     expect(screen.getAllByRole("link").filter((link) => ["Início", "Sobre", "Projetos", "Por que um projeto?", "Contato"].includes(link.textContent ?? ""))).toHaveLength(5);
     expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("aria-current", "page");
-    expect(screen.queryByRole("link", { name: "Fale no WhatsApp" })).not.toBeInTheDocument();
+    const contact = screen.getByRole("link", { name: "Fale com a Sobreiro" });
+    expect(contact).toHaveAttribute("href", "https://wa.me/message/CRFBFPI3Y5TJC1");
+    expect(contact).toHaveAttribute("target", "_blank");
+    expect(contact.querySelector("path")).toHaveAttribute(
+      "d",
+      "M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z",
+    );
   });
 
   it("sincroniza o destino ativo quando o hash da Home muda", async () => {

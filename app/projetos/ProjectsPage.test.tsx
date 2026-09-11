@@ -46,7 +46,13 @@ describe("Projetos", () => {
     expect(within(filters).getAllByRole("link").filter((link) => link.hasAttribute("aria-current"))).toHaveLength(1);
     expect(within(filters).getByRole("link", { name: "Todos" })).toHaveAttribute("href", "/projetos?tag=a&tag=b");
     expect(screen.getByRole("status")).toHaveTextContent("Paisagismo comercial: 1 projeto encontrado");
-    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("href", siteContent.contact.href);
+    const contact = screen.getByRole("link", { name: "Fale com a Sobreiro" });
+    expect(contact).toHaveAttribute("href", siteContent.contact.href);
+    expect(contact).toHaveAttribute("target", "_blank");
+    expect(contact.querySelector("path")).toHaveAttribute(
+      "d",
+      "M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z",
+    );
     expect(within(screen.getByRole("contentinfo")).getByRole("link", { name: "Projetos" })).toHaveAttribute("aria-current", "page");
     for (const heading of screen.getAllByRole("heading", { level: 2 }).filter((h) => h.closest("main"))) {
       expect(heading.closest("section")).toHaveAttribute("aria-labelledby", heading.id);
@@ -58,7 +64,7 @@ describe("Projetos", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Todos: 8 projetos encontrados");
   });
   it.each(["paisagismo-comercial", "todos"] as const)("oferece recuperação com coleção vazia em %s", (category) => {
-    render(<><ProjectsCatalog projects={[]} category={category} destinations={destinations} /><ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact)} /></>);
+    render(<><ProjectsCatalog projects={[]} category={category} destinations={destinations} /><ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact, siteContent.email)} /></>);
     expect(screen.getByText("Nenhum projeto encontrado nesta categoria.")).toBeVisible();
     expect(screen.getByRole("link", { name: "Ver todos" })).toHaveAttribute("href", "/projetos?tag=a&tag=b");
     expect(screen.getByRole("status")).toHaveTextContent("0 projetos encontrados");
@@ -111,15 +117,17 @@ describe("Projetos", () => {
     expect(() => validateProjectPresentations([...projectPresentations, projectPresentations[0]], catalogProjects)).toThrow(/duplicado/i);
     expect(() => validateProjectPresentations([...projectPresentations, { id: "desconhecido", direction: "mediaFirst", surface: "dark" }], catalogProjects)).toThrow(/desconhecido/i);
   });
-  it("banner usa fallback sem imagem e WhatsApp somente quando configurado", () => {
-    const { rerender } = render(<ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact)} />);
+  it("banner usa e-mail explícito como fallback e WhatsApp quando configurado", () => {
+    const { rerender } = render(<ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact, siteContent.email)} />);
     expect(screen.getByRole("heading", { name: "Seu projeto pode ser o próximo." })).toBeVisible();
     expect(document.querySelector(".projectsContactBanner__image")).toBeNull();
-    expect(screen.queryByRole("link", { name: "Fale no WhatsApp" })).not.toBeInTheDocument();
-    rerender(<ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "configured", href: "https://example.com/whatsapp" }, siteContent.contact)} />);
+    expect(screen.getByRole("link", { name: "Envie um e-mail" })).toHaveAttribute("href", siteContent.email.href);
+    expect(screen.queryByRole("link", { name: "Fale com a Sobreiro" })).not.toBeInTheDocument();
+    rerender(<ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "configured", href: "https://example.com/whatsapp" }, siteContent.contact, siteContent.email)} />);
     expect(screen.getByText(projectsContent.banner.description)).toBeVisible();
-    expect(screen.getByRole("link", { name: "Fale no WhatsApp" })).toHaveAttribute("href", "https://example.com/whatsapp");
-    expect(screen.getByRole("link", { name: "Agende uma conversa" })).toHaveAttribute("href", siteContent.contact.href);
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("href", "https://example.com/whatsapp");
+    expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("target", "_blank");
+    expect(screen.getByRole("link", { name: "Agende uma conversa" })).toHaveAttribute("href", siteContent.email.href);
   });
   it("banner renderiza mídia aprovada e não fabrica ações indisponíveis", () => {
     const approvedMedia = {

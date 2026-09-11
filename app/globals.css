@@ -118,6 +118,10 @@ body {
     transform var(--route-transition-motion) var(--ease-standard);
 }
 
+.routeViewport--initial {
+  animation: site-entry 720ms var(--ease-standard) both;
+}
+
 .routeViewport--leaving {
   pointer-events: none;
   opacity: 0;
@@ -133,6 +137,18 @@ body {
     opacity: 0;
     transform: translateY(0.5rem);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes site-entry {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -434,7 +450,7 @@ ol {
 .displayHeading .textAccent,
 .sectionHeading--onDark .textAccent,
 .bannerMessage .textAccent {
-  color: var(--color-text-accent-on-dark);
+  color: var(--color-focus-on-dark);
 }
 
 .sectionHeading {
@@ -972,7 +988,21 @@ ol {
 }
 
 .aboutHero__historyIcon .lineIcon {
-  rotate: 90deg;
+  width: 1.1rem;
+  height: 1.1rem;
+  transform-origin: center;
+  animation: history-arrow-bob 2.4s ease-in-out infinite;
+}
+
+@keyframes history-arrow-bob {
+  0%,
+  100% {
+    transform: translateY(-1px) rotate(90deg);
+  }
+
+  50% {
+    transform: translateY(2px) rotate(90deg);
+  }
 }
 
 .aboutHero__statement {
@@ -983,16 +1013,6 @@ ol {
   font-style: italic;
   line-height: 1.2;
   text-wrap: balance;
-}
-
-.aboutHero__decoration {
-  position: absolute;
-  z-index: var(--z-decoration);
-  right: -3rem;
-  bottom: -5rem;
-  width: clamp(12rem, 28vw, 22rem);
-  color: var(--color-decoration-on-dark);
-  pointer-events: none;
 }
 
 .essenceSection,
@@ -1155,15 +1175,6 @@ ol {
   color: var(--color-text-on-dark);
 }
 
-.teamProfileSection__decoration {
-  position: absolute;
-  right: -2rem;
-  bottom: -5rem;
-  width: clamp(13rem, 24vw, 20rem);
-  color: var(--color-decoration-on-dark);
-  pointer-events: none;
-}
-
 .teamProfileSection__layout {
   position: relative;
   z-index: var(--z-content);
@@ -1283,11 +1294,14 @@ ol {
 .contactMethodsSection__decoration {
   position: absolute;
   z-index: var(--z-base);
-  top: -5rem;
-  right: -4rem;
-  width: 18rem;
-  color: var(--color-decoration-on-light);
+  top: -4rem;
+  right: -6rem;
+  width: clamp(16rem, 32vw, 28rem);
+  height: auto;
+  aspect-ratio: 658 / 537;
+  opacity: 0.08;
   pointer-events: none;
+  transform: rotate(-7deg);
 }
 
 .contactMethodsSection__layout,
@@ -1308,7 +1322,6 @@ ol {
 
 .contactMethodsGrid > li,
 .contactMethodLink,
-.contactMethodUnavailable,
 .contactMethodCard {
   height: 100%;
 }
@@ -1352,22 +1365,8 @@ ol {
   overflow-wrap: anywhere;
 }
 
-.contactMethodCard__body em {
-  color: var(--color-text-on-light-muted);
-  font-size: 0.72rem;
-  font-style: normal;
-}
-
 .contactMethodCard__arrow {
   color: var(--color-text-accent-on-light);
-}
-
-.contactMethodUnavailable {
-  cursor: default;
-}
-
-.contactMethodUnavailable .contactMethodCard {
-  background: var(--color-surface-light-primary);
 }
 
 @media (hover: hover) {
@@ -1386,7 +1385,8 @@ ol {
   position: relative;
   isolation: isolate;
   display: grid;
-  min-height: clamp(38rem, 78svh, 54rem);
+  min-height: 100vh;
+  min-height: 100svh;
   align-items: end;
   padding-block-start: var(--navbar-clearance);
   overflow: hidden;
@@ -1401,6 +1401,196 @@ ol {
 
 .heroBackdrop img {
   object-fit: cover;
+}
+
+.natureAmbient {
+  position: absolute;
+  z-index: var(--z-content);
+  inset: 0;
+  overflow: hidden;
+  color: var(--color-text-accent-on-dark);
+  pointer-events: none;
+}
+
+.natureAmbient__canvas {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  overflow: visible;
+}
+
+.natureAmbient__light {
+  fill: var(--color-text-accent-on-dark);
+  filter: blur(5rem);
+  mix-blend-mode: screen;
+  opacity: 0.08;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.natureAmbient__light--one {
+  animation: nature-light-drift-one 24s ease-in-out infinite alternate;
+}
+
+.natureAmbient__light--two {
+  animation: nature-light-drift-two 31s ease-in-out infinite alternate;
+}
+
+.natureAmbient__breeze {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.1;
+  opacity: 0.2;
+  vector-effect: non-scaling-stroke;
+  will-change: opacity, transform;
+}
+
+.natureAmbient__breeze--upper {
+  stroke-dasharray: 90 34 22 48;
+  animation: nature-breeze-upper 19s ease-in-out infinite alternate;
+}
+
+.natureAmbient__breeze--lower {
+  stroke-dasharray: 60 44 16 38;
+  animation: nature-breeze-lower 24s ease-in-out infinite alternate;
+}
+
+.natureAmbient__pollen {
+  fill: currentColor;
+  will-change: transform, opacity;
+}
+
+.natureAmbient__pollen--far {
+  opacity: 0.46;
+  animation: nature-pollen-drift-far 22s linear infinite;
+}
+
+.natureAmbient__pollen--mid {
+  opacity: 0.68;
+  animation: nature-pollen-drift-mid 17s ease-in-out infinite alternate;
+}
+
+.natureAmbient__pollen--near {
+  filter: blur(0.6px);
+  opacity: 0.76;
+  animation: nature-pollen-drift-near 13s ease-in-out infinite alternate;
+}
+
+.natureAmbient__pollen > * {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: nature-pollen-glimmer 4.8s ease-in-out infinite alternate;
+}
+
+.natureAmbient__pollen > :nth-child(3n + 1) {
+  animation-delay: -1.6s;
+  animation-duration: 4.1s;
+}
+
+.natureAmbient__pollen > :nth-child(3n + 2) {
+  animation-delay: -3.2s;
+  animation-duration: 5.7s;
+}
+
+.natureAmbient--about {
+  opacity: 0.88;
+}
+
+.natureAmbient--about .natureAmbient__canvas {
+  transform: translateX(4%);
+}
+
+@keyframes nature-light-drift-one {
+  from {
+    transform: translate3d(-2%, 1%, 0) scale(0.94);
+  }
+
+  to {
+    transform: translate3d(5%, -3%, 0) scale(1.08);
+  }
+}
+
+@keyframes nature-light-drift-two {
+  from {
+    transform: translate3d(3%, 2%, 0) scale(1.04);
+  }
+
+  to {
+    transform: translate3d(-4%, -2%, 0) scale(0.92);
+  }
+}
+
+@keyframes nature-breeze-upper {
+  from {
+    opacity: 0.1;
+    stroke-dashoffset: 0;
+    transform: translate3d(-2.5rem, 0.25rem, 0);
+  }
+
+  to {
+    opacity: 0.28;
+    stroke-dashoffset: -180;
+    transform: translate3d(2.5rem, -0.5rem, 0);
+  }
+}
+
+@keyframes nature-breeze-lower {
+  from {
+    opacity: 0.22;
+    stroke-dashoffset: 40;
+    transform: translate3d(2rem, 0.4rem, 0);
+  }
+
+  to {
+    opacity: 0.08;
+    stroke-dashoffset: -120;
+    transform: translate3d(-3rem, -0.35rem, 0);
+  }
+}
+
+@keyframes nature-pollen-drift-far {
+  from {
+    transform: translate3d(0, 3.5rem, 0);
+  }
+
+  to {
+    transform: translate3d(-3rem, -4rem, 0);
+  }
+}
+
+@keyframes nature-pollen-drift-mid {
+  from {
+    transform: translate3d(-1.5rem, 2.75rem, 0);
+  }
+
+  to {
+    transform: translate3d(2.5rem, -3.5rem, 0);
+  }
+}
+
+@keyframes nature-pollen-drift-near {
+  from {
+    transform: translate3d(1rem, 2rem, 0);
+  }
+
+  to {
+    transform: translate3d(-2.25rem, -2.75rem, 0);
+  }
+}
+
+@keyframes nature-pollen-glimmer {
+  from {
+    opacity: 0.18;
+    transform: scale(0.72);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.14);
+  }
 }
 
 .homeHero::after {
@@ -2130,7 +2320,7 @@ ol {
   }
 
   .contactMethodsGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .contactMethodCard {
@@ -2189,7 +2379,7 @@ ol {
   }
 
   .homeHero {
-    min-height: 34rem;
+    min-height: max(34rem, 100svh);
   }
 
   .heroContent {

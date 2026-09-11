@@ -32,6 +32,7 @@ function prefersReducedMotion() {
 export function RouteTransition({ children, header }: RouteTransitionProps) {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
+  const [isInitialRender, setIsInitialRender] = useState(true);
   const [transition, setTransition] = useState<TransitionState>({ pathname, phase: "visible" });
   const observedPathnameRef = useRef(pathname);
   const controlledNavigationRef = useRef(false);
@@ -51,6 +52,12 @@ export function RouteTransition({ children, header }: RouteTransitionProps) {
       focusFrameRef.current = null;
       document.querySelector<HTMLElement>("main#conteudo-principal")?.focus();
     });
+  }, []);
+
+  useEffect(() => {
+    const initialRenderTimer = window.setTimeout(() => setIsInitialRender(false), 760);
+
+    return () => window.clearTimeout(initialRenderTimer);
   }, []);
 
   useEffect(() => {
@@ -136,7 +143,7 @@ export function RouteTransition({ children, header }: RouteTransitionProps) {
       </a>
       {header}
       <div
-        className={`routeViewport routeViewport--${phase}`}
+        className={`routeViewport routeViewport--${phase}${isInitialRender ? " routeViewport--initial" : ""}`}
         data-region="route-viewport"
         data-phase={phase}
         inert={routeIsHidden}

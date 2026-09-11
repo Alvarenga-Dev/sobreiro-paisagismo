@@ -65,7 +65,11 @@ describe("adaptador do catálogo de portfólio", () => {
       "coffee-comfort",
       "jardim-vertical-residencial",
     ]);
-    expect(homeFeaturedProjects.every((project) => project.href === "/projetos")).toBe(true);
+    expect(homeFeaturedProjects.map((project) => project.href)).toEqual([
+      "/projetos/residencia-piscina-area-gourmet",
+      "/projetos/coffee-comfort",
+      "/projetos/jardim-vertical-residencial",
+    ]);
   });
 
   it("rejeita referência duplicada na seleção da Home", () => {

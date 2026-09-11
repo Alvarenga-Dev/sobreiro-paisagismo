@@ -78,7 +78,7 @@ export function ProjectDetailPageView({ project }: { readonly project: Portfolio
         <ContactBanner
           id="project-detail-contact-title"
           {...projectDetailBanner}
-          {...projectDetailContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact)}
+          {...projectDetailContactActions(siteContent.mobileMenu.contacts.whatsapp, siteContent.contact, siteContent.email)}
         />
       </div>
     </SiteFrame>

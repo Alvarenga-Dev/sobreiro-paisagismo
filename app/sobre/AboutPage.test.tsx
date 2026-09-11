@@ -8,8 +8,7 @@ import { aboutContent } from "./aboutContent";
 import type {
   AboutEssenceContent,
   AboutTeamContent,
-  ConfiguredContactMethod,
-  UnavailableContactMethod,
+  ContactMethod,
 } from "./aboutContent";
 
 describe("AboutPage", () => {
@@ -69,6 +68,16 @@ describe("AboutPage", () => {
     expect(within(hero as HTMLElement).getByText(aboutContent.hero.statement)).toBeVisible();
   });
 
+  it("usa a variação botânica ambiente como decoração não anunciada", () => {
+    render(<AboutPage />);
+
+    const hero = screen.getByRole("heading", { level: 1 }).closest("section");
+    const ambientMotion = hero?.querySelector("[data-ambient-motion='nature']");
+    expect(ambientMotion).toHaveClass("natureAmbient--about");
+    expect(ambientMotion).toHaveAttribute("aria-hidden", "true");
+    expect(hero?.querySelector(".botanicalDecoration")).not.toBeInTheDocument();
+  });
+
   it("apresenta quatro valores e quatro credenciais como conteúdo textual", () => {
     render(<AboutPage />);
 
@@ -90,24 +99,46 @@ describe("AboutPage", () => {
     });
   });
 
-  it("mantém os três métodos reais em ordem e cria link somente para o e-mail", () => {
+  it("mantém o perfil da equipe livre de ornamentos decorativos", () => {
+    render(<AboutPage />);
+
+    const section = screen.getByRole("heading", { name: /paixão que floresce/i }).closest("section");
+    expect(section?.querySelector(".brandEmblem")).not.toBeInTheDocument();
+    expect(section?.querySelector(".botanicalDecoration")).not.toBeInTheDocument();
+  });
+
+  it("oferece WhatsApp e e-mail como os dois métodos reais de contato", () => {
     render(<AboutPage />);
 
     const methods = screen.getByRole("list", { name: "Métodos de contato" });
-    expect(methods.children).toHaveLength(3);
+    expect(methods.children).toHaveLength(2);
     expect(Array.from(methods.children).map((method) => method.querySelector("strong")?.textContent)).toEqual([
       "Fale no WhatsApp",
       "Envie um e-mail",
-      "Agende uma conversa",
     ]);
-    expect(within(methods).getAllByRole("link")).toHaveLength(1);
+    expect(within(methods).getAllByRole("link")).toHaveLength(2);
+    expect(within(methods).getByRole("link", { name: /falar com a sobreiro pelo whatsapp/i })).toHaveAttribute(
+      "href",
+      "https://wa.me/message/CRFBFPI3Y5TJC1",
+    );
     expect(within(methods).getByRole("link", { name: /enviar e-mail/i })).toHaveAttribute(
       "href",
       "mailto:contato@sobreiro.com.br",
     );
-    expect(within(methods).getByText("Contato ainda não disponível")).toBeVisible();
-    expect(within(methods).getByText("Agenda ainda não disponível")).toBeVisible();
-    expect(methods.querySelectorAll("[data-contact-status='unavailable']")).toHaveLength(2);
+    expect(within(methods).queryByText(/agend/i)).not.toBeInTheDocument();
+  });
+
+  it("usa a flor oficial da marca como decoração do contato", () => {
+    render(<AboutPage />);
+
+    const section = screen.getByRole("heading", { name: /vamos transformar seu espaço/i }).closest("section");
+    const decoration = section?.querySelector(".contactMethodsSection__decoration");
+    expect(decoration).toHaveClass("brandEmblem--flower");
+    expect(decoration).toHaveAttribute("aria-hidden", "true");
+    expect(decoration?.querySelector("img")).toHaveAttribute(
+      "src",
+      expect.stringContaining("flor-sobreiro-verde-oliva.svg"),
+    );
   });
 
   it("não duplica o cabeçalho global dentro da rota", () => {
@@ -212,19 +243,9 @@ describe("ContactMethodCard", () => {
     icon: "mail",
     title: "Envie um e-mail",
     detail: "contato@sobreiro.com.br",
-    status: "configured",
     href: "mailto:contato@sobreiro.com.br",
     accessibleLabel: "Enviar e-mail para contato@sobreiro.com.br",
-  } satisfies ConfiguredContactMethod;
-
-  const unavailable = {
-    id: "agenda",
-    icon: "calendar",
-    title: "Agende uma conversa",
-    detail: "Atendimento personalizado",
-    status: "unavailable",
-    unavailableMessage: "Agenda ainda não disponível",
-  } satisfies UnavailableContactMethod;
+  } satisfies ContactMethod;
 
   it("renderiza um único link nativo quando o destino está configurado", () => {
     render(<ContactMethodCard method={configured} />);
@@ -234,12 +255,4 @@ describe("ContactMethodCard", () => {
     expect(screen.getAllByRole("link")).toHaveLength(1);
   });
 
-  it("renderiza superfície informativa não focável sem fabricar URL", () => {
-    const { container } = render(<ContactMethodCard method={unavailable} />);
-
-    expect(screen.getByText(unavailable.title)).toBeVisible();
-    expect(screen.getByText(unavailable.unavailableMessage)).toBeVisible();
-    expect(container.querySelector("a")).not.toBeInTheDocument();
-    expect(container.querySelector("[tabindex]")).not.toBeInTheDocument();
-  });
 });

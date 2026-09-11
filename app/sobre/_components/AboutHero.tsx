@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { BotanicalDecoration } from "../../_components/Brand";
 import { LineIcon } from "../../_components/LineIcon";
+import { NatureAmbient } from "../../_components/NatureAmbient";
 import { DisplayHeading, SupportingCopy } from "../../_components/Typography";
 import type { AboutHeroContent } from "../aboutContent";
 
@@ -17,6 +17,7 @@ export function AboutHero({ content }: { content: AboutHeroContent }) {
         sizes={content.media.sizes}
         style={{ objectPosition: content.media.position }}
       />
+      <NatureAmbient variant="about" />
       <div className="aboutHero__inner">
         <div className="aboutHero__editorial">
           <p className="aboutHero__eyebrow">{content.eyebrow}</p>
@@ -33,7 +34,6 @@ export function AboutHero({ content }: { content: AboutHeroContent }) {
           <p className="aboutHero__statement">{content.statement}</p>
         </div>
       </div>
-      <BotanicalDecoration className="aboutHero__decoration" />
     </section>
   );
 }

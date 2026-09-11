@@ -53,13 +53,23 @@ describe("HomePage", () => {
   it("mantém CTAs e conteúdo configurável em português do Brasil", () => {
     render(<HomePage />);
 
+    const main = screen.getByRole("main");
     const contactBanner = screen
       .getByRole("heading", { name: /vamos transformar seu espaço juntos/i })
       .closest("section");
     const footer = screen.getByRole("contentinfo");
-    const contactLinks = screen.getAllByRole("link", { name: "Fale com a Sobreiro" });
-    expect(contactLinks.length).toBeGreaterThanOrEqual(2);
-    contactLinks.forEach((link) => expect(link).toHaveAttribute("href", "mailto:contato@sobreiro.com.br"));
+    const heroContact = within(main.children[0] as HTMLElement).getByRole("link", { name: "Fale com a Sobreiro" });
+    const bannerContact = within(contactBanner as HTMLElement).getByRole("link", { name: "Fale com a Sobreiro" });
+    for (const contact of [heroContact, bannerContact]) {
+      expect(contact).toHaveAttribute("href", "https://wa.me/message/CRFBFPI3Y5TJC1");
+      expect(contact).toHaveAttribute("target", "_blank");
+      expect(contact).toHaveAttribute("rel", "noreferrer");
+      expect(contact.querySelector(".lineIcon")).toHaveClass("lineIcon--sm");
+      expect(contact.querySelector("path")).toHaveAttribute(
+        "d",
+        "M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4l-4.4 1.4 1.4-4.2a8.5 8.5 0 1 1 15.6-4.6Z",
+      );
+    }
     expect(screen.getByText(/projetos de paisagismo que conectam natureza/i)).toBeVisible();
     expect(contactBanner?.querySelector(".contactBanner__decoration img")).toHaveAttribute(
       "src",
@@ -70,6 +80,18 @@ describe("HomePage", () => {
       "src",
       "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
     );
+  });
+
+  it("mantém o movimento ambiente do hero decorativo e fora da árvore acessível", () => {
+    render(<HomePage />);
+
+    const ambientMotion = screen.getByRole("heading", { level: 1 }).closest("section")
+      ?.querySelector("[data-ambient-motion='nature']");
+    expect(ambientMotion).toHaveClass("natureAmbient--home");
+    expect(ambientMotion).toHaveAttribute("aria-hidden", "true");
+    expect(ambientMotion?.querySelector("svg")).toHaveAttribute("focusable", "false");
+    expect(ambientMotion?.querySelectorAll("[data-pollen-grain='true']")).toHaveLength(31);
+    expect(ambientMotion?.querySelector(".natureAmbient__sprig")).not.toBeInTheDocument();
   });
 
   it("deixa o cabeçalho global fora da rota e preserva rodapé e destinos", () => {
