@@ -47,7 +47,7 @@ export const homeContent = {
     eyebrow: "Paisagismo autoral",
     title: "Projetando pra você",
     signature: "“um espaço que respira”",
-    description: "Projetos de paisagismo e design que transformam experiências.",
+    description: "Projetos de Paisagismo e Design que transformam experiências.",
     media: {
       src: "/images/portfolio/hero.png",
       alt: "Caminho envolvido por um jardim tropical iluminado",

@@ -68,6 +68,7 @@ export function RouteTransition({ children, header }: RouteTransitionProps) {
     const shouldFocusMain = controlledNavigationRef.current;
     controlledNavigationRef.current = false;
     clearTimer(enterTimerRef);
+    setTransition({ pathname, phase: "entering" });
     enterTimerRef.current = window.setTimeout(() => {
       enterTimerRef.current = null;
       setTransition({ pathname, phase: "visible" });
@@ -129,7 +130,6 @@ export function RouteTransition({ children, header }: RouteTransitionProps) {
     clearTimer(navigationTimerRef);
     navigationTimerRef.current = window.setTimeout(() => {
       navigationTimerRef.current = null;
-      setTransition({ pathname: destination.pathname, phase: "entering" });
       router.push(href);
     }, transitionDuration);
   };
