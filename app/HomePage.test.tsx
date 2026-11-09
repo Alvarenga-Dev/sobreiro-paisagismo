@@ -10,7 +10,7 @@ describe("HomePage", () => {
     const main = screen.getByRole("main");
     const footer = screen.getByRole("contentinfo");
     const sectionNames = [
-      "Projetos de paisagismo e design de interiores",
+      "Projetando pra você",
       /prazer, sou jéssica sobreiro/i,
       "Como posso ajudar no seu espaço?",
       "Do jardim ao interior",
@@ -24,12 +24,12 @@ describe("HomePage", () => {
       expect(within(main.children[index] as HTMLElement).getByRole("heading", { name })).toBeVisible();
     });
     const h1 = screen.getByRole("heading", { level: 1 });
-    const hero = screen.getByRole("region", { name: "Projetos de paisagismo e design de interiores" });
-    const signature = within(hero).getByText("Um espaço que respira");
+    const hero = screen.getByRole("region", { name: "Projetando pra você" });
+    const signature = within(hero).getByText("“um espaço que respira”");
     expect(h1).not.toContainElement(signature);
     expect(h1.compareDocumentPosition(signature) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(within(hero).getByText("Com Jéssica Sobreiro")).toBeVisible();
-    expect(within(hero).getByText(/para casas e negócios/i)).toBeVisible();
+    expect(within(hero).getByText("Paisagismo autoral")).toBeVisible();
+    expect(within(hero).getByText("Projetos de paisagismo e design que transformam experiências.")).toBeVisible();
     expect(Array.from(main.children).slice(0, 5).map((section) => section.id)).toEqual([
       "inicio", "sobre", "servicos", "projetos", "beneficios",
     ]);
@@ -89,11 +89,11 @@ describe("HomePage", () => {
   it("mantém CTAs e conteúdo configurável em português do Brasil", () => {
     render(<HomePage />);
 
-    const hero = screen.getByRole("region", { name: "Projetos de paisagismo e design de interiores" });
+    const hero = screen.getByRole("region", { name: "Projetando pra você" });
     const contactBanner = screen.getByRole("region", { name: "O que você quer mudar no seu espaço?" });
     const footer = screen.getByRole("contentinfo");
-    const heroContact = within(hero).getByRole("link", { name: "Conversar com Jéssica" });
-    const bannerContact = within(contactBanner).getByRole("link", { name: "Conversar com Jéssica" });
+    const heroContact = within(hero).getByRole("link", { name: "Conversar com a Sobreiro" });
+    const bannerContact = within(contactBanner).getByRole("link", { name: "Conversar com a Sobreiro" });
     expect(within(contactBanner).getByText(/^Conte onde fica o imóvel e o que você quer criar ou renovar/))
       .toBeVisible();
     for (const contact of [heroContact, bannerContact]) {

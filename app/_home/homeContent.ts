@@ -39,16 +39,15 @@ export interface HeroContentData {
   };
 }
 
-const homeContact = { ...siteContent.contact, label: "Conversar com Jéssica" } as const;
+const homeContact = { ...siteContent.contact, label: "Conversar com a Sobreiro" } as const;
 
 export const homeContent = {
   contact: homeContact,
   hero: {
-    eyebrow: "Com Jéssica Sobreiro",
-    title: "Projetos de paisagismo e design de interiores",
-    signature: "Um espaço que respira",
-    description:
-      "Para casas e negócios que querem aproveitar melhor seus espaços, com conforto e escolhas pensadas para o dia a dia.",
+    eyebrow: "Paisagismo autoral",
+    title: "Projetando pra você",
+    signature: "“um espaço que respira”",
+    description: "Projetos de paisagismo e design que transformam experiências.",
     media: {
       src: "/images/portfolio/hero.png",
       alt: "Caminho envolvido por um jardim tropical iluminado",
