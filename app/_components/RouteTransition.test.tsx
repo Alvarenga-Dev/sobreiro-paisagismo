@@ -61,6 +61,7 @@ describe("RouteTransition", () => {
 
     act(() => jest.advanceTimersByTime(260));
     expect(push).toHaveBeenCalledWith("/sobre");
+    expect(viewport).toHaveClass("routeViewport--leaving");
 
     jest.mocked(usePathname).mockReturnValue("/sobre");
     rerender(
