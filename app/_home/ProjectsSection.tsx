@@ -11,16 +11,18 @@ export interface ProjectsSectionProps {
 export function ProjectsSection({ heading, projects }: ProjectsSectionProps) {
   return (
     <section className="projectsSection" id="projetos" aria-labelledby="projetos-title" data-region="projects">
-      <div className="projectsSection__header">
-        <SectionHeading
-          id="projetos-title"
-          eyebrow="Projetos"
-          fragments={heading}
-          context="onDark"
-        />
-        <SectionAction href="/projetos" label="Ver todos" />
+      <div className="aboutSectionInner projectsSection__inner">
+        <div className="projectsSection__header">
+          <SectionHeading
+            id="projetos-title"
+            eyebrow="Projetos em destaque"
+            fragments={heading}
+            context="onDark"
+          />
+          <SectionAction href="/projetos" label="Ver todos os projetos" />
+        </div>
+        <ProjectCarousel projects={projects} />
       </div>
-      <ProjectCarousel projects={projects} />
     </section>
   );
 }

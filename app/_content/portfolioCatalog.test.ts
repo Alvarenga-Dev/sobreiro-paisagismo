@@ -18,7 +18,7 @@ function copyHomeCatalog(): typeof rawHomeCatalog {
   };
 }
 
-function copyPortfolioCatalog(): typeof rawPortfolioCatalog {
+function copyPortfolioCatalog() {
   return {
     ...rawPortfolioCatalog,
     categories: rawPortfolioCatalog.categories.map((category) => ({
@@ -47,11 +47,11 @@ describe("adaptador do catálogo de portfólio", () => {
   afterEach(() => jest.resetAllMocks());
 
   it("transforma o catálogo válido em projetos com galeria e mídia local", () => {
-    expect(portfolioCatalog.projects).toHaveLength(8);
+    expect(portfolioCatalog.projects).toHaveLength(9);
     expect(portfolioCatalog.highlights.map((highlight) => highlight.projectId)).toEqual([
-      "residencia-piscina-area-gourmet",
+      "residencia-jardim-e-piscina",
       "coffee-comfort",
-      "jardim-vertical-residencial",
+      "suite-com-painel-iluminado",
     ]);
     expect(portfolioProjects[0].images.length).toBeGreaterThan(1);
     expect(portfolioProjects[0].detailPublication).toBe("published");
@@ -61,15 +61,48 @@ describe("adaptador do catálogo de portfólio", () => {
     expect(portfolioProjects[0].media.height).toBeGreaterThan(0);
     expect(portfolioProjects[0].media.sizes).toContain("min-width");
     expect(homeFeaturedProjects.map((project) => project.id)).toEqual([
-      "residencia-piscina-area-gourmet",
+      "residencia-jardim-e-piscina",
       "coffee-comfort",
-      "jardim-vertical-residencial",
+      "suite-com-painel-iluminado",
     ]);
     expect(homeFeaturedProjects.map((project) => project.href)).toEqual([
-      "/projetos/residencia-piscina-area-gourmet",
+      "/projetos/residencia-jardim-e-piscina",
       "/projetos/coffee-comfort",
-      "/projetos/jardim-vertical-residencial",
+      "/projetos/suite-com-painel-iluminado",
     ]);
+  });
+
+  it("mantém as capas vinculadas ao projeto certo e preserva os detalhes publicados", () => {
+    homeFeaturedProjects.forEach((card, index) => {
+      const project = portfolioProjects.find(({ id }) => id === card.id);
+      expect(project?.images.map(({ src }) => src)).toContain(card.media.src);
+      expect(card.media.src).toContain(portfolioCatalog.highlights[index].cover);
+    });
+    expect(findPublishedProjectBySlug(portfolioProjects, "jardim-vertical-residencial")?.title)
+      .toBe("Jardins verticais");
+    expect(findPublishedProjectBySlug(portfolioProjects, "residencia-jardim-e-piscina")?.images).toHaveLength(6);
+    expect(findPublishedProjectBySlug(portfolioProjects, "suite-com-painel-iluminado")?.images).toHaveLength(5);
+    expect(findPublishedProjectBySlug(portfolioProjects, "residencia-piscina-area-gourmet")).toBeUndefined();
+  });
+
+  it("rejeita capa de outro projeto na seleção da Home", () => {
+    const homeCatalog = copyHomeCatalog();
+    homeCatalog.highlights[0].cover = rawHomeCatalog.highlights[1].cover;
+    expect(() => buildPortfolioCatalog(rawPortfolioCatalog, homeCatalog)).toThrow(
+      /home-catalog\.highlights\[0\]\.cover: a capa .* não pertence ao projeto/,
+    );
+  });
+
+  it("valida quantidade e ordem dos destaques e aceita referências sem capa ou título", () => {
+    const { highlights } = copyHomeCatalog();
+    expect(() => buildPortfolioCatalog(rawPortfolioCatalog, { highlights: highlights.slice(1) }))
+      .toThrow("esperadas exatamente três referências");
+    expect(() => buildPortfolioCatalog(rawPortfolioCatalog, {
+      highlights: [highlights[0], { ...highlights[1], order: highlights[0].order }, highlights[2]],
+    })).toThrow("ordem duplicada");
+    const references = highlights.map(({ projectId, order }) => ({ projectId, order }));
+    expect(buildPortfolioCatalog(rawPortfolioCatalog, { highlights: [...references].reverse() })
+      .highlights.map(({ projectId, order }) => ({ projectId, order }))).toEqual(references);
   });
 
   it("rejeita referência duplicada na seleção da Home", () => {
@@ -145,7 +178,7 @@ describe("adaptador do catálogo de portfólio", () => {
       replaceFirstProject({
         ...project,
         details: {
-          titleAccent: "área gourmet",
+          titleAccent: "jardim e piscina",
           introHeading: "Um jardim para viver a casa por inteiro.",
           body: [
             "O percurso verde acompanha as áreas de convivência.",
@@ -161,7 +194,7 @@ describe("adaptador do catálogo de portfólio", () => {
     const parsed = catalog.projects[0];
 
     expect(parsed.details).toMatchObject({
-      titleAccent: "área gourmet",
+      titleAccent: "jardim e piscina",
       introHeading: "Um jardim para viver a casa por inteiro.",
       body: [
         "O percurso verde acompanha as áreas de convivência.",
@@ -185,7 +218,7 @@ describe("adaptador do catálogo de portfólio", () => {
       }),
       rawHomeCatalog,
     ).projects[0];
-    const legacy = buildPortfolioCatalog(rawPortfolioCatalog, rawHomeCatalog).projects[0];
+    const legacy = buildPortfolioCatalog(replaceFirstProject({ ...project, details: undefined }), rawHomeCatalog).projects[0];
 
     expect(withDesktopFocus.images[0]).toMatchObject({
       position: "left top",
@@ -295,7 +328,8 @@ describe("adaptador do catálogo de portfólio", () => {
       categories: [
         {
           ...firstCategory,
-          projects: firstCategory.projects.map((project) => ({ ...project, detailPublication: "published" })),
+          projects: firstCategory.projects.map((project, index) =>
+            index === 0 ? { ...project, detailPublication: "published" } : project),
         },
         {
           ...secondCategory,
@@ -308,18 +342,18 @@ describe("adaptador do catálogo de portfólio", () => {
     const published = getPublishedProjects(projects);
 
     expect(published.map((project) => project.id)).toEqual([
-      "residencia-piscina-area-gourmet",
+      "residencia-jardim-e-piscina",
       "coffee-comfort",
     ]);
     expect(getPublishedProjectParams(projects)).toEqual([
-      { slug: "residencia-piscina-area-gourmet" },
+      { slug: "residencia-jardim-e-piscina" },
       { slug: "coffee-comfort" },
     ]);
     expect(new Set(getPublishedProjectParams(projects).map(({ slug }) => slug)).size).toBe(2);
     expect(findPublishedProjectBySlug(projects, "coffee-comfort")?.title).toBe("Coffee Comfort");
     expect(findPublishedProjectBySlug(projects, "Coffee-Comfort")).toBeUndefined();
-    expect(findPublishedProjectBySlug(projects, portfolioProjects[2].id)).toBeUndefined();
-    expect(toProjectCardData(published[0]).href).toBe("/projetos/residencia-piscina-area-gourmet");
+    expect(findPublishedProjectBySlug(projects, "suite-com-painel-iluminado")).toBeUndefined();
+    expect(toProjectCardData(published[0]).href).toBe("/projetos/residencia-jardim-e-piscina");
     expect(toProjectCardData({ ...portfolioProjects[0], detailPublication: "draft" }).href).toBeUndefined();
     expect(getPublishedProjects([])).toEqual([]);
     expect(getPublishedProjectParams([])).toEqual([]);

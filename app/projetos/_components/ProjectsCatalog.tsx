@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ProjectCard } from "../../_components/ProjectCard";
 import { ProjectFilters, type ProjectFiltersProps } from "./ProjectFilters";
+import { ProjectsCardList } from "./ProjectsCardList";
 import { ResultsAnnouncement } from "./ResultsAnnouncement";
 import { SectionHeading } from "../../_components/Typography";
 import {
   projectCategories,
-  projectPresentationById,
   projectsContent,
   type CatalogProject,
 } from "../projectsContent";
@@ -34,22 +34,13 @@ export function ProjectsCatalog({ category, destinations, projects }: ProjectsCa
       </div>
       <ResultsAnnouncement categoryLabel={categoryLabel} count={projects.length} />
       {projects.length ? (
-        <ul className="projectsCatalog__list">
-          {projects.map((project) => {
-            const presentation = projectPresentationById.get(project.id);
-            if (!presentation) throw new Error(`Apresentação ausente para: ${project.id}`);
-            return (
-              <li key={project.id}>
-                <ProjectCard
-                  project={project}
-                  layout="split"
-                  direction={presentation.direction}
-                  surface={presentation.surface}
-                />
-              </li>
-            );
-          })}
-        </ul>
+        <ProjectsCardList>
+          {projects.map((project, index) => (
+            <li key={project.id}>
+              <ProjectCard project={project} surface={index % 2 === 0 ? "dark" : "light"} />
+            </li>
+          ))}
+        </ProjectsCardList>
       ) : (
         <div className="projectsCatalog__empty">
           <p>Nenhum projeto encontrado nesta categoria.</p>

@@ -10,56 +10,92 @@ describe("HomePage", () => {
     const main = screen.getByRole("main");
     const footer = screen.getByRole("contentinfo");
     const sectionNames = [
-      /transformamos ambientes em experiências/i,
-      /por que investir em um projeto de paisagismo/i,
-      /ambientes que inspiram/i,
-      /paixão por natureza, atenção a cada detalhe/i,
-      /vamos transformar seu espaço juntos/i,
+      "Projetando pra você",
+      /prazer, sou jéssica sobreiro/i,
+      "Como posso ajudar no seu espaço?",
+      "Do jardim ao interior",
+      "O que um projeto ajuda a resolver?",
+      "O que você quer mudar no seu espaço?",
     ];
 
     expect(main.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(main.children).toHaveLength(5);
+    expect(main.children).toHaveLength(6);
     sectionNames.forEach((name, index) => {
       expect(within(main.children[index] as HTMLElement).getByRole("heading", { name })).toBeVisible();
     });
-    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    const h1 = screen.getByRole("heading", { level: 1 });
+    const hero = screen.getByRole("region", { name: "Projetando pra você" });
+    const signature = within(hero).getByText("“um espaço que respira”");
+    expect(h1).not.toContainElement(signature);
+    expect(h1.compareDocumentPosition(signature) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(hero).getByText("Paisagismo autoral")).toBeVisible();
+    expect(within(hero).getByText("Projetos de paisagismo e design que transformam experiências.")).toBeVisible();
+    expect(Array.from(main.children).slice(0, 5).map((section) => section.id)).toEqual([
+      "inicio", "sobre", "servicos", "projetos", "beneficios",
+    ]);
+    expect(within(main).getByRole("heading", { name: "O que você quer mudar no seu espaço?" }))
+      .toHaveAttribute("id", "contato");
   });
 
-  it("renderiza cinco benefícios, três projetos e mídias com alternativas", () => {
+  it("mostra as três opções de serviço e apresenta a indicação na voz de Jéssica", () => {
+    render(<HomePage />);
+
+    const services = screen.getByRole("region", { name: "Como posso ajudar no seu espaço?" });
+    expect(services).toHaveAttribute("id", "servicos");
+    expect(within(services).getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent))
+      .toEqual([
+        "Consultoria em paisagismo",
+        "Projeto de áreas externas e interiores",
+        "Indicação de fornecedores e profissionais",
+      ]);
+    expect(within(services).getByText("Precisa tirar o projeto do papel?")).toBeVisible();
+    expect(within(services).getByText(/^Tenho parceiros especializados e posso indicar fornecedores e profissionais/))
+      .toBeVisible();
+  });
+
+  it("renderiza três benefícios, três projetos e mídias com alternativas", () => {
     render(<HomePage />);
 
     const projectCards = screen.getAllByRole("article");
     expect(projectCards).toHaveLength(3);
     expect(projectCards.map((card) => card.getAttribute("data-project-id"))).toEqual([
-      "residencia-piscina-area-gourmet",
+      "residencia-jardim-e-piscina",
       "coffee-comfort",
-      "jardim-vertical-residencial",
+      "suite-com-painel-iluminado",
     ]);
-    for (const card of projectCards) {
-      expect(card.querySelector("img")).toHaveAttribute("src", expect.stringContaining("%2Fimages%2Fportfolio%2F"));
-      expect(card.querySelector("img")).not.toHaveAttribute("src", expect.stringContaining("unsplash"));
-    }
-    expect(screen.getByRole("list", { name: "Benefícios do paisagismo" }).children).toHaveLength(5);
-    expect(screen.getByAltText(/Jéssica Sobreiro, paisagista e fundadora/i)).toHaveAttribute(
+    const highlights = [
+      ["Paisagismo residencial", "vista-aerea.jpg", "/projetos/residencia-jardim-e-piscina", "Conhecer o projeto Paisagismo residencial"],
+      ["Coffee Comfort", "capa-fachada-frontal.jpg", "/projetos/coffee-comfort", "Conhecer o projeto Coffee Comfort"],
+      ["Projetos de interiores", "vista-ampla-da-suite.jpg", "/projetos/suite-com-painel-iluminado", "Conhecer o projeto Projetos de interiores"],
+    ];
+    highlights.forEach(([title, cover, href, label], index) => {
+      const card = within(projectCards[index]);
+      expect(card.getByRole("heading", { level: 3 })).toHaveTextContent(title);
+      expect(card.getByRole("img")).toHaveAttribute("src", expect.stringContaining(cover));
+      expect(card.getByRole("link", { name: label })).toHaveAttribute("href", href);
+      expect(projectCards[index].querySelector("p")).toBeNull();
+    });
+    const benefits = screen.getByRole("list", { name: "Benefícios do planejamento" });
+    expect(within(benefits).getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent))
+      .toEqual(["Espaços mais fáceis de usar", "Plantas adequadas ao lugar", "Escolhas que funcionam juntas"]);
+    expect(screen.getByRole("img", { name: /Jéssica Sobreiro sentada/i })).toHaveAttribute(
       "src",
-      expect.stringContaining("%2Fimages%2Fportfolio%2Fprofile-jess.webp"),
+      expect.stringContaining("jessica-sobreiro-retrato.webp"),
     );
-    expect(screen.getByAltText(/piscina integrada à área gourmet/i)).toBeVisible();
-    const quote = screen.getByText(/cada jardim começa pela escuta/i).closest("blockquote");
-    expect(quote).toBeInTheDocument();
-    expect(screen.getByText("Sobreiro Paisagismo", { selector: "strong" })).toBeVisible();
+    expect(screen.getByText(/Meu ponto de partida é ouvir como você quer usar o espaço/i)).toBeVisible();
+    expect(screen.getByRole("link", { name: "Conheça minha abordagem" })).toHaveAttribute("href", "/sobre");
   });
 
   it("mantém CTAs e conteúdo configurável em português do Brasil", () => {
     render(<HomePage />);
 
-    const main = screen.getByRole("main");
-    const contactBanner = screen
-      .getByRole("heading", { name: /vamos transformar seu espaço juntos/i })
-      .closest("section");
+    const hero = screen.getByRole("region", { name: "Projetando pra você" });
+    const contactBanner = screen.getByRole("region", { name: "O que você quer mudar no seu espaço?" });
     const footer = screen.getByRole("contentinfo");
-    const heroContact = within(main.children[0] as HTMLElement).getByRole("link", { name: "Fale com a Sobreiro" });
-    const bannerContact = within(contactBanner as HTMLElement).getByRole("link", { name: "Fale com a Sobreiro" });
+    const heroContact = within(hero).getByRole("link", { name: "Conversar com a Sobreiro" });
+    const bannerContact = within(contactBanner).getByRole("link", { name: "Conversar com a Sobreiro" });
+    expect(within(contactBanner).getByText(/^Conte onde fica o imóvel e o que você quer criar ou renovar/))
+      .toBeVisible();
     for (const contact of [heroContact, bannerContact]) {
       expect(contact).toHaveAttribute("href", "https://wa.me/message/CRFBFPI3Y5TJC1");
       expect(contact).toHaveAttribute("target", "_blank");
@@ -108,8 +144,8 @@ describe("HomePage", () => {
     );
     expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("href", "#inicio");
     expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute("href", "/sobre");
-    expect(screen.getByRole("link", { name: "Ver todos" })).toHaveAttribute("href", "/projetos");
-    expect(screen.getByRole("link", { name: "Ver projetos" })).toHaveAttribute("href", "#projetos");
+    expect(screen.getByRole("link", { name: "Ver todos os projetos" })).toHaveAttribute("href", "/projetos");
+    expect(screen.getByRole("link", { name: "Ver serviços" })).toHaveAttribute("href", "#servicos");
     expect(screen.getByRole("link", { name: "Projetos" })).toHaveAttribute("href", "/projetos");
     expect(screen.getByRole("link", { name: "WhatsApp da Sobreiro" })).toHaveAttribute(
       "href",

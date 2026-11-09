@@ -90,6 +90,8 @@
   --color-surface-dark-primary: var(--forest-900);
   --color-surface-dark-secondary: var(--forest-850);
   --color-surface-dark-raised: var(--forest-800);
+  --color-surface-editorial-dark: #191a1d;
+  --color-surface-editorial-raised: #222327;
   --color-surface-light-primary: var(--neutral-50);
   --color-surface-light-secondary: var(--neutral-100);
   --color-surface-light-raised: var(--neutral-200);
@@ -101,6 +103,7 @@
   --color-text-on-dark-muted: var(--neutral-400);
   --color-text-on-light: var(--neutral-900);
   --color-text-on-light-muted: var(--neutral-700);
+  --color-text-on-light-raised: var(--neutral-800);
   --color-text-accent-on-dark: var(--olive-300);
   --color-text-accent-on-light: var(--olive-700);
   --color-text-on-accent: var(--forest-950);

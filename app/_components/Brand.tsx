@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 const flowerEmblemSources = {
   olive: "/images/portfolio/logo/flor-sobreiro-verde-oliva.svg",
   light: "/images/portfolio/logo/flor-sobreiro-neutra-clara.svg",
+  white: "/images/portfolio/logo/flor-sobreiro-vetor-branca.svg",
 } as const;
 
 export type BrandEmblemArtwork = "fallback" | "flower";
@@ -65,6 +66,7 @@ export interface BrandLockupProps {
   compact?: boolean;
   presentation?: "horizontal" | "stacked";
   emblem?: BrandEmblemArtwork;
+  tone?: "default" | "white";
   className?: string;
 }
 
@@ -73,15 +75,16 @@ export function BrandLockup({
   compact = false,
   presentation = "horizontal",
   emblem = "fallback",
+  tone = "default",
   className = "",
 }: BrandLockupProps) {
   return (
     <a
-      className={`brandLockup ${compact ? "brandLockup--compact" : ""} ${presentation === "stacked" ? "brandLockup--stacked" : ""} ${className}`.trim()}
+      className={`brandLockup ${compact ? "brandLockup--compact" : ""} ${presentation === "stacked" ? "brandLockup--stacked" : ""} ${tone === "white" ? "brandLockup--white" : ""} ${className}`.trim()}
       href={href}
       aria-label="Sobreiro Paisagismo — página inicial"
     >
-      <BrandEmblem artwork={emblem} decorative />
+      <BrandEmblem artwork={emblem} flowerTone={tone === "white" ? "white" : "olive"} decorative />
       <span className="brandLockup__wordmark" translate="no">
         <strong>Sobreiro</strong>
         <small>Paisagismo</small>

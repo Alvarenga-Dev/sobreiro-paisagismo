@@ -391,12 +391,9 @@ contextuais, camadas, foco e movimento existentes.
 - `68.75rem`: Essência e perfil usam três zonas; callouts só então cruzam a borda
   com espaço reservado; indicadores ficam em coluna; contatos usam três cards.
 - `80rem`: contato assume grade assimétrica título → introdução/métodos.
-- `100rem`: em monitores ultrawide, os contêineres internos passam a acompanhar
-  os gutters da Home em vez de permanecerem como uma ilha central de 76rem; a
-  estrutura e as grades das regiões não mudam.
-- Abaixo de `100rem`, o conteúdo interno para de crescer em `--width-content`;
-  superfícies continuam full-bleed. Imagens usam `aspect-ratio`, `object-fit` e
-  ponto focal configurado, e nenhuma seção tem `height` fixa.
+- O conteúdo interno permanece centralizado com até `--width-content`, mais os
+  gutters laterais, inclusive em ultrawide. As superfícies ocupam toda a largura.
+  As imagens usam `aspect-ratio`, `object-fit` e ponto focal configurado.
 
 ### Semântica, teclado e movimento
 
@@ -479,9 +476,9 @@ texto, apoio, borda, acento e foco; títulos e resumos crescem sem truncamento.
 A composição exclusiva de `/projetos` usa `ProjectsHero`, `ProjectsCatalog` e
 `ProjectsContactBanner`, todos Server Components. Conteúdo editorial local e o
 estado de mídia pertencem a `projectsContent.ts`; categorias, projetos, capas,
-copy, publicação e destinos continuam exclusivamente no catálogo versionado. A
-tabela readonly de apresentação é indexada por ID e validada contra ausências,
-duplicatas e IDs desconhecidos, portanto a variante não muda após filtragem.
+copy, publicação e destinos continuam exclusivamente no catálogo versionado. O
+hero reutiliza a imagem da residência com jardim e piscina. A lista alterna as
+superfícies verde escuro e creme pela posição visível após cada filtro.
 
 O banner local usa a união discriminada `pendingApproval | approved`. O primeiro
 publica uma superfície verde profunda completa e não cria `src` vazio; o segundo
@@ -505,18 +502,16 @@ de tabs. Alvos mínimos usam `--size-touch`; cada pill quebra como uma unidade. 
 região de status persistente anuncia categoria + contagem com pluralização e
 `aria-atomic`; o estado vazio mantém introdução, filtros, contato e “Ver todos”.
 
-A página empilha tudo na base; a partir de 48rem, cards isolados podem usar a
-divisão 42/58 já existente. Em 56rem, statements editoriais ocupam uma segunda
-zona sem mudar a ordem DOM. Em 68.75rem, a coleção passa a duas colunas e os cards
-usam metades equivalentes, incluindo a inversão visual por áreas nomeadas. As
-quatro linhas usam a mesma altura fluida, com mínimo de 20rem; a mídia preenche a
-linha e o maior conteúdo pode expandir todas elas sem truncamento. A partir de
-100rem, hero, catálogo e contato deixam o limite de `--width-content` e acompanham
-os gutters da viewport, como a Home, sem alterar sua estrutura. Hero e banner são
-full-bleed; em larguras menores o catálogo continua limitado por
-`--width-content`. Todos preservam safe areas e crescimento de texto. Não há
-altura fixa, parallax ou animação de entrada; a regra global de
-`prefers-reduced-motion` cobre as transições compartilhadas.
+O hero, o catálogo e o contato compartilham o alinhamento horizontal da Home e
+do Sobre, com conteúdo centralizado em até `--width-content` mais os gutters.
+As superfícies ocupam toda a largura. A coleção usa uma coluna na base, duas a
+partir de 48rem e três a partir de 68.75rem. Os cards usam capas 16:10,
+conteúdo abaixo da mídia e alturas fluidas equalizadas pelo maior card da grade.
+As ações ficam alinhadas na base e os textos podem crescer sem truncamento. Em
+56rem, os statements editoriais ocupam uma segunda zona sem alterar a ordem DOM.
+`ProjectsCardList` mantém os cards renderizados no servidor e observa a entrada
+dos itens abaixo da dobra. O efeito breve de opacidade e deslocamento acontece
+uma vez por item e é dispensado quando a pessoa prefere movimento reduzido.
 
 Hero, catálogo e contato usam `aria-labelledby`; o hero contém o único `h1` e os
 projetos usam `h3` em artigos dentro de uma lista. A Navbar, o skip link e o rodapé
@@ -549,47 +544,25 @@ a apresentação textual por default.
 
 ### Padrões locais da rota
 
-`ProjectDetailHero`, `ProjectStoryGallery`, `ProjectNarrative`, `ProjectGallery`,
-`AppliedSolutions` e `ProjectsReturnLink` pertencem a `/projetos/[slug]`; não são
-primitives. A rota continua um Server Component e segue hero escuro → superfície
-marfim → retorno escuro → contato/rodapé escuros. Nenhum token global novo foi
-necessário: a largura fotográfica de até `90rem` é uma variável local, enquanto
-texto e regiões preservadas continuam limitados por `--width-content` e
-`--width-reading`.
+`ProjectDetailHero`, `ProjectGallery`, `ProjectNarrative`, `AppliedSolutions` e
+`ProjectsReturnLink` pertencem a `/projetos/[slug]`. A abertura clara centraliza
+categoria, título e resumo. O breadcrumb preserva a navegação estrutural e o
+item atual com `aria-current="page"`. O acento de título usa o fragmento
+editorial registrado em `details.titleAccent`.
 
-O hero recebe categoria, título, `summary` e a mídia do mesmo registro publicado.
-`details.titleAccent` pode destacar somente uma substring literal validada do
-título; sem o campo, o título permanece integral e sem acento inferido.
-`PortfolioImage.position` aceita keywords seguras ou dois percentuais e cai em
-`center center`; `positionMobile` cai no foco desktop. O componente usa uma única
-imagem prioritária e troca o foco por CSS, sobre superfície verde e gradientes
-lateral e inferior independentes.
+O carrossel ocupa a largura da página. A capa da ficha abre a sequência e
+`prepareProjectDetailMedia` remove duplicações por arquivo. As imagens mantêm a
+proporção de origem, têm largura limitada pela viewport e pelo arquivo e usam
+qualidade 90. A primeira recebe prioridade de busca e as demais carregam sob
+demanda. A legenda informa o total de imagens.
 
-A narrativa nunca repete `summary`. Ela exige um heading editorial real, resolvido
-por `details.introHeading ?? details.statement`, e pode renderizar os parágrafos de
-`details.body` na ordem declarada. Sem heading, a região “Sobre o projeto” é
-omitida. Os campos são opcionais para permitir adoção editorial gradual; o parser
-rejeita corpo sem heading, parágrafo vazio e acento incompatível.
+As setas aparecem quando o trilho tem rolagem. Toque e trackpad usam a rolagem
+nativa. Também é possível arrastar com o mouse ou usar as setas, Home e End
+com o trilho focado. A próxima página parte da primeira imagem parcialmente
+visível. Ao chegar à extremidade, a seta volta diretamente ao outro lado.
+O carrossel não avança sozinho e desativa a rolagem suave para quem prefere
+movimento reduzido.
 
-Antes de renderizar, `prepareProjectDetailMedia` deduplica a coleção por `file`
-sem mutar o catálogo. Quando o hero é a primeira mídia e existe outra fotografia
-única, essa repetição imediata sai da galeria. O hero recebe `alt` informativo se
-for a única ocorrência apresentada e `alt=""` somente quando o mesmo arquivo
-continua descrito na lista.
-
-A galeria é uma única lista estática, nomeada por heading visualmente oculto. A
-primeira mídia é o destaque; as restantes usam linhas integrais, pares alternados
-`7/5`–`5/7` ou trios. Quatro itens restantes fecham em dois pares, panoramas que
-não sustentam trio passam para linha integral e a orientação intrínseca define
-proporções compatíveis. De 320 a 767 px todas as fotos empilham; de 768 a 1199 px
-pares podem dividir o trilho; a composição `4/12 + 8/12` e trios entram a partir
-de 1200 px; acima de 1600 px a mídia respira até o limite local sem ampliar texto,
-hero ou tipografia indefinidamente.
-
-Imagens abaixo do hero preservam lazy loading, dimensões intrínsecas, `sizes` por
-papel e ponto focal. Elas não recebem link, botão, `tabIndex`, cursor de ação,
-listener, hover de transformação, lightbox, zoom ou gesto. Breadcrumb e retorno
-são navegação nativa; o item atual permanece no DOM com `aria-current="page"` e
-pode ser ocultado apenas visualmente abaixo de 480 px. Safe areas, foco visível e
-o crescimento do texto permanecem no fluxo; não há movimento local, e a regra
-global de `prefers-reduced-motion` cobre somente transições compartilhadas.
+A narrativa adicional segue o carrossel. Ela usa `details.introHeading` ou
+`details.statement` e os parágrafos registrados em `details.body`. Soluções,
+retorno ao catálogo, contato e rodapé seguem em ordem de leitura.

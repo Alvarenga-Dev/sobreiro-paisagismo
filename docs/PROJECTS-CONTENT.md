@@ -4,23 +4,23 @@ O conteúdo publicado de `/projetos` vem de [`images/portfolio/catalog.json`](..
 
 ## Catálogo atual
 
-O catálogo contém oito projetos e sete categorias editoriais:
+O catálogo contém nove projetos e sete categorias editoriais:
 
 | Categoria | Projetos |
 | --- | --- |
-| Paisagismo residencial | Residência com piscina e área gourmet |
+| Paisagismo residencial | Residência com jardim e piscina |
 | Paisagismo comercial | Coffee Comfort |
 | Paisagismo de fachada | Residência contemporânea — fachada |
 | Rooftop e áreas de lazer elevadas | Rooftop com piscina |
-| Jardins verticais | Jardim vertical residencial |
-| Design de interiores | Cozinha contemporânea; Hall de entrada e escada |
+| Jardins verticais | Jardins verticais |
+| Design de interiores | Cozinha contemporânea; Hall de entrada e escada; Suíte com painel iluminado |
 | Conceitos e renders | Casa suspensa na mata |
 
 Os filtros exibidos na página são derivados desses IDs, preservam `todos` e usam o parâmetro `categoria`. Categorias inválidas são tratadas como `todos`, sem remover os demais parâmetros da URL.
 
 ## Mídia
 
-Os 58 ativos fornecidos ficam exclusivamente em `public/images/portfolio`, mantendo os agrupamentos e nomes do catálogo. As capas são resolvidas pelo campo `cover`; todas as imagens permanecem no modelo de projeto para uma futura galeria de detalhes. O adaptador calcula dimensões reais, `sizes`, proporção e recorte central para os cards.
+O catálogo referencia 55 ativos em `public/images/portfolio`. As capas são resolvidas pelo campo `cover`, e o adaptador calcula dimensões e pontos focais para a renderização. A vista aérea da Residência com jardim e piscina também serve de hero para a listagem de Projetos.
 
 A rota individual `/projetos/[slug]` usa a galeria completa na ordem do catálogo,
 com `cover` como fallback do hero. O campo obrigatório `detailPublication` é a
@@ -28,42 +28,33 @@ com `cover` como fallback do hero. O campo obrigatório `detailPublication` é a
 `draft` mantém o card informativo com “Detalhes em breve”. O campo livre `status`
 não participa dessa decisão.
 
-## Aprovação do primeiro lançamento
+## Publicação dos detalhes
 
-Em 09/09/2026, o responsável pelo produto aprovou explicitamente todos os oito
-slugs para páginas individuais. Os registros estão declarados como `published`.
-Em 10/09/2026, Jéssica Sobreiro confirmou a autoria dos oito projetos e a
-autorização para exibi-los publicamente com os ativos atuais.
-Nenhuma frase, mídia específica de hero ou solução aplicada foi confirmada; esses
-campos opcionais permanecem omitidos e o hero usa o fallback de `cover`.
+Os oito projetos iniciais foram aprovados para exibição em setembro de 2026.
+Na revisão do catálogo, a antiga `residencia-piscina-area-gourmet` foi retirada.
+Seu slug retorna 404. Os dois projetos adicionados nesta revisão têm detalhe
+publicado com narrativa e mídia do acervo compartilhado.
 
-| Slug | Publicação do detalhe | Conteúdo opcional confirmado |
-| --- | --- | --- |
-| `residencia-piscina-area-gourmet` | `published` | Nenhum |
-| `coffee-comfort` | `published` | Nenhum |
-| `residencia-contemporanea-fachada` | `published` | Nenhum |
-| `rooftop-com-piscina` | `published` | Nenhum |
-| `jardim-vertical-residencial` | `published` | Nenhum |
-| `cozinha-contemporanea` | `published` | Nenhum |
-| `hall-de-entrada` | `published` | Nenhum |
-| `casa-suspensa-na-mata` | `published` | Nenhum |
+| Slug | Mídia |
+| --- | --- |
+| `residencia-jardim-e-piscina` | Vista aérea no hero e cinco imagens na galeria |
+| `suite-com-painel-iluminado` | Vista ampla no hero e quatro imagens na galeria |
 
-O template, seus fallbacks e os estados `published`/`draft` são verificados com
-fixtures automatizadas. Os oito cards do catálogo agora apontam para seus slugs.
+Os nove cards do catálogo apontam para seus slugs. A narrativa das novas fichas
+se limita aos elementos visíveis nas imagens. [Acervo compartilhado](https://drive.google.com/drive/folders/1ijbckYQ73wFUqTNwxOKbCgTwrPw7wqzD)
 
 ## Destaques da Home
 
 [`images/portfolio/home-catalog.json`](../images/portfolio/home-catalog.json) seleciona exatamente três projetos, nesta ordem:
 
-1. Residência com piscina e área gourmet (`residencia-piscina-area-gourmet`);
-2. Coffee Comfort (`coffee-comfort`);
-3. Jardim vertical residencial (`jardim-vertical-residencial`).
+1. Paisagismo residencial (`residencia-jardim-e-piscina`)
+2. Coffee Comfort (`coffee-comfort`)
+3. Projetos de interiores (`suite-com-painel-iluminado`)
 
-O arquivo de destaques não duplica galeria, capa ou texto. Qualquer alteração no catálogo completo é refletida automaticamente nos cards da Home.
+O arquivo de destaques referencia os projetos e pode definir título e capa para a Home. Os três links apontam para os detalhes publicados.
 
 ## Pendências editoriais
 
-- A referência `01-paisagismo-residencial/residencia-piscina-area-gourmet/07-composicao-noturna.jpg` estava declarada no catálogo original, mas não foi fornecida; foi removida para evitar uma URL quebrada e deve ser reposta somente após confirmação do arquivo.
 - `casa-suspensa-na-mata` permanece em `conceitos-e-renders` e não é apresentada como obra executada.
 - Novos projetos ou ativos devem receber confirmação de autoria e autorização pública antes de entrar em `public/images/portfolio`.
 - Revisar os textos alternativos com a Jéssica para confirmar ambientes e espécies vegetais.

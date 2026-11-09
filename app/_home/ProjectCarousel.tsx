@@ -16,14 +16,17 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
   function goTo(index: number) {
     const nextIndex = Math.min(Math.max(index, 0), lastIndex);
-    const item = trackRef.current?.children.item(nextIndex);
+    if (nextIndex === activeIndex) return;
+
+    const track = trackRef.current;
+    const firstSlide = track?.children.item(0);
+    const item = track?.children.item(nextIndex);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (item instanceof HTMLElement) {
-      item.scrollIntoView({
+    if (track && firstSlide instanceof HTMLElement && item instanceof HTMLElement) {
+      track.scrollTo({
+        left: item.offsetLeft - firstSlide.offsetLeft,
         behavior: reduceMotion ? "auto" : "smooth",
-        block: "nearest",
-        inline: "start",
       });
     }
 
@@ -48,14 +51,17 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
     if (!(track instanceof HTMLElement) || !(firstSlide instanceof HTMLElement)) return;
 
-    const snapPosition = track.scrollLeft + firstSlide.offsetLeft;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    if (maxScroll <= 0) return;
+
     let closestIndex = 0;
     let closestDistance = Number.POSITIVE_INFINITY;
 
     Array.from(track.children).forEach((slide, index) => {
       if (!(slide instanceof HTMLElement)) return;
 
-      const distance = Math.abs(slide.offsetLeft - snapPosition);
+      const snapPosition = Math.min(slide.offsetLeft - firstSlide.offsetLeft, maxScroll);
+      const distance = Math.abs(snapPosition - track.scrollLeft);
       if (distance < closestDistance) {
         closestDistance = distance;
         closestIndex = index;
@@ -77,7 +83,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       <ul className="projectCarousel__track" ref={trackRef} onScroll={handleScroll}>
         {projects.map((project) => (
           <li className="projectCarousel__slide" key={project.id}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} presentation="compact" />
           </li>
         ))}
       </ul>
@@ -86,7 +92,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
           type="button"
           className="projectCarousel__arrow projectCarousel__arrow--previous"
           aria-label="Projeto anterior"
-          disabled={activeIndex === 0}
+          aria-disabled={activeIndex === 0}
+          tabIndex={activeIndex === 0 ? -1 : undefined}
           onClick={() => goTo(activeIndex - 1)}
         >
           <LineIcon name="arrowLeft" />
@@ -101,7 +108,8 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
           type="button"
           className="projectCarousel__arrow projectCarousel__arrow--next"
           aria-label="Próximo projeto"
-          disabled={activeIndex === lastIndex}
+          aria-disabled={activeIndex === lastIndex}
+          tabIndex={activeIndex === lastIndex ? -1 : undefined}
           onClick={() => goTo(activeIndex + 1)}
         >
           <LineIcon name="arrowRight" />

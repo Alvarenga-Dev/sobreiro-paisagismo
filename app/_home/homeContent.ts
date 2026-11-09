@@ -2,6 +2,7 @@ import type { LineIconName } from "../_components/LineIcon";
 import type { TextFragment } from "../_components/Typography";
 import { siteContent } from "../_content/siteContent";
 import { homeFeaturedProjects } from "../_content/portfolioCatalog";
+import { jessicaProfile } from "../_content/jessicaProfile";
 
 export interface BenefitContent {
   id: string;
@@ -10,9 +11,16 @@ export interface BenefitContent {
   description: string;
 }
 
+export interface ServiceContent {
+  title: string;
+  question: string;
+  description: string;
+}
+
 export interface HeroContentData {
   eyebrow: string;
-  title: readonly TextFragment[];
+  title: string;
+  signature: string;
   description: string;
   media: {
     src: string;
@@ -31,127 +39,86 @@ export interface HeroContentData {
   };
 }
 
-export interface AboutContentData {
-  eyebrow: string;
-  title: readonly TextFragment[];
-  description: string;
-  action: {
-    label: string;
-    href: string;
-  };
-  media: {
-    src: string;
-    alt: string;
-    position: string;
-  };
-  quote: {
-    text: string;
-    author: string;
-    role: string;
-  };
-}
+const homeContact = { ...siteContent.contact, label: "Conversar com a Sobreiro" } as const;
 
 export const homeContent = {
-  contact: siteContent.contact,
+  contact: homeContact,
   hero: {
     eyebrow: "Paisagismo autoral",
-    title: [
-      { text: "Transformamos ambientes em " },
-      { text: "experiências", accent: true },
-      { text: "." },
-    ],
-    description:
-      "Projetos de paisagismo que unem estética, funcionalidade e bem-estar para valorizar cada detalhe do seu espaço.",
+    title: "Projetando pra você",
+    signature: "“um espaço que respira”",
+    description: "Projetos de paisagismo e design que transformam experiências.",
     media: {
       src: "/images/portfolio/hero.png",
       alt: "Caminho envolvido por um jardim tropical iluminado",
       position: "58% center",
     },
-    primaryAction: {
-      label: "Fale com a Sobreiro",
-      href: siteContent.contact.href,
-      icon: siteContent.contact.icon,
-      external: siteContent.contact.external,
-    },
+    primaryAction: homeContact,
     secondaryAction: {
-      label: "Ver projetos",
-      href: "#projetos",
+      label: "Ver serviços",
+      href: "#servicos",
     },
   } satisfies HeroContentData,
+  services: {
+    eyebrow: "Serviços",
+    heading: [{ text: "Como posso ajudar no seu espaço?" }] satisfies readonly TextFragment[],
+    introduction: "Da escolha das plantas ao planejamento de um ambiente inteiro, o ponto de partida é o que você quer mudar.",
+    items: [
+      {
+        title: "Consultoria em paisagismo",
+        question: "Quer criar ou renovar um jardim?",
+        description: "Receba orientação para escolher as espécies e encontrar soluções adequadas ao seu espaço.",
+      },
+      {
+        title: "Projeto de áreas externas e interiores",
+        question: "Quer planejar o espaço como um todo?",
+        description: "Tenha um projeto personalizado que reúne materiais, iluminação e vegetação, conforme o ambiente e o uso.",
+      },
+      {
+        title: "Indicação de fornecedores e profissionais",
+        question: "Precisa tirar o projeto do papel?",
+        description: "Tenho parceiros especializados e posso indicar fornecedores e profissionais conforme as necessidades do seu projeto.",
+      },
+    ] satisfies readonly ServiceContent[],
+  },
   benefitsHeading: [
-    { text: "Por que investir em um " },
-    { text: "projeto de paisagismo?", accent: true },
+    { text: "O que um projeto ajuda a resolver?" },
   ] satisfies readonly TextFragment[],
   benefits: [
     {
-      id: "valor",
-      icon: "leaf",
-      title: "Valorização do imóvel",
-      description: "Um projeto bem planejado amplia o valor e o potencial de cada espaço.",
-    },
-    {
-      id: "bem-estar",
-      icon: "lotus",
-      title: "Bem-estar",
-      description: "Ambientes verdes reduzem o estresse e convidam a viver com mais presença.",
-    },
-    {
-      id: "conforto",
-      icon: "droplet",
-      title: "Conforto térmico",
-      description: "A vegetação ajuda a amenizar o calor e torna os ambientes mais agradáveis.",
-    },
-    {
-      id: "funcionalidade",
+      id: "uso",
       icon: "shield",
-      title: "Funcionalidade",
-      description: "Cada escolha é pensada para um jardim bonito, prático e duradouro.",
+      title: "Espaços mais fáceis de usar",
+      description: "Planeje a circulação, as áreas de descanso e os pontos de encontro conforme a sua rotina.",
     },
     {
-      id: "identidade",
+      id: "plantas",
+      icon: "leaf",
+      title: "Plantas adequadas ao lugar",
+      description: "Escolha espécies que façam sentido para a luz, o clima e o cuidado que você pode dedicar.",
+    },
+    {
+      id: "integracao",
       icon: "sun",
-      title: "Identidade",
-      description: "Texturas, luz e espécies traduzem a personalidade de quem habita o lugar.",
+      title: "Escolhas que funcionam juntas",
+      description: "Pense em vegetação, materiais e iluminação em conjunto para que o espaço faça sentido no dia a dia.",
     },
   ] satisfies readonly BenefitContent[],
   projectsHeading: [
-    { text: "Ambientes que " },
-    { text: "inspiram", accent: true },
+    { text: "Do jardim ao interior" },
   ] satisfies readonly TextFragment[],
   projects: homeFeaturedProjects,
   about: {
-    eyebrow: "Sobre a Sobreiro",
-    title: [
-      { text: "Paixão por natureza, " },
-      { text: "atenção a cada detalhe.", accent: true },
-    ],
-    description:
-      "Acreditamos que o paisagismo vai muito além da estética. Ele transforma ambientes, melhora a qualidade de vida e cria conexões duradouras com a natureza.",
-    action: {
-      label: "Conheça nossa história",
-      href: "/sobre",
-    },
-    media: {
-      src: "/images/portfolio/profile-jess.webp",
-      alt: "Jéssica Sobreiro, paisagista e fundadora da Sobreiro Paisagismo",
-      position: "center 28%",
-    },
-    quote: {
-      text: "Cada jardim começa pela escuta: do lugar, da arquitetura e de quem vai vivê-lo.",
-      author: "Sobreiro Paisagismo",
-      role: "Estúdio de paisagismo",
-    },
-  } satisfies AboutContentData,
+    ...jessicaProfile,
+    introduction: "Meu ponto de partida é ouvir como você quer usar o espaço. A partir daí, penso em soluções que tragam conforto e expressem a sua personalidade. No paisagismo, valorizo espécies nativas e o que cada região oferece.",
+    action: { label: "Conheça minha abordagem", href: "/sobre" },
+  },
   banner: {
     message: [
-      { text: "Vamos transformar " },
-      { text: "seu espaço", accent: true },
-      { text: " juntos?" },
+      { text: "O que você quer mudar " },
+      { text: "no seu espaço?", accent: true },
     ] satisfies readonly TextFragment[],
-    supportingAction: {
-      label: "Agende uma conversa",
-      href: siteContent.email.href,
-    },
+    description: "Conte onde fica o imóvel e o que você quer criar ou renovar. A partir daí, podemos conversar sobre o tipo de ajuda que faz sentido para você.",
   },
   footer: siteContent.footer,
 } as const;

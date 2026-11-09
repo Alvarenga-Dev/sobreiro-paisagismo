@@ -28,7 +28,7 @@ export function BenefitsPanel({ heading, benefits }: BenefitsPanelProps) {
   return (
     <section className="benefitsPanel" id="beneficios" aria-labelledby="beneficios-title" data-region="benefits">
       <SectionHeading id="beneficios-title" fragments={heading} context="onLight" />
-      <ul className="benefitsPanel__list" aria-label="Benefícios do paisagismo">
+      <ul className="benefitsPanel__list" role="list" aria-label="Benefícios do planejamento">
         {benefits.map((benefit) => <BenefitCard benefit={benefit} key={benefit.id} />)}
       </ul>
     </section>

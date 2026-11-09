@@ -12,7 +12,8 @@ import {
 import { siteContent } from "../../_content/siteContent";
 import { AppliedSolutions } from "./_components/AppliedSolutions";
 import { ProjectDetailHero } from "./_components/ProjectDetailHero";
-import { ProjectStoryGallery } from "./_components/ProjectStoryGallery";
+import { ProjectGallery } from "./_components/ProjectGallery";
+import { ProjectNarrative } from "./_components/ProjectNarrative";
 import { ProjectsReturnLink } from "./_components/ProjectsReturnLink";
 import { projectDetailBanner, projectDetailContactActions } from "./projectDetailContent";
 import { prepareProjectDetailMedia } from "./projectDetailMedia";
@@ -46,11 +47,9 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 }
 
 export function ProjectDetailPageView({ project }: { readonly project: PortfolioProject }) {
-  const preparedMedia = prepareProjectDetailMedia(project.hero, project.images);
-  const hasStorySurface = preparedMedia.galleryMedia.length > 0
-    || project.details?.introHeading !== undefined
-    || project.details?.statement !== undefined
-    || Boolean(project.details?.solutions?.length);
+  const galleryImages = prepareProjectDetailMedia(project.hero, project.images);
+  const narrativeHeading = project.details?.introHeading ?? project.details?.statement;
+  const hasStorySurface = narrativeHeading !== undefined || Boolean(project.details?.solutions?.length);
 
   return (
     <SiteFrame
@@ -62,13 +61,12 @@ export function ProjectDetailPageView({ project }: { readonly project: Portfolio
         category={project.category}
         summary={project.summary}
         titleAccent={project.details?.titleAccent}
-        media={preparedMedia.hero}
-        heroAlt={preparedMedia.heroAlt}
       />
+      <ProjectGallery key={project.id} images={galleryImages} />
       {hasStorySurface ? (
         <div className="projectDetailSurface">
           <div className="projectDetailInner">
-            <ProjectStoryGallery details={project.details} images={preparedMedia.galleryMedia} />
+            <ProjectNarrative heading={narrativeHeading} body={project.details?.body} />
             <AppliedSolutions solutions={project.details?.solutions} />
           </div>
         </div>

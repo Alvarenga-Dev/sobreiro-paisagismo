@@ -10,10 +10,7 @@ import {
   catalogProjects,
   projectCategories,
   projectContactActions,
-  projectPresentationById,
-  projectPresentations,
   projectsContent,
-  validateProjectPresentations,
 } from "./projectsContent";
 
 const destinations = Object.fromEntries(projectCategories.map((option) => [option.id, `/projetos?categoria=${option.id}`]));
@@ -33,6 +30,8 @@ describe("Projetos", () => {
     expect(screen.getByText("EXPLORE POR CATEGORIA")).toBeVisible();
     expect(screen.getByText("VAMOS CONVERSAR?")).toBeVisible();
     expect(screen.getByText(projectsContent.hero.statement)).toBeVisible();
+    expect(screen.getByRole("img", { name: "Vista aérea da residência com jardim, piscina e área gourmet" }))
+      .toHaveAttribute("src", expect.stringContaining("residencia-jardim-e-piscina%2Fvista-aerea.jpg"));
     expect(screen.getByText(projectsContent.catalog.note)).toBeVisible();
     expect(screen.getByText(projectsContent.banner.statement)).toBeVisible();
     expect(document.querySelector("main header")).toBeNull();
@@ -61,7 +60,16 @@ describe("Projetos", () => {
   it("mostra a coleção completa e sua ordem para categoria ambígua", async () => {
     render(await ProjectsPage({ searchParams: Promise.resolve({ categoria: ["paisagismo-comercial", "jardins-verticais"] }) }));
     expect(screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent)).toEqual(catalogProjects.map((project) => project.title));
-    expect(screen.getByRole("status")).toHaveTextContent("Todos: 8 projetos encontrados");
+    expect(screen.getByRole("status")).toHaveTextContent("Todos: 9 projetos encontrados");
+    expect(screen.queryByRole("heading", { name: "Residência com piscina e área gourmet" })).not.toBeInTheDocument();
+  });
+  it.each([
+    ["paisagismo-residencial", "Residência com jardim e piscina", "residencia-jardim-e-piscina"],
+    ["design-de-interiores", "Suíte com painel iluminado", "suite-com-painel-iluminado"],
+  ])("abre o detalhe do novo projeto pelo filtro %s", async (categoria, title, slug) => {
+    render(await ProjectsPage({ searchParams: Promise.resolve({ categoria }) }));
+    expect(screen.getByRole("link", { name: `Conhecer o projeto ${title}` })).toHaveAttribute("href", `/projetos/${slug}`);
+    expect(screen.queryByText("Detalhes em breve")).not.toBeInTheDocument();
   });
   it.each(["paisagismo-comercial", "todos"] as const)("oferece recuperação com coleção vazia em %s", (category) => {
     render(<><ProjectsCatalog projects={[]} category={category} destinations={destinations} /><ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact, siteContent.email)} /></>);
@@ -93,29 +101,11 @@ describe("Projetos", () => {
     rerender(<ProjectCard project={{ ...project, href: "/destino-confirmado" }} />);
     expect(screen.getByRole("article")).toHaveClass("projectCard--stacked");
   });
-  it("mantém a matriz xadrez completa e estável por ID após filtragem", () => {
-    expect(projectPresentations).toHaveLength(8);
-    expect([...projectPresentationById.keys()]).toEqual(catalogProjects.map((project) => project.id));
-    expect(projectPresentations.map(({ direction, surface }) => `${direction}:${surface}`)).toEqual([
-      "mediaFirst:dark",
-      "mediaFirst:light",
-      "contentFirst:light",
-      "mediaFirst:dark",
-      "mediaFirst:dark",
-      "mediaFirst:light",
-      "contentFirst:light",
-      "mediaFirst:dark",
-    ]);
-    const filtered = catalogProjects.filter((project) => project.categoryId === "design-de-interiores");
-    expect(filtered.map((project) => projectPresentationById.get(project.id))).toEqual([
-      projectPresentations[5],
-      projectPresentations[6],
-    ]);
-  });
-  it("rejeita apresentações ausentes, duplicadas ou desconhecidas", () => {
-    expect(() => validateProjectPresentations(projectPresentations.slice(1), catalogProjects)).toThrow(/ausente/i);
-    expect(() => validateProjectPresentations([...projectPresentations, projectPresentations[0]], catalogProjects)).toThrow(/duplicado/i);
-    expect(() => validateProjectPresentations([...projectPresentations, { id: "desconhecido", direction: "mediaFirst", surface: "dark" }], catalogProjects)).toThrow(/desconhecido/i);
+  it("padroniza o formato e alterna as superfícies nos resultados filtrados", async () => {
+    render(await ProjectsPage({ searchParams: Promise.resolve({ categoria: "design-de-interiores" }) }));
+    const cards = screen.getAllByRole("article");
+    expect(cards.map((card) => card.getAttribute("data-surface"))).toEqual(["dark", "light", "dark"]);
+    cards.forEach((card) => expect(card).toHaveClass("projectCard--stacked"));
   });
   it("banner usa e-mail explícito como fallback e WhatsApp quando configurado", () => {
     const { rerender } = render(<ProjectsContactBanner id="contact" {...projectsContent.banner} {...projectContactActions({ status: "unavailable" }, siteContent.contact, siteContent.email)} />);
@@ -127,7 +117,7 @@ describe("Projetos", () => {
     expect(screen.getByText(projectsContent.banner.description)).toBeVisible();
     expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("href", "https://example.com/whatsapp");
     expect(screen.getByRole("link", { name: "Fale com a Sobreiro" })).toHaveAttribute("target", "_blank");
-    expect(screen.getByRole("link", { name: "Agende uma conversa" })).toHaveAttribute("href", siteContent.email.href);
+    expect(screen.queryByRole("link", { name: "Agende uma conversa" })).not.toBeInTheDocument();
   });
   it("banner renderiza mídia aprovada e não fabrica ações indisponíveis", () => {
     const approvedMedia = {

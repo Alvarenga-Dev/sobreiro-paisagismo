@@ -1,22 +1,17 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { SiteHeader } from "../_components/SiteHeader";
 import AboutPage, { metadata } from "./page";
 import { ContactMethodCard } from "./_components/ContactMethodsSection";
-import { EssenceSection } from "./_components/EssenceSection";
-import { TeamProfileSection } from "./_components/TeamProfileSection";
 import { aboutContent } from "./aboutContent";
-import type {
-  AboutEssenceContent,
-  AboutTeamContent,
-  ContactMethod,
-} from "./aboutContent";
+import type { ContactMethod } from "./aboutContent";
 
 describe("AboutPage", () => {
   afterEach(() => jest.resetAllMocks());
 
   it("expõe metadados próprios em português do Brasil", () => {
-    expect(metadata.title).toMatch(/sobre a sobreiro paisagismo/i);
-    expect(metadata.description).toMatch(/essência, os valores e a abordagem/i);
+    expect(metadata.title).toBe("Sobre | Sobreiro Paisagismo");
+    expect(metadata.description).toMatch(/Jéssica Sobreiro e sua abordagem/i);
   });
 
   it("compõe a narrativa na ordem prevista e preserva um único h1", () => {
@@ -24,18 +19,20 @@ describe("AboutPage", () => {
 
     const main = screen.getByRole("main");
     const footer = screen.getByRole("contentinfo");
-    expect(main.children).toHaveLength(4);
+    expect(main.children).toHaveLength(5);
     expect(Array.from(main.children).map((region) => region.getAttribute("data-region"))).toEqual([
       "about-hero",
-      "essence",
       "team-profile",
+      "essence",
+      "about-video",
       "contact-methods",
     ]);
     expect(main.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 1, name: /sobre a sobreiro paisagismo/i })).toBeVisible();
-    expect(screen.getByRole("heading", { level: 2, name: /design com propósito/i })).toBeVisible();
-    expect(screen.getByRole("heading", { level: 2, name: /paixão que floresce/i })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 2, name: "Prazer, sou Jéssica Sobreiro." })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 2, name: "Cada projeto começa pela escuta." })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 2, name: "Sobreiro em vídeo" })).toBeVisible();
     expect(screen.getByRole("heading", { level: 2, name: /vamos transformar seu espaço/i })).toBeVisible();
   });
 
@@ -45,15 +42,9 @@ describe("AboutPage", () => {
     expect(screen.queryByRole("navigation", { name: "Breadcrumb" })).not.toBeInTheDocument();
     expect(screen.getByText("Sobre", { selector: ".aboutHero__eyebrow" })).toBeVisible();
     expect(screen.getByText(aboutContent.hero.introduction)).toBeVisible();
-    expect(screen.getByText(aboutContent.hero.statement)).toBeVisible();
-    expect(screen.getByRole("link", { name: "Conheça nossa história" })).toHaveAttribute(
-      "href",
-      "#essencia",
-    );
-    expect(screen.getByRole("heading", { name: /design com propósito/i }).closest("section")).toHaveAttribute(
-      "id",
-      "essencia",
-    );
+    expect(screen.getByRole("link", { name: "Conheça a Jéssica" })).toHaveAttribute("href", "#perfil");
+    expect(screen.getByRole("region", { name: "Prazer, sou Jéssica Sobreiro." })).toHaveAttribute("id", "perfil");
+    expect(screen.getByRole("region", { name: "Cada projeto começa pela escuta." })).toHaveAttribute("id", "essencia");
     within(screen.getByRole("main")).getAllByRole("heading", { level: 2 }).forEach((heading) => {
       expect(heading.closest("section")).toHaveAttribute("aria-labelledby", heading.id);
     });
@@ -65,7 +56,6 @@ describe("AboutPage", () => {
     const hero = screen.getByRole("heading", { level: 1 }).closest("section");
     expect(hero?.querySelector("img")).toHaveAttribute("alt", "");
     expect(within(hero as HTMLElement).getByText(aboutContent.hero.introduction)).toBeVisible();
-    expect(within(hero as HTMLElement).getByText(aboutContent.hero.statement)).toBeVisible();
   });
 
   it("usa a variação botânica ambiente como decoração não anunciada", () => {
@@ -78,33 +68,46 @@ describe("AboutPage", () => {
     expect(hero?.querySelector(".botanicalDecoration")).not.toBeInTheDocument();
   });
 
-  it("apresenta quatro valores e quatro credenciais como conteúdo textual", () => {
+  it("apresenta o perfil e a abordagem com a narrativa em primeira pessoa e as imagens editoriais", () => {
     render(<AboutPage />);
 
-    const metrics = screen.getByRole("list", { name: "Indicadores da Sobreiro Paisagismo" });
-    expect(within(metrics).getByText("Natureza")).toBeVisible();
-    expect(screen.queryByText("+100")).not.toBeInTheDocument();
-    expect(screen.queryByText("100%")).not.toBeInTheDocument();
+    const profile = screen.getByRole("region", { name: "Prazer, sou Jéssica Sobreiro." });
+    expect(within(profile).getByText(/Atuo no desenvolvimento de projetos de paisagismo/i)).toBeVisible();
+    expect(within(profile).getByRole("img", { name: /Jéssica Sobreiro sentada/i }))
+      .toHaveAttribute("src", expect.stringContaining("jessica-sobreiro-retrato.webp"));
 
-    const values = screen.getByRole("list", { name: "Valores da Sobreiro Paisagismo" });
-    expect(values.children).toHaveLength(4);
-    ["Personalização", "Sustentabilidade", "Bem-estar", "Qualidade"].forEach((title) => {
-      expect(within(values).getByRole("heading", { level: 3, name: title })).toBeVisible();
-    });
-
-    const credentials = screen.getByRole("list", { name: "Credenciais da equipe" });
-    expect(credentials.children).toHaveLength(4);
-    ["Formação", "Especialização", "Experiência", "Atendimento"].forEach((label) => {
-      expect(within(credentials).getByText(label)).toBeVisible();
-    });
+    const essence = screen.getByRole("region", { name: "Cada projeto começa pela escuta." });
+    expect(within(essence).getByText("Como eu projeto")).toBeVisible();
+    expect(within(essence).getByText(/Escuto as necessidades.*conforto ao dia a dia/i)).toBeVisible();
+    expect(within(essence).getByText(/dou atenção às espécies nativas do Brasil/i)).toBeVisible();
+    expect(within(essence).getByText("Qualquer espaço pode se tornar “um espaço que respira”.")).toBeVisible();
+    expect(within(essence).getByRole("img", { name: "Mão tocando a folha de uma palmeira" })).toBeVisible();
   });
 
-  it("mantém o perfil da equipe livre de ornamentos decorativos", () => {
+  it("carrega o player por teclado e mantém o link externo disponível", async () => {
+    const user = userEvent.setup();
     render(<AboutPage />);
 
-    const section = screen.getByRole("heading", { name: /paixão que floresce/i }).closest("section");
-    expect(section?.querySelector(".brandEmblem")).not.toBeInTheDocument();
-    expect(section?.querySelector(".botanicalDecoration")).not.toBeInTheDocument();
+    const section = screen.getByRole("region", { name: "Sobreiro em vídeo" });
+    const video = within(section);
+    const fallback = video.getByRole("link", { name: "Assistir no YouTube" });
+    const loadButton = video.getByRole("button", { name: "Carregar vídeo" });
+    expect(video.getByText("Conheça um pouco mais da Sobreiro. Assista aqui mesmo ou abra o vídeo no YouTube.")).toBeVisible();
+    expect(section.querySelector("img")).toHaveAttribute("src", expect.stringContaining("sobreiro-em-video-poster.webp"));
+    expect(section.querySelector("iframe")).toBeNull();
+    expect(fallback).toHaveAttribute("href", "https://www.youtube.com/watch?v=Rvv5bZX8TZs");
+    expect(fallback).toBeVisible();
+
+    loadButton.focus();
+    await user.keyboard("{Enter}");
+
+    const frame = video.getByTitle("Vídeo da Sobreiro Paisagismo no YouTube");
+    expect(frame).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/Rvv5bZX8TZs?playsinline=1&hl=pt-BR");
+    expect(frame).toHaveAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    expect(frame).toHaveAttribute("allowfullscreen");
+    expect(frame).toHaveFocus();
+    expect(loadButton).not.toBeInTheDocument();
+    expect(fallback).toBeVisible();
   });
 
   it("oferece WhatsApp e e-mail como os dois métodos reais de contato", () => {
@@ -173,68 +176,6 @@ describe("AboutPage", () => {
     expect(within(footer).getByRole("link", { name: "Contato" })).toHaveAttribute("href", "/#contato");
   });
 
-});
-
-describe("EssenceSection", () => {
-  it("renderiza callout, mídia contextual, quatro valores e somente indicadores aprovados", () => {
-    const content = {
-      ...aboutContent.essence,
-      metrics: [
-        {
-          id: "approved-projects",
-          status: "approved",
-          value: "12",
-          label: "projetos com publicação aprovada",
-        },
-        {
-          id: "pending-projects",
-          status: "pendingApproval",
-          candidateValue: "+100",
-          candidateLabel: "projetos realizados",
-        },
-      ],
-    } satisfies AboutEssenceContent;
-
-    render(<EssenceSection content={content} />);
-
-    expect(screen.getByRole("img", { name: content.media.alt })).toBeVisible();
-    expect(screen.getByText(content.mediaCallout.title)).toBeVisible();
-    expect(screen.getByText(content.mediaCallout.description)).toBeVisible();
-    const metrics = screen.getByRole("list", { name: "Indicadores da Sobreiro Paisagismo" });
-    expect(within(metrics).getByText("12")).toBeVisible();
-    expect(screen.queryByText("+100")).not.toBeInTheDocument();
-    expect(screen.getByRole("list", { name: "Valores da Sobreiro Paisagismo" }).children).toHaveLength(4);
-    expect(screen.queryByText(/contador/i)).not.toBeInTheDocument();
-  });
-});
-
-describe("TeamProfileSection", () => {
-  it("apresenta Jéssica Sobreiro com foto e credenciais textuais", () => {
-    render(<TeamProfileSection content={aboutContent.team} />);
-
-    expect(screen.getByText("Jéssica Sobreiro")).toBeVisible();
-    expect(screen.getByText("Paisagista e fundadora da Sobreiro Paisagismo")).toBeVisible();
-    expect(screen.getByRole("img", { name: /Jéssica Sobreiro/ })).toBeVisible();
-    expect(screen.getByText(aboutContent.team.media.callout)).toBeVisible();
-    expect(screen.getByRole("list", { name: "Credenciais da equipe" }).children).toHaveLength(4);
-    expect(screen.queryByText(/mídia botânica em atualização|retrato profissional/i)).not.toBeInTheDocument();
-  });
-
-  it("renderiza mídia botânica configurada com alternativa contextual", () => {
-    const content = {
-      ...aboutContent.team,
-      media: {
-        status: "configured",
-        media: aboutContent.essence.media,
-        callout: aboutContent.team.media.callout,
-      },
-    } satisfies AboutTeamContent;
-
-    render(<TeamProfileSection content={content} />);
-
-    expect(screen.getByRole("img", { name: content.media.media.alt })).toBeVisible();
-    expect(screen.queryByText("Mídia botânica em atualização")).not.toBeInTheDocument();
-  });
 });
 
 describe("ContactMethodCard", () => {
