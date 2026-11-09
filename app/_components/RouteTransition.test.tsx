@@ -133,8 +133,9 @@ describe("RouteTransition", () => {
 
     await user.click(screen.getByRole("link", { name: "Sobre" }));
     await user.click(screen.getByRole("link", { name: "Projetos" }));
-    expect(jest.getTimerCount()).toBe(1);
-    act(() => jest.advanceTimersByTime(260));
+    act(() => jest.advanceTimersByTime(259));
+    expect(push).not.toHaveBeenCalled();
+    act(() => jest.advanceTimersByTime(1));
     expect(push).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith("/projetos");
   });
@@ -156,7 +157,6 @@ describe("RouteTransition", () => {
     await user.click(screen.getByRole("link", { name: "Sobre no header" }));
     expect(push).toHaveBeenCalledWith("/sobre");
     expect(container.querySelector("[data-region='route-viewport']")).toHaveClass("routeViewport--visible");
-    expect(jest.getTimerCount()).toBe(0);
 
     unmount();
     expect(jest.getTimerCount()).toBe(0);

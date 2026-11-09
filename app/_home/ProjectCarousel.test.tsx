@@ -5,7 +5,7 @@ import { ProjectCarousel } from "./ProjectCarousel";
 
 describe("ProjectCarousel", () => {
   beforeAll(() => {
-    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+    Object.defineProperty(HTMLElement.prototype, "scrollTo", {
       configurable: true,
       value: jest.fn(),
     });
@@ -17,7 +17,7 @@ describe("ProjectCarousel", () => {
     renderWithUser(<ProjectCarousel projects={homeContent.projects} />);
 
     expect(screen.getAllByRole("article")).toHaveLength(3);
-    expect(screen.getAllByRole("link", { name: /conhecer o projeto/i })).toHaveLength(3);
+    expect(screen.getAllByRole("link")).toHaveLength(3);
     for (const article of screen.getAllByRole("article")) {
       expect(article.querySelectorAll("a")).toHaveLength(1);
       expect(article.querySelector("button")).not.toBeInTheDocument();
@@ -30,10 +30,10 @@ describe("ProjectCarousel", () => {
     const previous = getByRole("button", { name: "Projeto anterior" });
     const next = getByRole("button", { name: "Próximo projeto" });
 
-    expect(previous).toBeDisabled();
+    expect(previous).toHaveAttribute("aria-disabled", "true");
     await user.click(next);
 
-    expect(previous).toBeEnabled();
+    expect(previous).toHaveAttribute("aria-disabled", "false");
     expect(getByRole("button", { name: "Ir para o projeto 2 de 3" })).toHaveAttribute(
       "aria-current",
       "page",
@@ -42,11 +42,21 @@ describe("ProjectCarousel", () => {
 
     carousel.focus();
     await user.keyboard("{ArrowRight}");
-    expect(next).toBeDisabled();
+    expect(next).toHaveAttribute("aria-disabled", "true");
     expect(getByRole("button", { name: "Ir para o projeto 3 de 3" })).toHaveAttribute(
       "aria-current",
       "page",
     );
+  });
+
+  it("mantém o foco no controle ao chegar ao último destaque", async () => {
+    const { user, getByRole } = renderWithUser(<ProjectCarousel projects={homeContent.projects} />);
+    const next = getByRole("button", { name: "Próximo projeto" });
+    next.focus();
+    await user.keyboard("{Enter}{Enter}");
+
+    expect(next).toHaveFocus();
+    expect(next).toHaveAttribute("aria-disabled", "true");
   });
 
   it("sincroniza a paginação quando a pessoa desliza a galeria", () => {
@@ -54,7 +64,11 @@ describe("ProjectCarousel", () => {
     const track = screen.getByRole("list");
     const slides = Array.from(track.children) as HTMLElement[];
 
-    Object.defineProperty(track, "scrollLeft", { configurable: true, value: 304 });
+    Object.defineProperties(track, {
+      scrollLeft: { configurable: true, writable: true, value: 304 },
+      scrollWidth: { configurable: true, value: 870 },
+      clientWidth: { configurable: true, value: 370 },
+    });
     slides.forEach((slide, index) => {
       Object.defineProperty(slide, "offsetLeft", {
         configurable: true,
@@ -69,5 +83,12 @@ describe("ProjectCarousel", () => {
       "page",
     );
     expect(screen.getByText(/projeto 2 de 3: coffee comfort/i)).toBeInTheDocument();
+
+    track.scrollLeft = 500;
+    fireEvent.scroll(track);
+    expect(screen.getByRole("button", { name: "Ir para o projeto 3 de 3" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 });

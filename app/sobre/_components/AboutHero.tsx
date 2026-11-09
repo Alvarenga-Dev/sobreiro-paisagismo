@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ButtonLink } from "../../_components/ButtonLink";
 import { LineIcon } from "../../_components/LineIcon";
 import { NatureAmbient } from "../../_components/NatureAmbient";
 import { DisplayHeading, SupportingCopy } from "../../_components/Typography";
@@ -23,15 +24,14 @@ export function AboutHero({ content }: { content: AboutHeroContent }) {
           <p className="aboutHero__eyebrow">{content.eyebrow}</p>
           <DisplayHeading id="sobre-hero-title" fragments={content.title} />
           <SupportingCopy context="onDark">{content.introduction}</SupportingCopy>
-        </div>
-        <div className="aboutHero__closing">
-          <a className="aboutHero__historyLink" href={content.historyLink.href}>
-            <span aria-hidden="true" className="aboutHero__historyIcon">
-              <LineIcon name="arrowRight" />
-            </span>
+          <ButtonLink
+            className="aboutHero__historyLink"
+            href={content.historyLink.href}
+            variant="outlineInverse"
+            trailingIcon={<LineIcon name="arrowRight" size="sm" />}
+          >
             {content.historyLink.label}
-          </a>
-          <p className="aboutHero__statement">{content.statement}</p>
+          </ButtonLink>
         </div>
       </div>
     </section>
