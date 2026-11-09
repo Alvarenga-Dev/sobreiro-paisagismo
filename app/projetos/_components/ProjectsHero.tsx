@@ -6,7 +6,7 @@ export function ProjectsHero() {
   const { hero } = projectsContent;
   return (
     <section className="projectsHero" aria-labelledby="projects-hero-title" data-region="hero">
-      <Image className="projectsHero__image" src={hero.media.src} alt={hero.media.alt} fill priority sizes={hero.media.sizes} style={{ objectPosition: hero.media.position }} />
+      <Image className="projectsHero__image" src={hero.media.src} alt={hero.media.alt} fill loading="eager" fetchPriority="high" sizes={hero.media.sizes} style={{ objectPosition: hero.media.position }} />
       <div className="projectsHero__inner">
         <div className="projectsHero__introduction">
           <p className="projectsHero__eyebrow">{hero.eyebrow}</p>

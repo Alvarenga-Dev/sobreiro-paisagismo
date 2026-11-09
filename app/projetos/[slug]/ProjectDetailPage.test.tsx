@@ -1,4 +1,5 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { notFound, usePathname } from "next/navigation";
 import { ContactBanner } from "../../_components/ContactBanner";
 import {
@@ -93,7 +94,19 @@ describe("detalhe de projeto", () => {
   afterEach(() => jest.resetAllMocks());
 
   it("gera somente os params reais publicados e metadados seguros", async () => {
-    expect(generateStaticParams()).toEqual(portfolioProjects.map((project) => ({ slug: project.id })));
+    expect(generateStaticParams()).toEqual([
+      { slug: "residencia-jardim-e-piscina" },
+      { slug: "coffee-comfort" },
+      { slug: "residencia-contemporanea-fachada" },
+      { slug: "rooftop-com-piscina" },
+      { slug: "jardim-vertical-residencial" },
+      { slug: "cozinha-contemporanea" },
+      { slug: "hall-de-entrada" },
+      { slug: "suite-com-painel-iluminado" },
+      { slug: "casa-suspensa-na-mata" },
+    ]);
+    expect(await generateMetadata({ params: Promise.resolve({ slug: "jardim-vertical-residencial" }) }))
+      .toMatchObject({ title: "Jardins verticais | Sobreiro Paisagismo" });
     expect(await generateMetadata({ params: Promise.resolve({ slug: portfolioProjects[0].id }) })).toEqual({
       title: `${portfolioProjects[0].title} | Sobreiro Paisagismo`,
       description: portfolioProjects[0].summary,
@@ -104,11 +117,22 @@ describe("detalhe de projeto", () => {
     });
   });
 
-  it("responde com notFound para slug desconhecido", async () => {
-    await expect(ProjectDetailPage({ params: Promise.resolve({ slug: "slug-inexistente" }) })).rejects.toThrow(
+  it.each(["slug-inexistente", "residencia-piscina-area-gourmet"])("responde com notFound para %s", async (slug) => {
+    await expect(ProjectDetailPage({ params: Promise.resolve({ slug }) })).rejects.toThrow(
       "NEXT_NOT_FOUND",
     );
     expect(notFound).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
+    ["residencia-jardim-e-piscina", "Da área gourmet ao jardim", 6],
+    ["suite-com-painel-iluminado", "Luz indireta e usos integrados", 5],
+  ])("renderiza narrativa e sequência de imagens na ficha %s", async (slug, heading, imageCount) => {
+    render(await ProjectDetailPage({ params: Promise.resolve({ slug }) }));
+
+    expect(screen.getByRole("heading", { name: heading })).toBeVisible();
+    const gallery = screen.getByRole("region", { name: "Galeria do projeto" });
+    expect(within(gallery).getAllByRole("img")).toHaveLength(imageCount);
   });
 
   it("aplica a mesma fronteira de rota a um registro em draft", () => {
@@ -117,11 +141,12 @@ describe("detalhe de projeto", () => {
     expect(notFound).toHaveBeenCalledTimes(1);
   });
 
-  it("compõe hero, superfície, retorno e contato em ordem com origem editorial única", () => {
+  it("compõe abertura, galeria, narrativa, retorno e contato em ordem", () => {
     const { container } = render(<ProjectDetailPageView project={publishedProject} />);
     const main = screen.getByRole("main");
     expect(Array.from(main.children).map((child) => child.className)).toEqual([
       "projectDetailHero",
+      "projectDetailGallery",
       "projectDetailSurface",
       "projectDetailReturn",
       "projectDetailContact",
@@ -135,24 +160,20 @@ describe("detalhe de projeto", () => {
     expect(screen.getByText(publishedProject.category)).toBeVisible();
     expect(screen.getAllByText(publishedProject.summary)).toHaveLength(1);
     expect(screen.getByText(publishedProject.summary).closest(".projectDetailHero")).toBe(hero);
-    expect(container.querySelector(".projectDetailHero__divider")).not.toBeInTheDocument();
   });
 
-  it("mantém título integral sem acento fabricado e aplica foco responsivo à única imagem prioritária", () => {
+  it("mantém título integral sem acento fabricado e prioriza a primeira imagem da galeria", () => {
     const withoutAccent: PortfolioProject = {
       ...publishedProject,
       details: { ...publishedProject.details, titleAccent: undefined },
     };
-    const { container } = render(<ProjectDetailPageView project={withoutAccent} />);
+    render(<ProjectDetailPageView project={withoutAccent} />);
     const heading = screen.getByRole("heading", { level: 1, name: withoutAccent.title });
-    const heroImages = container.querySelectorAll(".projectDetailHero__image");
+    const cover = screen.getByRole("img", { name: heroMedia.alt });
 
     expect(heading.querySelector(".textAccent")).toBeNull();
-    expect(heroImages).toHaveLength(1);
-    expect(heroImages[0]).toHaveAttribute("sizes", "100vw");
-    expect(heroImages[0]).not.toHaveAttribute("loading", "lazy");
-    expect(heroImages[0].getAttribute("style")).toContain("--project-detail-image-position: 60% 40%");
-    expect(heroImages[0].getAttribute("style")).toContain("--project-detail-image-position-mobile: right center");
+    expect(cover).toHaveAttribute("loading", "eager");
+    expect(cover).toHaveAttribute("fetchpriority", "high");
   });
 
   it("oferece breadcrumb ancestral e mantém o item atual sem link", () => {
@@ -165,22 +186,17 @@ describe("detalhe de projeto", () => {
     expect(within(breadcrumb).getAllByRole("link")).toHaveLength(2);
   });
 
-  it("calcula a alternativa do hero conforme sua permanência informativa na galeria", () => {
-    const { rerender, container } = render(<ProjectDetailPageView project={publishedProject} />);
-    expect(container.querySelector(".projectDetailHero__image")).toHaveAttribute("alt", heroMedia.alt);
-
+  it("mostra a capa primeiro com uma única descrição acessível", () => {
     const heroLater: PortfolioProject = {
       ...publishedProject,
       hero: gallerySecond,
       images: [heroMedia, gallerySecond, galleryThird],
     };
-    rerender(<ProjectDetailPageView project={heroLater} />);
-    expect(container.querySelector(".projectDetailHero__image")).toHaveAttribute("alt", "");
-    const gallery = screen.getByRole("heading", { name: "Galeria do projeto" }).closest("section");
-    if (!gallery) throw new Error("Galeria não renderizada");
+    render(<ProjectDetailPageView project={heroLater} />);
+    const gallery = screen.getByRole("region", { name: "Galeria do projeto" });
     expect(within(gallery).getAllByRole("img").map((image) => image.getAttribute("alt"))).toEqual([
-      heroMedia.alt,
       gallerySecond.alt,
+      heroMedia.alt,
       galleryThird.alt,
     ]);
   });
@@ -212,30 +228,58 @@ describe("detalhe de projeto", () => {
     expect(screen.getAllByText(publishedProject.summary)).toHaveLength(1);
   });
 
-  it("renderiza galeria nomeada em lista, deduplicada e sem interação", () => {
-    const { container } = render(<ProjectDetailPageView project={publishedProject} />);
-    const gallery = screen.getByRole("heading", { name: "Galeria do projeto" }).closest("section");
-    if (!gallery) throw new Error("Galeria não renderizada");
+  it("renderiza imagens responsivas com dimensões e textos alternativos", () => {
+    render(<ProjectDetailPageView project={publishedProject} />);
+    const gallery = screen.getByRole("region", { name: "Galeria do projeto" });
     const list = within(gallery).getByRole("list");
     const images = within(list).getAllByRole("img");
-    const expectedImages = [gallerySecond, galleryThird, galleryFourth];
+    const expectedImages = [heroMedia, gallerySecond, galleryThird, galleryFourth];
 
     expect(within(list).getAllByRole("listitem")).toHaveLength(expectedImages.length);
     expect(images.map((image) => image.getAttribute("alt"))).toEqual(expectedImages.map((image) => image.alt));
     images.forEach((image, index) => {
       expect(image).toHaveAttribute("width", `${expectedImages[index].width}`);
       expect(image).toHaveAttribute("height", `${expectedImages[index].height}`);
-      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).toHaveAttribute("loading", index === 0 ? "eager" : "lazy");
+      expect(image).toHaveAttribute("sizes", expect.stringContaining("82vw"));
+      expect(image).toHaveAttribute("srcset", expect.stringContaining("&q=90"));
       expect(image.closest("li")).not.toHaveAttribute("tabindex");
     });
-    expect(images[0].closest("li")).toHaveAttribute("data-gallery-role", "lead");
-    expect(images[1].closest("li")).toHaveAttribute("data-gallery-role", "pair");
-    expect(within(gallery).queryByRole("button")).not.toBeInTheDocument();
     expect(within(gallery).queryByRole("link")).not.toBeInTheDocument();
-    expect(container.querySelector(".projectDetailGallery [tabindex]")).toBeNull();
   });
 
-  it("omite galeria e superfície vazias quando o hero é a única mídia", () => {
+  it("avança da primeira imagem parcial e aceita navegação rápida e por teclado", async () => {
+    const user = userEvent.setup();
+    render(<ProjectDetailPageView project={publishedProject} />);
+    const track = screen.getByRole("list", { name: "Galeria do projeto" });
+    const scrollTo = jest.fn();
+    Object.defineProperties(track, {
+      scrollTo: { value: scrollTo },
+      clientWidth: { value: 400 },
+      scrollWidth: { value: 880 },
+    });
+    within(track).getAllByRole("listitem").forEach((slide, index) => {
+      Object.defineProperties(slide, {
+        offsetLeft: { value: index * 220 },
+        offsetWidth: { value: 220 },
+      });
+    });
+    act(() => window.dispatchEvent(new Event("resize")));
+    const next = screen.getByRole("button", { name: "Próximas imagens" });
+
+    await user.click(next);
+    await user.click(next);
+    expect(scrollTo).toHaveBeenNthCalledWith(1, { left: 220, behavior: "auto" });
+    expect(scrollTo).toHaveBeenNthCalledWith(2, { left: 440, behavior: "auto" });
+    expect(next).toHaveFocus();
+
+    track.focus();
+    await user.keyboard("{End}{ArrowRight}");
+    expect(scrollTo).toHaveBeenNthCalledWith(3, { left: 480, behavior: "auto" });
+    expect(scrollTo).toHaveBeenNthCalledWith(4, { left: 0, behavior: "instant" });
+  });
+
+  it("mantém a imagem única sem controles ou superfície vazia", () => {
     const singleMediaProject: PortfolioProject = {
       ...publishedProject,
       details: undefined,
@@ -243,10 +287,10 @@ describe("detalhe de projeto", () => {
     };
     const { container } = render(<ProjectDetailPageView project={singleMediaProject} />);
 
-    expect(screen.queryByRole("heading", { name: "Galeria do projeto" })).not.toBeInTheDocument();
-    expect(container.querySelector(".projectDetailGallery")).toBeNull();
+    const gallery = screen.getByRole("region", { name: "Galeria do projeto" });
+    expect(within(gallery).getByRole("img", { name: heroMedia.alt })).toBeVisible();
+    expect(within(gallery).queryByRole("button")).not.toBeInTheDocument();
     expect(container.querySelector(".projectDetailSurface")).toBeNull();
-    expect(container.querySelector(".projectDetailHero__image")).toHaveAttribute("alt", heroMedia.alt);
   });
 
   it("mostra soluções informativas e omite soluções opcionais", () => {

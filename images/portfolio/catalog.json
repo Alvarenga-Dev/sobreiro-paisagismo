@@ -2,7 +2,7 @@
   "owner": "Jéssica Sobreiro",
   "brand": "Sobreiro Paisagismo",
   "version": 1,
-  "imageCount": 58,
+  "imageCount": 55,
   "categories": [
     {
       "id": "paisagismo-residencial",
@@ -10,28 +10,27 @@
       "description": "Áreas externas residenciais com piscina, área gourmet, decks, canteiros e iluminação paisagística.",
       "projects": [
         {
-          "id": "residencia-piscina-area-gourmet",
-          "title": "Residência com piscina e área gourmet",
-          "summary": "Paisagismo residencial para uma área de lazer integrada à piscina, ao deck e à área gourmet.",
-          "status": "projeto autoral de Jéssica Sobreiro — fotografia",
+          "id": "residencia-jardim-e-piscina",
+          "title": "Residência com jardim e piscina",
+          "summary": "Projeto de paisagismo residencial com jardim em torno da piscina e da área gourmet.",
+          "status": "projeto autoral de Jéssica Sobreiro",
           "detailPublication": "published",
-          "cover": "01-paisagismo-residencial/residencia-piscina-area-gourmet/01-piscina-area-gourmet.jpg",
+          "cover": "01-paisagismo-residencial/residencia-jardim-e-piscina/vista-aerea.jpg",
+          "details": {
+            "titleAccent": "jardim e piscina",
+            "introHeading": "Da área gourmet ao jardim",
+            "body": [
+              "O deck conecta a piscina à área gourmet coberta e reúne espaços para sentar, tomar sol e fazer refeições ao ar livre.",
+              "Canteiros de diferentes alturas acompanham o perímetro do jardim e emolduram a área de lazer. Nas vistas noturnas, a iluminação destaca a vegetação junto aos caminhos e à piscina."
+            ]
+          },
           "images": [
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/01-piscina-area-gourmet.jpg", "alt": "Piscina integrada à área gourmet em residência contemporânea" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/02-area-de-estar.jpg", "alt": "Área de estar externa com mesa, cadeiras e vegetação" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/03-piscina-com-deck.jpg", "alt": "Piscina residencial junto a deck de madeira e jardim" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/04-detalhe-de-vegetacao.jpg", "alt": "Detalhe da vegetação ornamental junto à área de estar" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/05-piscina-e-jardim.jpg", "alt": "Piscina e jardim linear em área externa residencial" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/06-detalhe-area-gourmet.jpg", "alt": "Detalhe dos bancos da área gourmet externa" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/08-piscina-iluminada.jpg", "alt": "Piscina iluminada ao lado da área gourmet" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/09-jardim-linear.jpg", "alt": "Jardim linear acompanhando o muro da residência" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/10-paisagem-ao-entardecer.jpg", "alt": "Jardim residencial visto ao entardecer" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/11-jardim-com-cobertura.jpg", "alt": "Jardim e área de convivência sob cobertura de vidro" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/12-deck-e-vegetacao.jpg", "alt": "Deck de madeira cercado por vegetação e mobiliário externo" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/13-jardim-com-deck.jpg", "alt": "Jardim residencial com deck e banco externo" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/14-canteiro-e-area-de-estar.jpg", "alt": "Canteiro com folhagens junto à área de estar" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/15-piscina-e-montanhas.jpg", "alt": "Piscina residencial com jardim e vista para as montanhas" },
-            { "file": "01-paisagismo-residencial/residencia-piscina-area-gourmet/16-iluminacao-do-jardim.jpg", "alt": "Iluminação cênica destacando o jardim residencial à noite" }
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/vista-aerea.jpg", "alt": "Vista aérea da residência com jardim, piscina e área gourmet" },
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/piscina-e-deck.jpg", "alt": "Piscina com espreguiçadeiras no deck de madeira, junto à área gourmet" },
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/piscina-vista-da-casa.jpg", "alt": "Piscina e jardim vistos do deck, com guarda-sol ao lado da casa" },
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/jardim-lateral.jpg", "alt": "Canteiro de folhagens acompanhando o gramado ao lado da piscina" },
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/jardim-iluminado.jpg", "alt": "Vegetação iluminada ao longo do caminho ao lado da piscina" },
+            { "file": "01-paisagismo-residencial/residencia-jardim-e-piscina/vista-aerea-noturna.jpg", "alt": "Vista aérea noturna com piscina, deck e área gourmet iluminados" }
           ]
         }
       ]
@@ -47,7 +46,8 @@
           "summary": "Paisagismo e ambientação para uma cafeteria, conectando fachada, acesso, salão e balcão de atendimento.",
           "status": "projeto autoral de Jéssica Sobreiro — fotografia",
           "detailPublication": "published",
-          "cover": "02-paisagismo-comercial/coffee-comfort/01-fachada.jpg",
+          "cover": "02-paisagismo-comercial/coffee-comfort/capa-fachada-frontal.jpg",
+          "details": { "heroFile": "02-paisagismo-comercial/coffee-comfort/01-fachada.jpg" },
           "images": [
             { "file": "02-paisagismo-comercial/coffee-comfort/01-fachada.jpg", "alt": "Fachada do Coffee Comfort cercada por árvores" },
             { "file": "02-paisagismo-comercial/coffee-comfort/02-fachada-com-calcada.jpg", "alt": "Fachada do Coffee Comfort vista a partir da calçada" },
@@ -55,7 +55,8 @@
             { "file": "02-paisagismo-comercial/coffee-comfort/04-interior-do-cafe.jpg", "alt": "Interior do Coffee Comfort com mesas e vegetação suspensa" },
             { "file": "02-paisagismo-comercial/coffee-comfort/05-salao.jpg", "alt": "Salão do Coffee Comfort com iluminação acolhedora" },
             { "file": "02-paisagismo-comercial/coffee-comfort/06-balcao.jpg", "alt": "Balcão de atendimento do Coffee Comfort" },
-            { "file": "02-paisagismo-comercial/coffee-comfort/07-detalhe-do-balcao.jpg", "alt": "Detalhe da máquina de café e do balcão do Coffee Comfort" }
+            { "file": "02-paisagismo-comercial/coffee-comfort/07-detalhe-do-balcao.jpg", "alt": "Detalhe da máquina de café e do balcão do Coffee Comfort" },
+            { "file": "02-paisagismo-comercial/coffee-comfort/capa-fachada-frontal.jpg", "alt": "Fachada frontal do Coffee Comfort vista da calçada", "position": "50% 56%" }
           ]
         }
       ]
@@ -111,7 +112,7 @@
       "projects": [
         {
           "id": "jardim-vertical-residencial",
-          "title": "Jardim vertical residencial",
+          "title": "Jardins verticais",
           "summary": "Jardim vertical integrado à fachada e à área da piscina, com diferentes enquadramentos e detalhes de composição.",
           "status": "projeto autoral de Jéssica Sobreiro — renderização",
           "detailPublication": "published",
@@ -162,6 +163,29 @@
             { "file": "06-design-de-interiores/hall-de-entrada/02-hall-e-escada.JPG", "alt": "Hall de entrada integrado à escada e ao jardim interno" },
             { "file": "06-design-de-interiores/hall-de-entrada/03-painel-com-iluminacao.JPG", "alt": "Painel decorativo com iluminação indireta no hall" },
             { "file": "06-design-de-interiores/hall-de-entrada/04-composicao-do-hall.JPG", "alt": "Composição do hall com sofá, poltronas e painel iluminado" }
+          ]
+        },
+        {
+          "id": "suite-com-painel-iluminado",
+          "title": "Suíte com painel iluminado",
+          "summary": "Projeto de interiores de uma suíte com iluminação indireta e painel atrás da cama.",
+          "status": "projeto autoral de Jéssica Sobreiro",
+          "detailPublication": "published",
+          "cover": "06-design-de-interiores/suite-com-painel-iluminado/vista-ampla-da-suite.jpg",
+          "details": {
+            "titleAccent": "painel iluminado",
+            "introHeading": "Luz indireta e usos integrados",
+            "body": [
+              "O desenho luminoso acima da cabeceira marca a área de descanso. Tons de verde, madeira e luz quente aparecem também nos acabamentos ao redor.",
+              "Junto à janela, a mesa aproveita a luz natural. A cozinha compacta ocupa a parede oposta, conectada ao quarto pelo mesmo espaço."
+            ]
+          },
+          "images": [
+            { "file": "06-design-de-interiores/suite-com-painel-iluminado/vista-ampla-da-suite.jpg", "alt": "Vista ampla da suíte com painel iluminado atrás da cama", "position": "44% 50%" },
+            { "file": "06-design-de-interiores/suite-com-painel-iluminado/suite-vista-da-janela.jpg", "alt": "Vista da suíte com mesa junto à janela, cama e painel iluminado" },
+            { "file": "06-design-de-interiores/suite-com-painel-iluminado/parede-verde-e-quadros.jpg", "alt": "Quadros emoldurados na parede verde ao lado da geladeira" },
+            { "file": "06-design-de-interiores/suite-com-painel-iluminado/cozinha-integrada.jpg", "alt": "Cozinha compacta integrada à suíte, com armários escuros e bancada iluminada" },
+            { "file": "06-design-de-interiores/suite-com-painel-iluminado/detalhe-do-painel.jpg", "alt": "Detalhe do desenho luminoso acima da cabeceira" }
           ]
         }
       ]

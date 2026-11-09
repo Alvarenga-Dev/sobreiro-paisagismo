@@ -1,8 +1,22 @@
 {
   "version": 1,
   "highlights": [
-    { "projectId": "residencia-piscina-area-gourmet", "order": 1 },
-    { "projectId": "coffee-comfort", "order": 2 },
-    { "projectId": "jardim-vertical-residencial", "order": 3 }
+    {
+      "projectId": "residencia-jardim-e-piscina",
+      "order": 1,
+      "title": "Paisagismo residencial",
+      "cover": "01-paisagismo-residencial/residencia-jardim-e-piscina/vista-aerea.jpg"
+    },
+    {
+      "projectId": "coffee-comfort",
+      "order": 2,
+      "cover": "02-paisagismo-comercial/coffee-comfort/capa-fachada-frontal.jpg"
+    },
+    {
+      "projectId": "suite-com-painel-iluminado",
+      "order": 3,
+      "title": "Projetos de interiores",
+      "cover": "06-design-de-interiores/suite-com-painel-iluminado/vista-ampla-da-suite.jpg"
+    }
   ]
 }

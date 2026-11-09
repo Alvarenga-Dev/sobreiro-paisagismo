@@ -1,6 +1,5 @@
 import type { LineIconName } from "../_components/LineIcon";
 import type { ContactBannerProps } from "../_components/ContactBanner";
-import type { ProjectCardDirection, ProjectCardSurface } from "../_components/ProjectCard";
 import type { ConfiguredContact } from "../_content/siteContent";
 import {
   portfolioCategories,
@@ -21,7 +20,7 @@ export interface CategoryOption {
 }
 
 export const projectCategories: readonly CategoryOption[] = portfolioCategoryOptions;
-const catalogCoverSizes = "(min-width: 1600px) 23vw, (min-width: 1100px) 304px, (min-width: 768px) 42vw, 100vw";
+const catalogCoverSizes = "(min-width: 68.75rem) min(390px, calc(30vw - 1rem)), (min-width: 48rem) calc(45vw - 0.75rem), 100vw";
 
 export const catalogProjects: readonly CatalogProject[] = portfolioProjects.map((project) => {
   const cardData = toProjectCardData(project);
@@ -35,52 +34,6 @@ export const catalogProjects: readonly CatalogProject[] = portfolioProjects.map(
   };
 });
 
-export interface ProjectPresentation {
-  readonly id: string;
-  readonly direction: ProjectCardDirection;
-  readonly surface: ProjectCardSurface;
-}
-
-export const projectPresentations = [
-  { id: "residencia-piscina-area-gourmet", direction: "mediaFirst", surface: "dark" },
-  { id: "coffee-comfort", direction: "mediaFirst", surface: "light" },
-  { id: "residencia-contemporanea-fachada", direction: "contentFirst", surface: "light" },
-  { id: "rooftop-com-piscina", direction: "mediaFirst", surface: "dark" },
-  { id: "jardim-vertical-residencial", direction: "mediaFirst", surface: "dark" },
-  { id: "cozinha-contemporanea", direction: "mediaFirst", surface: "light" },
-  { id: "hall-de-entrada", direction: "contentFirst", surface: "light" },
-  { id: "casa-suspensa-na-mata", direction: "mediaFirst", surface: "dark" },
-] as const satisfies readonly ProjectPresentation[];
-
-export function validateProjectPresentations(
-  presentations: readonly ProjectPresentation[],
-  projects: readonly Pick<CatalogProject, "id">[],
-): ReadonlyMap<string, ProjectPresentation> {
-  const projectIds = new Set(projects.map((project) => project.id));
-  const presentationById = new Map<string, ProjectPresentation>();
-
-  for (const presentation of presentations) {
-    if (!projectIds.has(presentation.id)) {
-      throw new Error(`Apresentação de projeto com ID desconhecido: ${presentation.id}`);
-    }
-    if (presentationById.has(presentation.id)) {
-      throw new Error(`Apresentação de projeto com ID duplicado: ${presentation.id}`);
-    }
-    presentationById.set(presentation.id, presentation);
-  }
-
-  const missingIds = projects
-    .map((project) => project.id)
-    .filter((id) => !presentationById.has(id));
-  if (missingIds.length > 0) {
-    throw new Error(`Apresentação ausente para: ${missingIds.join(", ")}`);
-  }
-
-  return presentationById;
-}
-
-export const projectPresentationById = validateProjectPresentations(projectPresentations, catalogProjects);
-
 export type ProjectsBannerMedia =
   | { readonly status: "pendingApproval" }
   | {
@@ -93,7 +46,8 @@ export type ProjectsBannerMedia =
       readonly position?: string;
     };
 
-const projectsHeroMedia = portfolioProjects[0].cover;
+const projectsHeroMedia = portfolioProjects.find((project) => project.id === "residencia-jardim-e-piscina")?.hero
+  ?? portfolioProjects[0].hero;
 
 export const projectsContent = {
   hero: {
@@ -129,7 +83,7 @@ export function projectContactActions(
   whatsapp: ConfiguredContact,
   contact: { readonly label: string },
   email: { readonly href: string },
-): Pick<ContactBannerProps, "contactHref" | "contactLabel" | "contactIcon" | "contactIconSize" | "contactExternal" | "supportingAction"> {
+): Pick<ContactBannerProps, "contactHref" | "contactLabel" | "contactIcon" | "contactIconSize" | "contactExternal"> {
   if (whatsapp.status !== "configured") {
     return {
       contactHref: email.href,
@@ -146,6 +100,5 @@ export function projectContactActions(
     contactIcon: "whatsapp",
     contactIconSize: "sm",
     contactExternal: true,
-    supportingAction: { label: "Agende uma conversa", href: email.href },
   };
 }

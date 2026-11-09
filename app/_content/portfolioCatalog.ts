@@ -50,6 +50,8 @@ export interface PortfolioCategory {
 export interface HomeCatalogHighlight {
   readonly projectId: string;
   readonly order: number;
+  readonly title?: string;
+  readonly cover?: string;
 }
 
 export interface PortfolioCatalogData {
@@ -70,7 +72,7 @@ export interface PortfolioBuildOptions {
 
 const publicPortfolioRoot = path.join(process.cwd(), "public", "images", "portfolio");
 const catalogCardSizes = "(min-width: 1216px) 440px, (min-width: 768px) 42vw, 100vw";
-const homeCardSizes = "(max-width: 699px) 82vw, (max-width: 1099px) 43vw, 30vw";
+const homeCardSizes = "(max-width: 639px) 78vw, (max-width: 895px) 54vw, (max-width: 1351px) 30vw, 390px";
 
 const categoryIcons: Readonly<Record<string, LineIconName>> = {
   "paisagismo-residencial": "home",
@@ -380,7 +382,7 @@ function parseHighlights(input: unknown, projects: readonly PortfolioProject[]):
   const records = asArray(root.highlights, "home-catalog.highlights");
   if (records.length !== 3) invalid("home-catalog.highlights", "esperadas exatamente três referências");
 
-  const projectIds = new Set(projects.map((project) => project.id));
+  const projectsById = new Map(projects.map((project) => [project.id, project]));
   const referencedIds = new Set<string>();
   const orders = new Set<number>();
   const highlights = records.map((value, index) => {
@@ -388,12 +390,18 @@ function parseHighlights(input: unknown, projects: readonly PortfolioProject[]):
     const record = asRecord(value, highlightPath);
     const projectId = requiredString(record, "projectId", highlightPath);
     const order = requiredInteger(record, "order", highlightPath);
-    if (!projectIds.has(projectId)) invalid(`${highlightPath}.projectId`, `projeto inexistente: ${projectId}`);
+    const project = projectsById.get(projectId);
+    if (!project) invalid(`${highlightPath}.projectId`, `projeto inexistente: ${projectId}`);
     if (referencedIds.has(projectId)) invalid(`${highlightPath}.projectId`, `referência duplicada: ${projectId}`);
     if (orders.has(order)) invalid(`${highlightPath}.order`, `ordem duplicada: ${order}`);
+    const title = optionalString(record, "title", highlightPath);
+    const cover = record.cover === undefined ? undefined : relativeFile(record, "cover", highlightPath);
+    if (cover !== undefined && !project.images.some((image) => image.file === cover)) {
+      invalid(`${highlightPath}.cover`, `a capa ${cover} não pertence ao projeto ${projectId}`);
+    }
     referencedIds.add(projectId);
     orders.add(order);
-    return { projectId, order };
+    return { projectId, order, title, cover };
   });
 
   return [...highlights].sort((first, second) => first.order - second.order);
@@ -413,9 +421,7 @@ export function buildPortfolioCatalog(
 
 export function toProjectCardData(
   project: PortfolioProject,
-  context: "catalog" | "home" = "catalog",
 ): ProjectCardData {
-  const media = context === "home" ? { ...project.cover, sizes: homeCardSizes } : project.cover;
   return {
     id: project.id,
     href: project.detailPublication === "published"
@@ -424,7 +430,7 @@ export function toProjectCardData(
     title: project.title,
     category: project.category,
     summary: project.summary,
-    media,
+    media: project.cover,
   };
 }
 
@@ -455,10 +461,20 @@ export const portfolioCategories: readonly PortfolioCategory[] = portfolioCatalo
 export const portfolioProjects: readonly PortfolioProject[] = portfolioCatalog.projects;
 export const publishedPortfolioProjects: readonly PortfolioProject[] = getPublishedProjects(portfolioProjects);
 export const homeHighlights: readonly HomeCatalogHighlight[] = portfolioCatalog.highlights;
-export const homeFeaturedProjects: readonly ProjectCardData[] = homeHighlights.map(({ projectId }) => {
+export const homeFeaturedProjects: readonly ProjectCardData[] = homeHighlights.map((highlight) => {
+  const { projectId } = highlight;
   const project = portfolioProjects.find((candidate) => candidate.id === projectId);
   if (!project) throw new Error(`Catálogo inválido em home-catalog.highlights: projeto inexistente: ${projectId}`);
-  return toProjectCardData(project, "home");
+  const card = toProjectCardData(project);
+  const title = highlight.title ?? card.title;
+  const cover = project.images.find((image) => image.file === highlight.cover) ?? project.cover;
+  return {
+    ...card,
+    title,
+    media: { ...cover, sizes: homeCardSizes },
+    href: card.href ?? `/projetos?${new URLSearchParams({ categoria: project.categoryId })}`,
+    linkLabel: card.href ? undefined : `Ver ${title} no catálogo`,
+  };
 });
 
 export const portfolioCategoryOptions: readonly PortfolioCategoryOption[] = [

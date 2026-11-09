@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ButtonLink, ContactButton } from "../../_components/ButtonLink";
+import { ContactButton } from "../../_components/ButtonLink";
 import type { LineIconName } from "../../_components/LineIcon";
 import { SectionHeading, SupportingCopy } from "../../_components/Typography";
 import type { ProjectsBannerMedia } from "../projectsContent";
@@ -17,10 +17,6 @@ export interface ProjectsContactBannerProps {
   readonly contactIcon?: LineIconName;
   readonly contactIconSize?: "sm" | "md" | "lg";
   readonly contactExternal?: boolean;
-  readonly supportingAction?: {
-    readonly label: string;
-    readonly href: string;
-  };
 }
 
 export function ProjectsContactBanner({
@@ -35,7 +31,6 @@ export function ProjectsContactBanner({
   contactIcon,
   contactIconSize,
   contactExternal,
-  supportingAction,
 }: ProjectsContactBannerProps) {
   return (
     <section
@@ -67,11 +62,6 @@ export function ProjectsContactBanner({
                 iconSize={contactIconSize}
                 external={contactExternal}
               />
-              {supportingAction ? (
-                <ButtonLink href={supportingAction.href} variant="outlineInverse">
-                  {supportingAction.label}
-                </ButtonLink>
-              ) : null}
             </div>
           ) : (
             <p className="projectsContactBanner__unavailable">Contato temporariamente indisponível.</p>
