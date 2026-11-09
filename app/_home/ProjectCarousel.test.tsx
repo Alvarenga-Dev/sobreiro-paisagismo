@@ -38,7 +38,7 @@ describe("ProjectCarousel", () => {
       "aria-current",
       "page",
     );
-    expect(screen.getByText(/projeto 2 de 3: coffee comfort/i)).toBeInTheDocument();
+    expect(screen.getByText(/projeto 2 de 3: projetos comerciais/i)).toBeInTheDocument();
 
     carousel.focus();
     await user.keyboard("{ArrowRight}");
@@ -82,7 +82,7 @@ describe("ProjectCarousel", () => {
       "aria-current",
       "page",
     );
-    expect(screen.getByText(/projeto 2 de 3: coffee comfort/i)).toBeInTheDocument();
+    expect(screen.getByText(/projeto 2 de 3: projetos comerciais/i)).toBeInTheDocument();
 
     track.scrollLeft = 500;
     fireEvent.scroll(track);
