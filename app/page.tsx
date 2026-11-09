@@ -10,7 +10,7 @@ import { ServicesSection } from "./_home/ServicesSection";
 import { homeContent } from "./_home/homeContent";
 
 export const metadata: Metadata = {
-  title: "Sobreiro Paisagismo | Paisagismo e design de interiores",
+  title: "Sobreiro Paisagismo | Paisagismo e Design de Interiores",
   description: "Conheça os projetos de Jéssica Sobreiro para jardins, áreas externas e interiores. Veja quando uma consultoria em paisagismo pode ajudar e converse sobre seu espaço.",
 };
 

@@ -29,7 +29,7 @@ describe("HomePage", () => {
     expect(h1).not.toContainElement(signature);
     expect(h1.compareDocumentPosition(signature) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(hero).getByText("Paisagismo autoral")).toBeVisible();
-    expect(within(hero).getByText("Projetos de paisagismo e design que transformam experiências.")).toBeVisible();
+    expect(within(hero).getByText("Projetos de Paisagismo e Design que transformam experiências.")).toBeVisible();
     expect(Array.from(main.children).slice(0, 5).map((section) => section.id)).toEqual([
       "inicio", "sobre", "servicos", "projetos", "beneficios",
     ]);
@@ -65,7 +65,7 @@ describe("HomePage", () => {
     ]);
     const highlights = [
       ["Paisagismo residencial", "vista-aerea.jpg", "/projetos/residencia-jardim-e-piscina", "Conhecer o projeto Paisagismo residencial"],
-      ["Coffee Comfort", "capa-fachada-frontal.jpg", "/projetos/coffee-comfort", "Conhecer o projeto Coffee Comfort"],
+      ["Projetos Comerciais", "capa-fachada-frontal.jpg", "/projetos/coffee-comfort", "Conhecer o projeto Projetos Comerciais"],
       ["Projetos de interiores", "vista-ampla-da-suite.jpg", "/projetos/suite-com-painel-iluminado", "Conhecer o projeto Projetos de interiores"],
     ];
     highlights.forEach(([title, cover, href, label], index) => {
